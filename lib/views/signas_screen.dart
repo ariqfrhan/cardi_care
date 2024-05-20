@@ -1,6 +1,8 @@
+import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
 class SignasScreen extends StatelessWidget {
   const SignasScreen({super.key});
@@ -22,7 +24,7 @@ class SignasScreen extends StatelessWidget {
               SizedBox(
                 width: double.maxFinite,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => Get.toNamed(Routes.signupPasien),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: whiteColor,
                       side: BorderSide(color: redColor),
