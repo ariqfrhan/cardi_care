@@ -25,29 +25,32 @@ class CustomFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        isShowTitle
-            ? Text(
-                title,
-                style: blackText.copyWith(fontWeight: medium),
-              )
-            : const SizedBox(
-                height: 0,
-              ),
+        // isShowTitle
+        //     ? Text(
+        //         title,
+        //         style: blackText.copyWith(fontWeight: medium),
+        //       )
+        //     : const SizedBox(
+        //         height: 0,
+        //       ),
         const SizedBox(
-          height: 4,
+          height: 8,
         ),
-        TextField(
+        TextFormField(
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
-          onSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
-              hintText: hint,
-              focusColor: redColor,
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              contentPadding: const EdgeInsets.all(12)),
-        )
+            labelText: title,
+            focusColor: redColor,
+            floatingLabelStyle: TextStyle(color: redColor),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            contentPadding: const EdgeInsets.all(12),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: redColor),
+            ),
+          ),
+        ),
       ],
     );
   }

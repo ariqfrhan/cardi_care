@@ -5,8 +5,8 @@ import 'package:cardi_care/views/widgets/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SignupPasienScreen extends StatelessWidget {
-  const SignupPasienScreen({super.key});
+class SigninPasienScreen extends StatelessWidget {
+  const SigninPasienScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class SignupPasienScreen extends StatelessWidget {
                 height: 20,
               ),
               Text(
-                'Lengkapi data diri anda untuk membuat akun',
+                'Masukkan username dan password anda untuk login sebagai pasien',
                 textAlign: TextAlign.center,
                 style: blackText.copyWith(
                   fontSize: 16,
@@ -44,51 +44,10 @@ class SignupPasienScreen extends StatelessWidget {
               const Column(
                 children: [
                   CustomFormField(
-                    title: 'Nama Lengkap',
-                  ),
-                  CustomFormField(
                     title: 'Email',
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomFormField(
-                          title: 'Tanggal Lahir',
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Expanded(
-                        child: CustomFormField(
-                          title: 'Jenis Kelamin',
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomFormField(
-                          title: 'Tinggi Badan',
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Expanded(
-                        child: CustomFormField(
-                          title: 'Berat Badan',
-                        ),
-                      )
-                    ],
                   ),
                   CustomFormField(
                     title: 'Kata Sandi',
-                    obscureText: true,
-                  ),
-                  CustomFormField(
-                    title: 'Konfirmasi Kata Sandi',
                     obscureText: true,
                   ),
                 ],
@@ -97,9 +56,9 @@ class SignupPasienScreen extends StatelessWidget {
                 height: 81,
               ),
               CustomRedButton(
-                title: 'Daftar',
+                title: 'Login',
                 onPressed: () {
-                  Get.toNamed(Routes.onboarding);
+                  Get.toNamed(Routes.mainWrapper);
                 },
               )
             ],

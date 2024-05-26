@@ -5,8 +5,8 @@ import 'package:cardi_care/views/widgets/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SignupPasienScreen extends StatelessWidget {
-  const SignupPasienScreen({super.key});
+class SignupKeluargaScreen extends StatelessWidget {
+  const SignupKeluargaScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,40 +48,6 @@ class SignupPasienScreen extends StatelessWidget {
                   ),
                   CustomFormField(
                     title: 'Email',
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomFormField(
-                          title: 'Tanggal Lahir',
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Expanded(
-                        child: CustomFormField(
-                          title: 'Jenis Kelamin',
-                        ),
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CustomFormField(
-                          title: 'Tinggi Badan',
-                        ),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Expanded(
-                        child: CustomFormField(
-                          title: 'Berat Badan',
-                        ),
-                      )
-                    ],
                   ),
                   CustomFormField(
                     title: 'Kata Sandi',

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-class SignasScreen extends StatelessWidget {
-  const SignasScreen({super.key});
+class SignasLoginScreen extends StatelessWidget {
+  const SignasLoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class SignasScreen extends StatelessWidget {
               SizedBox(
                 width: double.maxFinite,
                 child: ElevatedButton(
-                  onPressed: () => Get.toNamed(Routes.signupPasien),
+                  onPressed: () => Get.toNamed(Routes.signinPasien),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: whiteColor,
                       side: BorderSide(color: redColor),
@@ -39,7 +39,7 @@ class SignasScreen extends StatelessWidget {
               SizedBox(
                 width: double.maxFinite,
                 child: ElevatedButton(
-                  onPressed: () => Get.toNamed(Routes.signupKeluarga),
+                  onPressed: () => Get.toNamed(Routes.signinKeluarga),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: whiteColor,
                       side: BorderSide(color: redColor),
