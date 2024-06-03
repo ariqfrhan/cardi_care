@@ -152,3 +152,47 @@ class FeatureButtons extends StatelessWidget {
     );
   }
 }
+
+class ProfileButtons extends StatelessWidget {
+  final String title;
+  final VoidCallback? onPressed;
+
+  const ProfileButtons({
+    super.key,
+    required this.title,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ZoomTapAnimation(
+      onTap: () {
+        onPressed?.call();
+      },
+      child: Container(
+        margin: const EdgeInsets.only(top: 12),
+        decoration: BoxDecoration(
+          color: pinkColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: redText.copyWith(
+                  fontWeight: bold,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            const Icon(Icons.navigate_next),
+          ],
+        ),
+      ),
+    );
+  }
+}
