@@ -1,7 +1,9 @@
+import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -43,35 +45,53 @@ class HomeScreen extends StatelessWidget {
                       fontWeight: medium,
                     ),
                   ),
-                  const FeatureButtons(
+                  FeatureButtons(
                     title: 'Olahraga',
                     icons: Icons.man,
                     status: false,
+                    onPressed: () {
+                      Get.toNamed(Routes.userOlahraga);
+                    },
                   ),
-                  const FeatureButtons(
+                  FeatureButtons(
                     title: 'Diet Rendah Garam',
                     icons: Icons.rice_bowl,
                     status: true,
+                    onPressed: () {
+                      Get.toNamed(Routes.userDiet);
+                    },
                   ),
-                  const FeatureButtons(
+                  FeatureButtons(
                     title: 'Konsumsi Obat',
                     icons: Icons.medication_outlined,
                     status: false,
+                    onPressed: () {
+                      Get.toNamed(Routes.userObat);
+                    },
                   ),
-                  const FeatureButtons(
+                  FeatureButtons(
                     title: 'Berat Badan',
                     icons: Icons.monitor_weight,
                     status: false,
+                    onPressed: () {
+                      Get.toNamed(Routes.userBerat);
+                    },
                   ),
-                  const FeatureButtons(
+                  FeatureButtons(
                     title: 'Pembatasan Cairan',
                     icons: Icons.water,
                     status: false,
+                    onPressed: () {
+                      Get.toNamed(Routes.userCairan);
+                    },
                   ),
-                  const FeatureButtons(
+                  FeatureButtons(
                     title: 'Merokok & Alkohol',
                     icons: Icons.no_drinks,
                     status: true,
+                    onPressed: () {
+                      Get.toNamed(Routes.userMerokokAlkohol);
+                    },
                   ),
                 ],
               ),

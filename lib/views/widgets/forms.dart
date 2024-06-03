@@ -14,7 +14,7 @@ class CustomFormField extends StatelessWidget {
       {super.key,
       required this.title,
       this.obscureText = false,
-      this.isShowTitle = true,
+      this.isShowTitle = false,
       this.keyboardType,
       this.controller,
       this.hint,
@@ -25,14 +25,14 @@ class CustomFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // isShowTitle
-        //     ? Text(
-        //         title,
-        //         style: blackText.copyWith(fontWeight: medium),
-        //       )
-        //     : const SizedBox(
-        //         height: 0,
-        //       ),
+        isShowTitle
+            ? Text(
+                title,
+                style: blackText.copyWith(fontWeight: medium),
+              )
+            : const SizedBox(
+                height: 0,
+              ),
         const SizedBox(
           height: 8,
         ),

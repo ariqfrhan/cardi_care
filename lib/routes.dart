@@ -1,6 +1,12 @@
 import 'package:cardi_care/views/SignIn/signas_login_screen.dart';
 import 'package:cardi_care/views/SignIn/signin_keluarga_screen.dart';
 import 'package:cardi_care/views/SignIn/signin_pasien_screen.dart';
+import 'package:cardi_care/views/UserFeature/berat_view.dart';
+import 'package:cardi_care/views/UserFeature/cairan_view.dart';
+import 'package:cardi_care/views/UserFeature/diet_view.dart';
+import 'package:cardi_care/views/UserFeature/merokok_alkohol_view.dart';
+import 'package:cardi_care/views/UserFeature/obat_view.dart';
+import 'package:cardi_care/views/UserFeature/olahraga_view.dart';
 import 'package:cardi_care/views/home_wrapper/main_wrapper_screen.dart';
 import 'package:cardi_care/views/onboarding_screen.dart';
 import 'package:cardi_care/views/signas_screen.dart';
@@ -22,6 +28,12 @@ class Routes {
   static String mainWrapper = '/main-wrapper';
   static String signinPasien = '/signin_pasien';
   static String signinKeluarga = '/signin_keluarga';
+  static String userOlahraga = '/user_olahraga';
+  static String userDiet = '/user_diet';
+  static String userObat = '/user_obat';
+  static String userBerat = '/user_berat';
+  static String userCairan = '/user_cairan';
+  static String userMerokokAlkohol = '/user_merokok_alkohol';
 
   static List<GetPage> routes = [
     GetPage(
@@ -59,6 +71,30 @@ class Routes {
     GetPage(
       name: signupKeluarga,
       page: () => const SigninKeluargaScreen(),
+    ),
+    GetPage(
+      name: userOlahraga,
+      page: () => const OlahragaView(),
+    ),
+    GetPage(
+      name: userDiet,
+      page: () => const DietView(),
+    ),
+    GetPage(
+      name: userObat,
+      page: () => const ObatView(),
+    ),
+    GetPage(
+      name: userBerat,
+      page: () => const BeratView(),
+    ),
+    GetPage(
+      name: userCairan,
+      page: () => const CairanView(),
+    ),
+    GetPage(
+      name: userMerokokAlkohol,
+      page: () => const MerokokAlkoholView(),
     ),
   ];
 }
