@@ -41,7 +41,7 @@ class ProfileScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Daiyan Uthsa Rafif',
+                      'Ariq Farhan',
                       style: blackText.copyWith(fontSize: 22),
                     ),
                     Text(
@@ -60,6 +60,10 @@ class ProfileScreen extends StatelessWidget {
           ProfileButtons(title: 'Riwayat'),
           ProfileButtons(title: 'Obat'),
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: whiteColor,
+        child: CustomRedButton(title: 'Keluar'),
       ),
     );
   }

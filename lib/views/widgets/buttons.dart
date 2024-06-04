@@ -196,3 +196,54 @@ class ProfileButtons extends StatelessWidget {
     );
   }
 }
+
+class BarIndicator extends StatelessWidget {
+  final String title;
+  final double calculate;
+  final String total;
+
+  const BarIndicator({
+    super.key,
+    required this.title,
+    required this.calculate,
+    required this.total,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              title,
+              style: blackText.copyWith(fontSize: 14),
+              softWrap: true,
+            ),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          Expanded(
+            flex: 3,
+            child: Stack(alignment: Alignment.topRight, children: [
+              LinearProgressIndicator(
+                minHeight: 20,
+                color: redColor,
+                value: calculate,
+              ),
+              Text(
+                total,
+                style: blackText.copyWith(
+                  fontSize: 14,
+                ),
+              )
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+}
