@@ -12,7 +12,7 @@ class RecordMinggu extends StatelessWidget {
         children: [
           BarIndicator(
             title: 'Konsumsi Obat',
-            calculate: 0.57,
+            calculate: 0.9,
             total: '4/7',
           ),
           BarIndicator(

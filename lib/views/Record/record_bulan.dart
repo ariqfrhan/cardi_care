@@ -12,7 +12,7 @@ class RecordBulan extends StatelessWidget {
         children: [
           BarIndicator(
             title: 'Konsumsi Obat',
-            calculate: 0.57,
+            calculate: 0.1,
             total: '4/7',
           ),
           BarIndicator(
