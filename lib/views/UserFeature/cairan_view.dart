@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cardi_care/shared/theme.dart';
+import 'package:cardi_care/shared/utils.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class CairanView extends StatefulWidget {
@@ -13,6 +17,7 @@ class CairanView extends StatefulWidget {
 class _CairanViewState extends State<CairanView> {
   late TextEditingController dateCtl = TextEditingController();
   String? selectedOption;
+  XFile? selectedImage;
 
   List<String> options = ['Berat', 'Ringan', 'Sedang'];
 
@@ -26,6 +31,13 @@ class _CairanViewState extends State<CairanView> {
   void dispose() {
     super.dispose();
     dateCtl.dispose();
+  }
+
+  bool validation() {
+    if (selectedImage == null) {
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -148,14 +160,56 @@ class _CairanViewState extends State<CairanView> {
               decoration: BoxDecoration(
                 color: pinkColor,
                 borderRadius: BorderRadius.circular(10),
+                image: selectedImage == null
+                    ? null
+                    : DecorationImage(
+                        image: FileImage(File(selectedImage!.path)),
+                        fit: BoxFit.cover,
+                      ),
               ),
-              child: const Center(
-                child: Text('Dokumentasikan aktivitas dietmu'),
-              ),
+              child: selectedImage == null
+                  ? Center(
+                      child: Text(
+                        'Dokumentasikan aktivitas dietmu',
+                        style: blackText,
+                      ),
+                    )
+                  : null,
             ),
             const SizedBox(
-              height: 4,
+              height: 8,
             ),
+            Row(
+              children: [
+                Expanded(
+                  child: PickImagesButton(
+                    icon: Icons.camera_alt,
+                    title: 'Kamera',
+                    onPressed: () async {
+                      final image = await selectCameraImage();
+                      setState(() {
+                        selectedImage = image;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  width: 8,
+                ),
+                Expanded(
+                  child: PickImagesButton(
+                    icon: Icons.photo,
+                    title: 'Galeri',
+                    onPressed: () async {
+                      final image = await selectGalleryImage();
+                      setState(() {
+                        selectedImage = image;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

@@ -74,6 +74,56 @@ class CustomOutlineButton extends StatelessWidget {
   }
 }
 
+class PickImagesButton extends StatelessWidget {
+  final String title;
+  final double width;
+  final double height;
+  final IconData icon;
+  final VoidCallback? onPressed;
+
+  const PickImagesButton({
+    super.key,
+    required this.title,
+    this.width = double.infinity,
+    required this.icon,
+    this.height = 40,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: ElevatedButton(
+          onPressed: () {
+            onPressed?.call();
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: whiteColor,
+              side: BorderSide(color: redColor),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: redColor,
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              Text(
+                title,
+                style: redText.copyWith(fontSize: 16, fontWeight: semibold),
+              ),
+            ],
+          )),
+    );
+  }
+}
+
 class FeatureButtons extends StatelessWidget {
   final String title;
   final IconData icons;
