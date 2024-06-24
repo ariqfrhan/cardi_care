@@ -55,3 +55,94 @@ class CustomFormField extends StatelessWidget {
     );
   }
 }
+
+class ObatForms extends StatefulWidget {
+  final String namaObat;
+  final int jam;
+  final Function(String?) onOptionChanged;
+
+  const ObatForms(
+      {super.key,
+      required this.namaObat,
+      required this.jam,
+      required this.onOptionChanged});
+
+  @override
+  State<ObatForms> createState() => _ObatFormsState();
+}
+
+class _ObatFormsState extends State<ObatForms> {
+  late TextEditingController dateCtl = TextEditingController();
+  String? selectedOptions;
+  List<String> options = ['Belum', 'Mandiri', 'Dibantu'];
+
+  @override
+  void initState() {
+    super.initState();
+    dateCtl = TextEditingController();
+    selectedOptions = options[0];
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    dateCtl.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        color: pinkColor,
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              widget.namaObat,
+              style: blackText.copyWith(fontWeight: bold),
+            ),
+          ),
+          Expanded(
+            child: DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: redColor,
+                floatingLabelStyle: TextStyle(
+                  color: redColor,
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: redColor,
+                  ),
+                ),
+              ),
+              iconEnabledColor: whiteColor,
+              dropdownColor: redColor,
+              value: selectedOptions,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedOptions = newValue;
+                });
+                widget.onOptionChanged(newValue);
+              },
+              items: options.map<DropdownMenuItem<String>>(
+                (String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: whiteText.copyWith(fontSize: 16, fontWeight: bold),
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
