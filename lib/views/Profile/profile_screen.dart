@@ -1,65 +1,82 @@
+import 'package:cardi_care/model/user_model.dart';
+import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
+import 'package:cardi_care/shared/utils.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AuthServices auth = Get.find<AuthServices>();
+
     return Scaffold(
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        children: [
-          const SizedBox(
-            height: 86,
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
+      body: FutureBuilder(
+        future: auth.getUserData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData) {
+            return const Center(child: Text('No user data found'));
+          }
+
+          UserModel user = snapshot.data!;
+          DateTime birthDate = DateTime.parse(user.tempatTL);
+          int age = Utils.calculateAge(birthDate);
+
+          return ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             children: [
-              Container(
-                height: 120,
-                width: 120,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Icon(
-                  Icons.person,
-                  color: whiteColor,
-                  size: 112,
-                ),
-              ),
-              const SizedBox(
-                width: 16,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Ariq Farhan',
-                      style: blackText.copyWith(fontSize: 22),
+              const SizedBox(height: 86),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 120,
+                    width: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(100),
                     ),
-                    Text(
-                      '21 tahun',
-                      style: blackText.copyWith(fontSize: 16),
+                    child: Icon(
+                      Icons.person,
+                      color: whiteColor,
+                      size: 112,
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          user.name,
+                          style: blackText.copyWith(fontSize: 22),
+                        ),
+                        Text(
+                          '$age tahun',
+                          style: blackText.copyWith(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 64),
+              ProfileButtons(title: 'Pengaturan'),
+              ProfileButtons(title: 'Riwayat'),
+              ProfileButtons(title: 'Obat'),
             ],
-          ),
-          const SizedBox(
-            height: 64,
-          ),
-          ProfileButtons(title: 'Pengaturan'),
-          ProfileButtons(title: 'Riwayat'),
-          ProfileButtons(title: 'Obat'),
-        ],
+          );
+        },
       ),
       bottomNavigationBar: BottomAppBar(
         color: whiteColor,

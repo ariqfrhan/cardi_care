@@ -1,9 +1,17 @@
+import 'package:cardi_care/firebase_options.dart';
 import 'package:cardi_care/routes.dart';
+import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  Get.put(AuthServices());
   runApp(const MainApp());
 }
 

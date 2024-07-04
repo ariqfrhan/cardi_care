@@ -1,12 +1,44 @@
+import 'package:cardi_care/model/user_model.dart';
 import 'package:cardi_care/routes.dart';
+import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:cardi_care/views/widgets/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SignupPasienScreen extends StatelessWidget {
+class SignupPasienScreen extends StatefulWidget {
   const SignupPasienScreen({super.key});
+
+  @override
+  State<SignupPasienScreen> createState() => _SignupPasienScreenState();
+}
+
+class _SignupPasienScreenState extends State<SignupPasienScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  final AuthServices _authServices = AuthServices();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _dobController.dispose();
+    _genderController.dispose();
+    _heightController.dispose();
+    _weightController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,19 +73,22 @@ class SignupPasienScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              const Column(
+              Column(
                 children: [
                   CustomFormField(
                     title: 'Nama Lengkap',
+                    controller: _nameController,
                   ),
                   CustomFormField(
                     title: 'Email',
+                    controller: _emailController,
                   ),
                   Row(
                     children: [
                       Expanded(
                         child: CustomFormField(
                           title: 'Tanggal Lahir',
+                          controller: _dobController,
                         ),
                       ),
                       SizedBox(
@@ -62,6 +97,7 @@ class SignupPasienScreen extends StatelessWidget {
                       Expanded(
                         child: CustomFormField(
                           title: 'Jenis Kelamin',
+                          controller: _genderController,
                         ),
                       )
                     ],
@@ -71,6 +107,7 @@ class SignupPasienScreen extends StatelessWidget {
                       Expanded(
                         child: CustomFormField(
                           title: 'Tinggi Badan',
+                          controller: _heightController,
                         ),
                       ),
                       SizedBox(
@@ -79,6 +116,7 @@ class SignupPasienScreen extends StatelessWidget {
                       Expanded(
                         child: CustomFormField(
                           title: 'Berat Badan',
+                          controller: _weightController,
                         ),
                       )
                     ],
@@ -86,10 +124,12 @@ class SignupPasienScreen extends StatelessWidget {
                   CustomFormField(
                     title: 'Kata Sandi',
                     obscureText: true,
+                    controller: _passwordController,
                   ),
                   CustomFormField(
                     title: 'Konfirmasi Kata Sandi',
                     obscureText: true,
+                    controller: _confirmPasswordController,
                   ),
                 ],
               ),
@@ -98,8 +138,28 @@ class SignupPasienScreen extends StatelessWidget {
               ),
               CustomRedButton(
                 title: 'Daftar',
-                onPressed: () {
-                  Get.toNamed(Routes.onboarding);
+                onPressed: () async {
+                  if (_passwordController.text ==
+                      _confirmPasswordController.text) {
+                    UserModel user = UserModel(
+                      uid: '',
+                      name: _nameController.text,
+                      email: _emailController.text,
+                      tempatTL: _dobController.text,
+                      gender: _genderController.text,
+                      height: _heightController.text,
+                      weight: _weightController.text,
+                    );
+
+                    await _authServices.signUpWithEmail(
+                      _emailController.text,
+                      _passwordController.text,
+                      user,
+                    );
+                  } else {
+                    Get.snackbar(
+                        'Registration Failed', 'Password tidak sesuai');
+                  }
                 },
               )
             ],
