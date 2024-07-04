@@ -80,7 +80,12 @@ class ProfileScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomAppBar(
         color: whiteColor,
-        child: CustomRedButton(title: 'Keluar'),
+        child: CustomRedButton(
+          title: 'Keluar',
+          onPressed: () {
+            auth.signOut();
+          },
+        ),
       ),
     );
   }

@@ -69,4 +69,10 @@ class AuthServices {
 
     return UserModel.fromMap(userData.data() as Map<String, dynamic>);
   }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
+    await _googleSignIn.signOut();
+    Get.offAllNamed(Routes.splash);
+  }
 }

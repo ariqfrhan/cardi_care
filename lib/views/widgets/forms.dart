@@ -8,6 +8,7 @@ class CustomFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final TextEditingController? controller;
   final String? hint;
+  final String? suffixText;
   final Function(String)? onFieldSubmitted;
 
   const CustomFormField(
@@ -18,7 +19,8 @@ class CustomFormField extends StatelessWidget {
       this.keyboardType,
       this.controller,
       this.hint,
-      this.onFieldSubmitted});
+      this.onFieldSubmitted,
+      this.suffixText = ''});
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class CustomFormField extends StatelessWidget {
           obscureText: obscureText,
           keyboardType: keyboardType,
           decoration: InputDecoration(
+            suffix: Text(suffixText!),
             labelText: title,
             focusColor: redColor,
             floatingLabelStyle: TextStyle(color: redColor),

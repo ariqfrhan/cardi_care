@@ -6,6 +6,7 @@ import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:cardi_care/views/widgets/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class SignupPasienScreen extends StatefulWidget {
   const SignupPasienScreen({super.key});
@@ -83,12 +84,39 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                     title: 'Email',
                     controller: _emailController,
                   ),
+                  const SizedBox(
+                    height: 8,
+                  ),
                   Row(
                     children: [
                       Expanded(
-                        child: CustomFormField(
-                          title: 'Tanggal Lahir',
+                        child: TextFormField(
                           controller: _dobController,
+                          decoration: InputDecoration(
+                              fillColor: pinkColor,
+                              labelText: 'Tanggal',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              suffixIcon: const Icon(Icons.date_range),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: redColor))),
+                          onTap: () async {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            DateTime now = DateTime.now();
+                            DateTime? dateTime = await showDatePicker(
+                              context: context,
+                              firstDate:
+                                  now.subtract(const Duration(days: 36500)),
+                              lastDate: now,
+                            );
+                            if (dateTime != null) {
+                              String formattedDate =
+                                  DateFormat('yyyy-MM-dd').format(dateTime);
+                              setState(() {
+                                _dobController.text = formattedDate;
+                              });
+                            }
+                          },
                         ),
                       ),
                       SizedBox(
@@ -108,6 +136,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                         child: CustomFormField(
                           title: 'Tinggi Badan',
                           controller: _heightController,
+                          suffixText: 'cm',
                         ),
                       ),
                       SizedBox(
@@ -117,6 +146,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                         child: CustomFormField(
                           title: 'Berat Badan',
                           controller: _weightController,
+                          suffixText: 'kg',
                         ),
                       )
                     ],
