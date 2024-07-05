@@ -111,7 +111,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                             );
                             if (dateTime != null) {
                               String formattedDate =
-                                  DateFormat('yyyy-MM-dd').format(dateTime);
+                                  DateFormat('dd-MM-yyyy').format(dateTime);
                               setState(() {
                                 _dobController.text = formattedDate;
                               });

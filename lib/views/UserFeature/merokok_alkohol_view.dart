@@ -1,6 +1,9 @@
+import 'package:cardi_care/model/rokok_alkohol_model.dart';
+import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class MerokokAlkoholView extends StatefulWidget {
@@ -11,7 +14,7 @@ class MerokokAlkoholView extends StatefulWidget {
 }
 
 class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
-  late TextEditingController dateCtl = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
   String? selectedOptionRokok;
   String? selectedOptionAlkohol;
 
@@ -23,13 +26,11 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
   @override
   void initState() {
     super.initState();
-    dateCtl = TextEditingController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    dateCtl.dispose();
   }
 
   @override
@@ -137,6 +138,29 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
             const SizedBox(
               height: 8,
             ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Catatan',
+              style: blackText.copyWith(
+                fontSize: 14,
+                fontWeight: semibold,
+              ),
+            ),
+            TextFormField(
+              controller: notesController,
+              maxLines: 2,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: pinkColor,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  floatingLabelStyle: TextStyle(color: redColor),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: redColor)),
+                  hintText: 'Tambahkan catatan disini'),
+            ),
           ],
         ),
       ),
@@ -144,7 +168,24 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
         padding: const EdgeInsets.all(16),
         child: CustomRedButton(
           title: 'Simpan',
-          onPressed: () {},
+          onPressed: () async {
+            if (selectedOptionAlkohol == null || selectedOptionRokok == null) {
+              Get.snackbar('Error', 'Harap isi semua bagian');
+            } else {
+              RokokAlkoholModel rokok = RokokAlkoholModel(
+                id: '',
+                userId: '',
+                date: DateTime.now().toIso8601String(),
+                merokok: selectedOptionRokok!,
+                alkohol: selectedOptionAlkohol!,
+                notes: notesController.text.isNotEmpty
+                    ? notesController.text
+                    : null,
+              );
+
+              await TugasServices().addRokokAlkoholData(rokok);
+            }
+          },
         ),
       ),
     );

@@ -27,7 +27,7 @@ class ProfileScreen extends StatelessWidget {
           }
 
           UserModel user = snapshot.data!;
-          DateTime birthDate = DateTime.parse(user.tempatTL);
+          DateTime birthDate = Utils.convertToDateTime(user.tempatTL);
           int age = Utils.calculateAge(birthDate);
 
           return ListView(

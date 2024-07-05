@@ -1,7 +1,10 @@
+import 'package:cardi_care/model/olahraga_model.dart';
+import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:cardi_care/shared/theme.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class OlahragaView extends StatefulWidget {
@@ -13,6 +16,9 @@ class OlahragaView extends StatefulWidget {
 
 class _OlahragaViewState extends State<OlahragaView> {
   late TextEditingController dateCtl = TextEditingController();
+  final TextEditingController typeController = TextEditingController();
+  final TextEditingController durationController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
   String? selectedOption;
 
   List<String> options = ['Berat', 'Ringan', 'Sedang'];
@@ -36,7 +42,7 @@ class _OlahragaViewState extends State<OlahragaView> {
         backgroundColor: redColor,
         foregroundColor: whiteColor,
         title: Text(
-          'Olahraga',
+          'Aktivitas',
           style: whiteText.copyWith(
             fontSize: 20,
             fontWeight: semibold,
@@ -45,130 +51,175 @@ class _OlahragaViewState extends State<OlahragaView> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Kenapa olahraga penting?',
-              style: blackText.copyWith(
-                fontSize: 18,
-                fontWeight: semibold,
-              ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.',
-              style: blackText.copyWith(
-                fontSize: 12,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Olahragaku',
-              style: blackText.copyWith(
-                fontSize: 16,
-                fontWeight: semibold,
-              ),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            TextFormField(
-              controller: dateCtl,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: pinkColor,
-                labelText: 'Tanggal',
-                suffixIcon: const Icon(Icons.date_range),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: redColor,
-                  ),
+        child: ListView(children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Kenapa aktivitas fisik?',
+                style: blackText.copyWith(
+                  fontSize: 18,
+                  fontWeight: semibold,
                 ),
               ),
-              onTap: () async {
-                FocusScope.of(context).requestFocus(FocusNode());
-                DateTime now = DateTime.now();
-                DateTime? dateTime = await showDatePicker(
-                  context: context,
-                  initialDate: now.subtract(const Duration(days: 7)),
-                  firstDate: now
-                      .subtract(const Duration(days: 7)), // Seminggu yang lalu
-                  lastDate: now,
-                );
-                if (dateTime != null) {
-                  String formattedDate =
-                      DateFormat('dd-MM-yyyy').format(dateTime);
-                  setState(() {
-                    dateCtl.text = formattedDate;
-                  });
-                }
-              },
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(
-                labelText: 'Jenis olahraga',
-                filled: true,
-                fillColor: pinkColor,
-                floatingLabelStyle: TextStyle(color: redColor),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: redColor,
-                  ),
+              const SizedBox(
+                height: 8,
+              ),
+              Text(
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.',
+                style: blackText.copyWith(
+                  fontSize: 12,
                 ),
               ),
-              value: selectedOption,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedOption = newValue;
-                });
-              },
-              items: options.map<DropdownMenuItem<String>>(
-                (String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                },
-              ).toList(),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: pinkColor,
-                floatingLabelStyle: TextStyle(color: redColor),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: redColor)),
-                suffixIcon: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Menit',
-                      style: blackText.copyWith(fontSize: 12, fontWeight: bold),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Aktivitasku',
+                style: blackText.copyWith(
+                  fontSize: 16,
+                  fontWeight: semibold,
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: dateCtl,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: pinkColor,
+                  labelText: 'Tanggal',
+                  suffixIcon: const Icon(Icons.date_range),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: redColor,
                     ),
-                  ],
+                  ),
                 ),
-                labelText: 'Durasi Olahraga',
+                onTap: () async {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  DateTime now = DateTime.now();
+                  DateTime? dateTime = await showDatePicker(
+                    context: context,
+                    initialDate: now.subtract(const Duration(days: 7)),
+                    firstDate: now.subtract(
+                        const Duration(days: 7)), // Seminggu yang lalu
+                    lastDate: now,
+                  );
+                  if (dateTime != null) {
+                    String formattedDate =
+                        DateFormat('dd-MM-yyyy').format(dateTime);
+                    setState(() {
+                      dateCtl.text = formattedDate;
+                    });
+                  }
+                },
               ),
-            )
-          ],
-        ),
+              const SizedBox(
+                height: 8,
+              ),
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: 'Jenis olahraga',
+                  filled: true,
+                  fillColor: pinkColor,
+                  floatingLabelStyle: TextStyle(color: redColor),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: redColor,
+                    ),
+                  ),
+                ),
+                value: selectedOption,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedOption = newValue;
+                  });
+                },
+                items: options.map<DropdownMenuItem<String>>(
+                  (String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  },
+                ).toList(),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+                controller: durationController,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: pinkColor,
+                  floatingLabelStyle: TextStyle(color: redColor),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: redColor)),
+                  suffixIcon: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Menit',
+                        style:
+                            blackText.copyWith(fontSize: 12, fontWeight: bold),
+                      ),
+                    ],
+                  ),
+                  labelText: 'Durasi Olahraga',
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Catatan',
+                style: blackText.copyWith(
+                  fontSize: 14,
+                  fontWeight: semibold,
+                ),
+              ),
+              TextFormField(
+                maxLines: 2,
+                decoration: InputDecoration(
+                    filled: true,
+                    fillColor: pinkColor,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    floatingLabelStyle: TextStyle(color: redColor),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: redColor)),
+                    hintText: 'Tambahkan catatan disini'),
+              ),
+            ],
+          ),
+        ]),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
         child: CustomRedButton(
           title: 'Simpan',
-          onPressed: () {},
+          onPressed: () async {
+            if (dateCtl.text.isEmpty ||
+                selectedOption == null ||
+                durationController.text.isEmpty) {
+              Get.snackbar('Error', 'Harap isi semua bagian');
+            } else {
+              OlahragaModel olahraga = OlahragaModel(
+                id: '',
+                userId: '',
+                date: dateCtl.text,
+                type: selectedOption!,
+                duration: durationController.text,
+                notes: notesController.text.isNotEmpty
+                    ? notesController.text
+                    : null,
+              );
+
+              await TugasServices().addOlahragaData(olahraga);
+            }
+          },
         ),
       ),
     );

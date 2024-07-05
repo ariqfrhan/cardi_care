@@ -6,11 +6,9 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthServices {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  GoogleSignInAccount? _currentUser;
   UserCredential? userCredential;
 
   Future<void> signUpWithEmail(
@@ -62,17 +60,17 @@ class AuthServices {
     }
   }
 
+  Future<void> signOut() async {
+    await _auth.signOut();
+    await _googleSignIn.signOut();
+    Get.offAllNamed(Routes.splash);
+  }
+
   Future<UserModel> getUserData() async {
     User? user = _auth.currentUser;
     DocumentSnapshot userData =
         await firestore.collection('users').doc(user!.uid).get();
 
     return UserModel.fromMap(userData.data() as Map<String, dynamic>);
-  }
-
-  Future<void> signOut() async {
-    await _auth.signOut();
-    await _googleSignIn.signOut();
-    Get.offAllNamed(Routes.splash);
   }
 }

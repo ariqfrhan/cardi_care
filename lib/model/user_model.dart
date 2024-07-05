@@ -17,7 +17,6 @@ class UserModel {
     required this.weight,
   });
 
-  // Mengubah objek UserModel menjadi Map
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
@@ -30,7 +29,6 @@ class UserModel {
     };
   }
 
-  // Membuat objek UserModel dari Map
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       uid: map['uid'],

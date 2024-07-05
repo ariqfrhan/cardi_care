@@ -1,6 +1,12 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class Utils {
+  static DateTime convertToDateTime(String date) {
+    final DateFormat dateFormat = DateFormat('dd-MM-yyyy');
+    return dateFormat.parse(date);
+  }
+
   static int calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
     int age = currentDate.year - birthDate.year;
