@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/shared/utils.dart';
@@ -121,10 +122,17 @@ class _CairanViewState extends State<CairanView> {
                       lastDate: now,
                     );
                     if (dateTime != null) {
-                      String formattedDate =
-                          DateFormat('dd-MM-yyyy').format(dateTime);
+                      DateTime selectedDateTime = DateTime(
+                        dateTime.year,
+                        dateTime.month,
+                        dateTime.day,
+                        now.hour,
+                        now.minute,
+                        now.second,
+                      );
+                      String iso8601String = selectedDateTime.toIso8601String();
                       setState(() {
-                        dateCtl.text = formattedDate;
+                        dateCtl.text = iso8601String;
                       });
                     }
                   },
@@ -265,6 +273,7 @@ class _CairanViewState extends State<CairanView> {
                   selectedImage,
                   notesController.text.isNotEmpty ? notesController.text : null,
                 );
+                Get.offAllNamed(Routes.mainWrapper);
               } catch (e) {
                 Get.snackbar('Error', e.toString());
               }

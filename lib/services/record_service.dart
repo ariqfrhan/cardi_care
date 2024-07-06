@@ -99,4 +99,51 @@ class RecordService {
   Future<int> countRokokRecordsInLastMonth() async {
     return await countRecords('rokok-alkohol', const Duration(days: 30));
   }
+
+  Future<bool> checkData(String collections) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user == null) {
+        throw Exception('User not logged in');
+      }
+
+      DateTime now = DateTime.now();
+      DateTime startOfDay = DateTime(now.year, now.month, now.day);
+      DateTime endOfDay = startOfDay.add(const Duration(days: 1));
+      final snapshot = await firestore
+          .collection(collections)
+          .where('userId', isEqualTo: user.uid)
+          .where('date', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
+          .where('date', isLessThan: endOfDay.toIso8601String())
+          .get();
+
+      return snapshot.docs.isNotEmpty;
+    } catch (e) {
+      throw Exception('Error');
+    }
+  }
+
+  Future<bool> checkObatRecords() async {
+    return await checkData('riwayat-obat');
+  }
+
+  Future<bool> checkDietRecords() async {
+    return await checkData('diet-rendah-garam');
+  }
+
+  Future<bool> checkCairanRecords() async {
+    return await checkData('pembatasan-cairan');
+  }
+
+  Future<bool> checkBeratRecords() async {
+    return await checkData('berat');
+  }
+
+  Future<bool> checkOlahragaRecords() async {
+    return await checkData('olahraga');
+  }
+
+  Future<bool> checkRokokRecords() async {
+    return await checkData('rokok-alkohol');
+  }
 }

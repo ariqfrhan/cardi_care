@@ -1,4 +1,5 @@
 import 'package:cardi_care/model/user_model.dart';
+import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/shared/utils.dart';
@@ -72,7 +73,12 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 64),
               ProfileButtons(title: 'Pengaturan'),
-              ProfileButtons(title: 'Riwayat'),
+              ProfileButtons(
+                title: 'Riwayat',
+                onPressed: () {
+                  Get.toNamed(Routes.userRiwayat);
+                },
+              ),
               ProfileButtons(title: 'Obat'),
             ],
           );

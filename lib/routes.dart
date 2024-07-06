@@ -1,3 +1,4 @@
+import 'package:cardi_care/views/Profile/riwayat_screen.dart';
 import 'package:cardi_care/views/SignIn/signas_login_screen.dart';
 import 'package:cardi_care/views/SignIn/signin_keluarga_screen.dart';
 import 'package:cardi_care/views/SignIn/signin_pasien_screen.dart';
@@ -34,6 +35,7 @@ class Routes {
   static String userBerat = '/user_berat';
   static String userCairan = '/user_cairan';
   static String userMerokokAlkohol = '/user_merokok_alkohol';
+  static String userRiwayat = '/user-riwayat';
 
   static List<GetPage> routes = [
     GetPage(
@@ -96,5 +98,9 @@ class Routes {
       name: userMerokokAlkohol,
       page: () => const MerokokAlkoholView(),
     ),
+    GetPage(
+      name: userRiwayat,
+      page: () => const UserRiwayat(),
+    )
   ];
 }
