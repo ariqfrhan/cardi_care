@@ -226,7 +226,7 @@ class _OlahragaViewState extends State<OlahragaView> {
               );
 
               await TugasServices().addOlahragaData(olahraga);
-              Get.offNamed(Routes.mainWrapper);
+              Get.offAllNamed(Routes.mainWrapper);
             }
           },
         ),

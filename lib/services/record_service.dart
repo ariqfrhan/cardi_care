@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class RecordService {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   UserCredential? userCredential;
 
-  Future<int> countRecords(String collection, Duration duration) async {
+  Future<int> countRecords(String subCollection, Duration duration) async {
     try {
       User? user = _auth.currentUser;
       if (user == null) {
@@ -17,8 +16,9 @@ class RecordService {
       DateTime targetDate = now.subtract(duration);
 
       final snapshot = await firestore
-          .collection(collection)
-          .where('userId', isEqualTo: user.uid)
+          .collection('riwayat')
+          .doc(user.uid)
+          .collection(subCollection)
           .where('date', isGreaterThanOrEqualTo: targetDate.toIso8601String())
           .get();
 
@@ -100,7 +100,7 @@ class RecordService {
     return await countRecords('rokok-alkohol', const Duration(days: 30));
   }
 
-  Future<bool> checkData(String collections) async {
+  Future<bool> checkData(String subCollection) async {
     try {
       User? user = _auth.currentUser;
       if (user == null) {
@@ -111,15 +111,16 @@ class RecordService {
       DateTime startOfDay = DateTime(now.year, now.month, now.day);
       DateTime endOfDay = startOfDay.add(const Duration(days: 1));
       final snapshot = await firestore
-          .collection(collections)
-          .where('userId', isEqualTo: user.uid)
+          .collection('riwayat')
+          .doc(user.uid)
+          .collection(subCollection)
           .where('date', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
           .where('date', isLessThan: endOfDay.toIso8601String())
           .get();
 
       return snapshot.docs.isNotEmpty;
     } catch (e) {
-      throw Exception('Error');
+      throw Exception('Error: $e');
     }
   }
 

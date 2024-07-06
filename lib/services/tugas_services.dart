@@ -25,7 +25,12 @@ class TugasServices {
       User? user = _auth.currentUser;
       if (user != null) {
         olahraga = OlahragaModel(
-          id: firestore.collection('aktivitas').doc().id,
+          id: firestore
+              .collection('riwayat')
+              .doc(user.uid)
+              .collection('olahraga')
+              .doc()
+              .id,
           userId: user.uid,
           date: olahraga.date,
           type: olahraga.type,
@@ -34,6 +39,8 @@ class TugasServices {
         );
 
         await firestore
+            .collection('riwayat')
+            .doc(user.uid)
             .collection('olahraga')
             .doc(olahraga.id)
             .set(olahraga.toMap());
@@ -52,7 +59,12 @@ class TugasServices {
       User? user = _auth.currentUser;
       if (user != null) {
         rokok = RokokAlkoholModel(
-          id: firestore.collection("rokok-alkohol").doc().id,
+          id: firestore
+              .collection('riwayat')
+              .doc(user.uid)
+              .collection('rokok-alkohol')
+              .doc()
+              .id,
           userId: user.uid,
           date: rokok.date,
           merokok: rokok.merokok,
@@ -61,9 +73,12 @@ class TugasServices {
         );
 
         await firestore
-            .collection("rokok-alkohol")
+            .collection('riwayat')
+            .doc(user.uid)
+            .collection('rokok-alkohol')
             .doc(rokok.id)
             .set(rokok.toMap());
+
         Get.snackbar(
             'Success', 'Data aktivitas rokok dan alkohol berhasil ditambahkan');
       }
@@ -87,18 +102,29 @@ class TugasServices {
             storage.ref().child(imagePath).putFile(File(image.path));
         final TaskSnapshot downloadUrl = await uploadTask;
         imageUrl = await downloadUrl.ref.getDownloadURL();
-
-        final beratId = uuid.v4();
-        final beratData = BeratModel(
-            id: beratId,
-            userId: user.uid,
-            date: date,
-            weight: weight,
-            imageUrl: imageUrl,
-            notes: notes);
-
-        await firestore.collection('berat').doc(beratId).set(beratData.toMap());
       }
+
+      final beratData = BeratModel(
+        id: firestore
+            .collection('riwayat')
+            .doc(user.uid)
+            .collection('berat')
+            .doc()
+            .id,
+        userId: user.uid,
+        date: date,
+        weight: weight,
+        imageUrl: imageUrl,
+        notes: notes,
+      );
+
+      await firestore
+          .collection('riwayat')
+          .doc(user.uid)
+          .collection('berat')
+          .doc(beratData.id)
+          .set(beratData.toMap());
+
       Get.snackbar('Success', 'Data berat badan berhasil ditambahkan');
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -120,21 +146,29 @@ class TugasServices {
             storage.ref().child(imagePath).putFile(File(image.path));
         final TaskSnapshot downloadUrl = await uploadTask;
         imageUrl = await downloadUrl.ref.getDownloadURL();
-
-        final cairanId = uuid.v4();
-        final cairanData = CairanModel(
-            id: cairanId,
-            userId: user.uid,
-            date: date,
-            spoon: spoon,
-            imageUrl: imageUrl,
-            notes: notes);
-
-        await firestore
-            .collection('pembatasan-cairan')
-            .doc(cairanId)
-            .set(cairanData.toMap());
       }
+
+      final cairanData = CairanModel(
+        id: firestore
+            .collection('riwayat')
+            .doc(user.uid)
+            .collection('pembatasan-cairan')
+            .doc()
+            .id,
+        userId: user.uid,
+        date: date,
+        spoon: spoon,
+        imageUrl: imageUrl,
+        notes: notes,
+      );
+
+      await firestore
+          .collection('riwayat')
+          .doc(user.uid)
+          .collection('pembatasan-cairan')
+          .doc(cairanData.id)
+          .set(cairanData.toMap());
+
       Get.snackbar('Success', 'Data pembatasan cairan berhasil ditambahkan');
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -156,21 +190,29 @@ class TugasServices {
             storage.ref().child(imagePath).putFile(File(image.path));
         final TaskSnapshot downloadUrl = await uploadTask;
         imageUrl = await downloadUrl.ref.getDownloadURL();
-
-        final dietId = uuid.v4();
-        final dietData = DietModel(
-            id: dietId,
-            userId: user.uid,
-            date: date,
-            spoon: spoon,
-            imageUrl: imageUrl,
-            notes: notes);
-
-        await firestore
-            .collection('diet-rendah-garam')
-            .doc(dietId)
-            .set(dietData.toMap());
       }
+
+      final dietData = DietModel(
+        id: firestore
+            .collection('riwayat')
+            .doc(user.uid)
+            .collection('diet-rendah-garam')
+            .doc()
+            .id,
+        userId: user.uid,
+        date: date,
+        spoon: spoon,
+        imageUrl: imageUrl,
+        notes: notes,
+      );
+
+      await firestore
+          .collection('riwayat')
+          .doc(user.uid)
+          .collection('diet-rendah-garam')
+          .doc(dietData.id)
+          .set(dietData.toMap());
+
       Get.snackbar('Success', 'Data aktivitas berhasil ditambahkan');
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -184,16 +226,25 @@ class TugasServices {
         throw Exception('User not logged in');
       }
 
-      final obatId = uuid.v4();
       final obatData = ObatModel(
-        id: obatId,
+        id: firestore
+            .collection('riwayat')
+            .doc(user.uid)
+            .collection('obat')
+            .doc()
+            .id,
         userId: user.uid,
         nama: obat.nama,
         date: obat.date,
         status: obat.status,
       );
 
-      await firestore.collection('obat').doc(obatId).set(obatData.toMap());
+      await firestore
+          .collection('riwayat')
+          .doc(user.uid)
+          .collection('obat')
+          .doc(obatData.id)
+          .set(obatData.toMap());
 
       Get.snackbar('Success', 'Data obat berhasil ditambahkan');
     } catch (e) {
@@ -221,9 +272,13 @@ class TugasServices {
         throw Exception('User not logged in');
       }
 
-      final obatId = uuid.v4();
       final obatData = ObatModel(
-        id: obatId,
+        id: firestore
+            .collection('riwayat')
+            .doc(user.uid)
+            .collection('riwayat-obat')
+            .doc()
+            .id,
         userId: user.uid,
         nama: obat.nama,
         date: DateTime.now(),
@@ -231,8 +286,10 @@ class TugasServices {
       );
 
       await firestore
+          .collection('riwayat')
+          .doc(user.uid)
           .collection('riwayat-obat')
-          .doc(obatId)
+          .doc(obatData.id)
           .set(obatData.toMap());
 
       Get.snackbar(
