@@ -121,9 +121,10 @@ class _ObatViewState extends State<ObatView> {
                     fontSize: 12,
                   ),
                 ),
-                _buildObatSection('Pagi (06.00-10.00)', 6, 10),
+                _buildObatSection('Pagi (07.00-12.00)', 7, 12),
                 _buildObatSection('Siang (12.00-15.00)', 12, 15),
-                _buildObatSection('Malam (18.00-20.00)', 18, 20),
+                _buildObatSection('Sore (15.00-19.00)', 15, 19),
+                _buildObatSection('Malam (19.00-00.00)', 19, 24),
               ],
             ),
           ],
@@ -156,12 +157,19 @@ class _ObatViewState extends State<ObatView> {
           ),
           const SizedBox(height: 8),
           ...filteredObat.map((obat) {
-            return ObatForms(
-              namaObat: obat.nama,
-              jam: obat.date.hour,
-              onOptionChanged: (value) {
-                _handleOptionChanged(obat.id, value!);
-              },
+            return Column(
+              children: [
+                ObatForms(
+                  namaObat: obat.nama,
+                  jam: obat.date.hour,
+                  onOptionChanged: (value) {
+                    _handleOptionChanged(obat.id, value!);
+                  },
+                ),
+                const SizedBox(
+                  height: 8,
+                )
+              ],
             );
           }).toList(),
         ],

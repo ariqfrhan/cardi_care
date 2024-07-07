@@ -27,6 +27,19 @@ class Utils {
     return age;
   }
 
+  static String getWaktu(DateTime dateTime) {
+    int hour = dateTime.hour;
+    if (hour >= 7 && hour < 12) {
+      return 'Pagi';
+    } else if (hour >= 12 && hour < 15) {
+      return 'Siang';
+    } else if (hour >= 15 && hour < 19) {
+      return 'Sore';
+    } else {
+      return 'Malam';
+    }
+  }
+
   static Future<String> getInitialRoute() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
@@ -49,6 +62,15 @@ class Utils {
 
     if (keluargaSnapshot.exists) {
       return Routes.keluargaWrapper;
+    }
+
+    DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
+        .collection('admin')
+        .doc(user.uid)
+        .get();
+
+    if (adminSnapshot.exists) {
+      return Routes.adminWrapper;
     }
     return Routes.splash;
   }

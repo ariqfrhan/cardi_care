@@ -51,6 +51,21 @@ class SignasLoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(
+                width: double.maxFinite,
+                child: ElevatedButton(
+                  onPressed: () => Get.toNamed(Routes.signinAdmin),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: whiteColor,
+                      side: BorderSide(color: redColor),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12))),
+                  child: Text(
+                    'Admin',
+                    style: redText.copyWith(fontSize: 12, fontWeight: semibold),
+                  ),
+                ),
+              ),
             ],
           )),
     );

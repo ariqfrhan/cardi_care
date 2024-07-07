@@ -1,3 +1,4 @@
+import 'package:cardi_care/model/AdminModel/admin_model.dart';
 import 'package:cardi_care/model/KeluargaModel/keluarga_model.dart';
 import 'package:cardi_care/model/user_model.dart';
 import 'package:cardi_care/routes.dart';
@@ -105,5 +106,13 @@ class AuthServices {
         await firestore.collection('keluarga').doc(keluarga!.uid).get();
 
     return KeluargaModel.fromMap(keluargaData.data() as Map<String, dynamic>);
+  }
+
+  Future<AdminModel> getAdminData() async {
+    User? admin = _auth.currentUser;
+    DocumentSnapshot adminData =
+        await firestore.collection('admin').doc(admin!.uid).get();
+
+    return AdminModel.fromMap(adminData.data() as Map<String, dynamic>);
   }
 }

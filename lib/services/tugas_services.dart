@@ -219,32 +219,54 @@ class TugasServices {
     }
   }
 
-  Future<void> addObatData(ObatModel obat) async {
+  Future<void> addObatData(
+      String namaObat, List<DateTime> times, String userId) async {
     try {
-      User? user = _auth.currentUser;
-      if (user == null) {
-        throw Exception('User not logged in');
+      for (DateTime time in times) {
+        final obatData = ObatModel(
+          id: firestore.collection('obat').doc().id,
+          userId: userId,
+          nama: namaObat,
+          date: time,
+          status: '',
+        );
+        await firestore
+            .collection('obat')
+            .doc(obatData.id)
+            .set(obatData.toMap());
       }
 
-      final obatData = ObatModel(
-        id: firestore
-            .collection('riwayat')
-            .doc(user.uid)
-            .collection('obat')
-            .doc()
-            .id,
-        userId: user.uid,
-        nama: obat.nama,
-        date: obat.date,
-        status: obat.status,
-      );
+      Get.snackbar('Success', 'Data obat berhasil ditambahkan');
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
 
-      await firestore
-          .collection('riwayat')
-          .doc(user.uid)
-          .collection('obat')
-          .doc(obatData.id)
-          .set(obatData.toMap());
+  Future<void> deleteObat(String obatId) async {
+    try {
+      await firestore.collection('obat').doc(obatId).delete();
+      Get.snackbar('Success', 'Obat berhasil dihapus');
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
+
+  Future<void> updateObat(String obatId, String namaObat, List<DateTime> times,
+      String userId) async {
+    try {
+      for (DateTime time in times) {
+        final obatData = ObatModel(
+          id: obatId,
+          userId: userId,
+          nama: namaObat,
+          date: time,
+          status: '',
+        );
+        await firestore
+            .collection('obat')
+            .doc(obatData.id)
+            .update(obatData.toMap());
+      }
 
       Get.snackbar('Success', 'Data obat berhasil ditambahkan');
     } catch (e) {
