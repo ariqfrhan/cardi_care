@@ -78,8 +78,12 @@ class _SigninPasienScreenState extends State<SigninPasienScreen> {
               CustomRedButton(
                 title: 'Login',
                 onPressed: () async {
-                  await auth.logInWithEmail(
-                      _emailController.text, _passwordController.text);
+                  await auth
+                      .logInWithEmail(
+                          _emailController.text, _passwordController.text)
+                      .then((value) async {
+                    Get.offAllNamed(Routes.mainWrapper);
+                  });
                 },
               )
             ],

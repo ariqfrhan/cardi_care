@@ -1,23 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cardi_care/model/user_model.dart';
 
 class RecordService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  UserCredential? userCredential;
 
-  Future<int> countRecords(String subCollection, Duration duration) async {
+  Future<int> countRecords(String subCollection, Duration duration,
+      {UserModel? userModel}) async {
     try {
-      User? user = _auth.currentUser;
-      if (user == null) {
+      User? currentUser = _auth.currentUser;
+      String? userId;
+
+      if (userModel != null) {
+        userId = userModel.uid;
+      } else if (currentUser != null) {
+        userId = currentUser.uid;
+      } else {
         throw Exception('User not logged in');
       }
+
       DateTime now = DateTime.now();
       DateTime targetDate = now.subtract(duration);
 
       final snapshot = await firestore
           .collection('riwayat')
-          .doc(user.uid)
+          .doc(userId)
           .collection(subCollection)
           .where('date', isGreaterThanOrEqualTo: targetDate.toIso8601String())
           .get();
@@ -28,82 +36,106 @@ class RecordService {
     }
   }
 
-  Future<int> countObatRecordsInLastDay() async {
-    return await countRecords('riwayat-obat', const Duration(days: 1));
+  Future<int> countObatRecordsInLastDay({UserModel? userModel}) async {
+    return await countRecords('riwayat-obat', const Duration(days: 1),
+        userModel: userModel);
   }
 
-  Future<int> countDietRecordsInLastDay() async {
-    return await countRecords('diet-rendah-garam', const Duration(days: 1));
+  Future<int> countDietRecordsInLastDay({UserModel? userModel}) async {
+    return await countRecords('diet-rendah-garam', const Duration(days: 1),
+        userModel: userModel);
   }
 
-  Future<int> countCairanRecordsInLastDay() async {
-    return await countRecords('pembatasan-cairan', const Duration(days: 1));
+  Future<int> countCairanRecordsInLastDay({UserModel? userModel}) async {
+    return await countRecords('pembatasan-cairan', const Duration(days: 1),
+        userModel: userModel);
   }
 
-  Future<int> countBeratRecordsInLastDay() async {
-    return await countRecords('berat', const Duration(days: 1));
+  Future<int> countBeratRecordsInLastDay({UserModel? userModel}) async {
+    return await countRecords('berat', const Duration(days: 1),
+        userModel: userModel);
   }
 
-  Future<int> countOlahragaRecordsInLastDay() async {
-    return await countRecords('olahraga', const Duration(days: 1));
+  Future<int> countOlahragaRecordsInLastDay({UserModel? userModel}) async {
+    return await countRecords('olahraga', const Duration(days: 1),
+        userModel: userModel);
   }
 
-  Future<int> countRokokRecordsInLastDay() async {
-    return await countRecords('rokok-alkohol', const Duration(days: 1));
+  Future<int> countRokokRecordsInLastDay({UserModel? userModel}) async {
+    return await countRecords('rokok-alkohol', const Duration(days: 1),
+        userModel: userModel);
   }
 
-  Future<int> countObatRecordsInLastWeek() async {
-    return await countRecords('riwayat-obat', const Duration(days: 7));
+  Future<int> countObatRecordsInLastWeek({UserModel? userModel}) async {
+    return await countRecords('riwayat-obat', const Duration(days: 7),
+        userModel: userModel);
   }
 
-  Future<int> countDietRecordsInLastWeek() async {
-    return await countRecords('diet-rendah-garam', const Duration(days: 7));
+  Future<int> countDietRecordsInLastWeek({UserModel? userModel}) async {
+    return await countRecords('diet-rendah-garam', const Duration(days: 7),
+        userModel: userModel);
   }
 
-  Future<int> countCairanRecordsInLastWeek() async {
-    return await countRecords('pembatasan-cairan', const Duration(days: 7));
+  Future<int> countCairanRecordsInLastWeek({UserModel? userModel}) async {
+    return await countRecords('pembatasan-cairan', const Duration(days: 7),
+        userModel: userModel);
   }
 
-  Future<int> countBeratRecordsInLastWeek() async {
-    return await countRecords('berat', const Duration(days: 7));
+  Future<int> countBeratRecordsInLastWeek({UserModel? userModel}) async {
+    return await countRecords('berat', const Duration(days: 7),
+        userModel: userModel);
   }
 
-  Future<int> countOlahragaRecordsInLastWeek() async {
-    return await countRecords('olahraga', const Duration(days: 7));
+  Future<int> countOlahragaRecordsInLastWeek({UserModel? userModel}) async {
+    return await countRecords('olahraga', const Duration(days: 7),
+        userModel: userModel);
   }
 
-  Future<int> countRokokRecordsInLastWeek() async {
-    return await countRecords('rokok-alkohol', const Duration(days: 7));
+  Future<int> countRokokRecordsInLastWeek({UserModel? userModel}) async {
+    return await countRecords('rokok-alkohol', const Duration(days: 7),
+        userModel: userModel);
   }
 
-  Future<int> countObatRecordsInLastMonth() async {
-    return await countRecords('riwayat-obat', const Duration(days: 30));
+  Future<int> countObatRecordsInLastMonth({UserModel? userModel}) async {
+    return await countRecords('riwayat-obat', const Duration(days: 30),
+        userModel: userModel);
   }
 
-  Future<int> countDietRecordsInLastMonth() async {
-    return await countRecords('diet-rendah-garam', const Duration(days: 30));
+  Future<int> countDietRecordsInLastMonth({UserModel? userModel}) async {
+    return await countRecords('diet-rendah-garam', const Duration(days: 30),
+        userModel: userModel);
   }
 
-  Future<int> countCairanRecordsInLastMonth() async {
-    return await countRecords('pembatasan-cairan', const Duration(days: 30));
+  Future<int> countCairanRecordsInLastMonth({UserModel? userModel}) async {
+    return await countRecords('pembatasan-cairan', const Duration(days: 30),
+        userModel: userModel);
   }
 
-  Future<int> countBeratRecordsInLastMonth() async {
-    return await countRecords('berat', const Duration(days: 30));
+  Future<int> countBeratRecordsInLastMonth({UserModel? userModel}) async {
+    return await countRecords('berat', const Duration(days: 30),
+        userModel: userModel);
   }
 
-  Future<int> countOlahragaRecordsInLastMonth() async {
-    return await countRecords('olahraga', const Duration(days: 30));
+  Future<int> countOlahragaRecordsInLastMonth({UserModel? userModel}) async {
+    return await countRecords('olahraga', const Duration(days: 30),
+        userModel: userModel);
   }
 
-  Future<int> countRokokRecordsInLastMonth() async {
-    return await countRecords('rokok-alkohol', const Duration(days: 30));
+  Future<int> countRokokRecordsInLastMonth({UserModel? userModel}) async {
+    return await countRecords('rokok-alkohol', const Duration(days: 30),
+        userModel: userModel);
   }
 
-  Future<bool> checkData(String subCollection) async {
+  Future<bool> checkData(String subCollection, {UserModel? userModel}) async {
     try {
-      User? user = _auth.currentUser;
-      if (user == null) {
+      User? currentUser = _auth.currentUser;
+      String? userId;
+
+      if (userModel != null) {
+        userId = userModel.uid;
+      } else if (currentUser != null) {
+        userId = currentUser.uid;
+      } else {
         throw Exception('User not logged in');
       }
 
@@ -112,7 +144,7 @@ class RecordService {
       DateTime endOfDay = startOfDay.add(const Duration(days: 1));
       final snapshot = await firestore
           .collection('riwayat')
-          .doc(user.uid)
+          .doc(userId)
           .collection(subCollection)
           .where('date', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
           .where('date', isLessThan: endOfDay.toIso8601String())
@@ -124,27 +156,27 @@ class RecordService {
     }
   }
 
-  Future<bool> checkObatRecords() async {
-    return await checkData('riwayat-obat');
+  Future<bool> checkObatRecords({UserModel? userModel}) async {
+    return await checkData('riwayat-obat', userModel: userModel);
   }
 
-  Future<bool> checkDietRecords() async {
-    return await checkData('diet-rendah-garam');
+  Future<bool> checkDietRecords({UserModel? userModel}) async {
+    return await checkData('diet-rendah-garam', userModel: userModel);
   }
 
-  Future<bool> checkCairanRecords() async {
-    return await checkData('pembatasan-cairan');
+  Future<bool> checkCairanRecords({UserModel? userModel}) async {
+    return await checkData('pembatasan-cairan', userModel: userModel);
   }
 
-  Future<bool> checkBeratRecords() async {
-    return await checkData('berat');
+  Future<bool> checkBeratRecords({UserModel? userModel}) async {
+    return await checkData('berat', userModel: userModel);
   }
 
-  Future<bool> checkOlahragaRecords() async {
-    return await checkData('olahraga');
+  Future<bool> checkOlahragaRecords({UserModel? userModel}) async {
+    return await checkData('olahraga', userModel: userModel);
   }
 
-  Future<bool> checkRokokRecords() async {
-    return await checkData('rokok-alkohol');
+  Future<bool> checkRokokRecords({UserModel? userModel}) async {
+    return await checkData('rokok-alkohol', userModel: userModel);
   }
 }

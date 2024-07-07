@@ -2,6 +2,7 @@ import 'package:cardi_care/firebase_options.dart';
 import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
+import 'package:cardi_care/shared/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +14,17 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Get.put(AuthServices());
-  runApp(const MainApp());
+
+  String initialRoute = await Utils.getInitialRoute();
+
+  runApp(MainApp(
+    initialRoute: initialRoute,
+  ));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  final String initialRoute;
+  const MainApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +33,7 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: whiteColor,
       ),
-      initialRoute: FirebaseAuth.instance.currentUser == null
-          ? Routes.splash
-          : Routes.mainWrapper,
+      initialRoute: initialRoute,
       getPages: Routes.routes,
     );
   }

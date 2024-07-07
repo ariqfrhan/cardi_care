@@ -1,10 +1,11 @@
+import 'package:cardi_care/model/user_model.dart';
 import 'package:cardi_care/services/record_service.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class RecordMinggu extends StatefulWidget {
-  const RecordMinggu({super.key});
+  final UserModel? user;
+  const RecordMinggu({super.key, this.user});
 
   @override
   State<RecordMinggu> createState() => _RecordMingguState();
@@ -13,13 +14,18 @@ class RecordMinggu extends StatefulWidget {
 class _RecordMingguState extends State<RecordMinggu> {
   Future<Map<String, int>> fetchCounts() async {
     try {
-      int obatCount = await RecordService().countObatRecordsInLastWeek();
-      int dietCount = await RecordService().countDietRecordsInLastWeek();
-      int cairanCount = await RecordService().countCairanRecordsInLastWeek();
-      int beratCount = await RecordService().countBeratRecordsInLastWeek();
-      int olahragaCount =
-          await RecordService().countOlahragaRecordsInLastWeek();
-      int rokokCount = await RecordService().countRokokRecordsInLastWeek();
+      int obatCount = await RecordService()
+          .countObatRecordsInLastWeek(userModel: widget.user);
+      int dietCount = await RecordService()
+          .countDietRecordsInLastWeek(userModel: widget.user);
+      int cairanCount = await RecordService()
+          .countCairanRecordsInLastWeek(userModel: widget.user);
+      int beratCount = await RecordService()
+          .countBeratRecordsInLastWeek(userModel: widget.user);
+      int olahragaCount = await RecordService()
+          .countOlahragaRecordsInLastWeek(userModel: widget.user);
+      int rokokCount = await RecordService()
+          .countRokokRecordsInLastWeek(userModel: widget.user);
 
       return {
         'obatCount': obatCount,

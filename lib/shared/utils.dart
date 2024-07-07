@@ -1,3 +1,6 @@
+import 'package:cardi_care/routes.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -22,6 +25,32 @@ class Utils {
       }
     }
     return age;
+  }
+
+  static Future<String> getInitialRoute() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Routes.splash;
+    }
+
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (userSnapshot.exists) {
+      return Routes.mainWrapper;
+    }
+
+    DocumentSnapshot keluargaSnapshot = await FirebaseFirestore.instance
+        .collection('keluarga')
+        .doc(user.uid)
+        .get();
+
+    if (keluargaSnapshot.exists) {
+      return Routes.keluargaWrapper;
+    }
+    return Routes.splash;
   }
 }
 

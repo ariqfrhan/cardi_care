@@ -4,6 +4,7 @@ import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:cardi_care/views/widgets/forms.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +28,23 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
       TextEditingController();
 
   final AuthServices _authServices = AuthServices();
+
+  List<DocumentSnapshot> familyMembers = [];
+  DocumentSnapshot? selectedFamilyMember;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchFamilyMembers();
+  }
+
+  Future<void> fetchFamilyMembers() async {
+    var snapshot =
+        await FirebaseFirestore.instance.collection('keluarga').get();
+    setState(() {
+      familyMembers = snapshot.docs;
+    });
+  }
 
   @override
   void dispose() {
@@ -87,19 +105,47 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                   const SizedBox(
                     height: 8,
                   ),
+                  DropdownButtonFormField<DocumentSnapshot>(
+                    value: selectedFamilyMember,
+                    items: familyMembers.map((DocumentSnapshot document) {
+                      return DropdownMenuItem<DocumentSnapshot>(
+                        value: document,
+                        child:
+                            Text('${document['name']} - ${document['email']}'),
+                      );
+                    }).toList(),
+                    onChanged: (DocumentSnapshot? newValue) {
+                      setState(() {
+                        selectedFamilyMember = newValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(width: 1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      labelText: 'Nama Penanggung Jawab',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
                   Row(
                     children: [
                       Expanded(
                         child: TextFormField(
                           controller: _dobController,
                           decoration: InputDecoration(
-                              fillColor: pinkColor,
-                              labelText: 'Tanggal',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12)),
-                              suffixIcon: const Icon(Icons.date_range),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: redColor))),
+                            fillColor: pinkColor,
+                            labelText: 'Tanggal',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            suffixIcon: const Icon(Icons.date_range),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: redColor),
+                            ),
+                          ),
                           onTap: () async {
                             FocusScope.of(context).requestFocus(FocusNode());
                             DateTime now = DateTime.now();
@@ -119,7 +165,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                           },
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Expanded(
@@ -127,7 +173,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                           title: 'Jenis Kelamin',
                           controller: _genderController,
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Row(
@@ -139,7 +185,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                           suffixText: 'cm',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Expanded(
@@ -148,7 +194,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                           controller: _weightController,
                           suffixText: 'kg',
                         ),
-                      )
+                      ),
                     ],
                   ),
                   CustomFormField(
@@ -173,6 +219,9 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                       _confirmPasswordController.text) {
                     UserModel user = UserModel(
                       uid: '',
+                      familyId: selectedFamilyMember != null
+                          ? selectedFamilyMember!.id
+                          : '',
                       name: _nameController.text,
                       email: _emailController.text,
                       tempatTL: _dobController.text,
@@ -186,12 +235,21 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                       _passwordController.text,
                       user,
                     );
+
+                    if (selectedFamilyMember != null) {
+                      await FirebaseFirestore.instance
+                          .collection('keluarga')
+                          .doc(selectedFamilyMember!.id)
+                          .update({
+                        'userIds': FieldValue.arrayUnion([user.uid]),
+                      });
+                    }
                   } else {
                     Get.snackbar(
                         'Registration Failed', 'Password tidak sesuai');
                   }
                 },
-              )
+              ),
             ],
           ),
         ),

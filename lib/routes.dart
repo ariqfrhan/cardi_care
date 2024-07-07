@@ -1,3 +1,5 @@
+import 'package:cardi_care/views/KeluargaPages/Analisis/analisis_detail.dart';
+import 'package:cardi_care/views/KeluargaPages/KeluargaWrapper/keluarga_wrapper_screen.dart';
 import 'package:cardi_care/views/Profile/riwayat_screen.dart';
 import 'package:cardi_care/views/SignIn/signas_login_screen.dart';
 import 'package:cardi_care/views/SignIn/signin_keluarga_screen.dart';
@@ -36,6 +38,8 @@ class Routes {
   static String userCairan = '/user_cairan';
   static String userMerokokAlkohol = '/user_merokok_alkohol';
   static String userRiwayat = '/user-riwayat';
+  static String keluargaWrapper = '/keluarga-wrapper';
+  static String keluargaAnalisisDetail = '/keluarga-analisis-detail';
 
   static List<GetPage> routes = [
     GetPage(
@@ -98,9 +102,23 @@ class Routes {
       name: userMerokokAlkohol,
       page: () => const MerokokAlkoholView(),
     ),
+
+    // Keluarga Pages
     GetPage(
       name: userRiwayat,
       page: () => const UserRiwayat(),
-    )
+    ),
+    GetPage(
+      name: keluargaWrapper,
+      page: () => KeluargaWrapperScreen(),
+    ),
+    GetPage(
+      name: signinKeluarga,
+      page: () => const SigninKeluargaScreen(),
+    ),
+    GetPage(
+      name: keluargaAnalisisDetail,
+      page: () => AnalisisDetail(),
+    ),
   ];
 }

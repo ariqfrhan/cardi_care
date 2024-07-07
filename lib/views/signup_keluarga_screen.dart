@@ -1,12 +1,25 @@
+import 'package:cardi_care/model/KeluargaModel/keluarga_model.dart';
 import 'package:cardi_care/routes.dart';
+import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:cardi_care/views/widgets/forms.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SignupKeluargaScreen extends StatelessWidget {
+class SignupKeluargaScreen extends StatefulWidget {
   const SignupKeluargaScreen({super.key});
+
+  @override
+  State<SignupKeluargaScreen> createState() => _SignupKeluargaScreenState();
+}
+
+class _SignupKeluargaScreenState extends State<SignupKeluargaScreen> {
+  final TextEditingController _namaController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,19 +54,23 @@ class SignupKeluargaScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              const Column(
+              Column(
                 children: [
                   CustomFormField(
+                    controller: _namaController,
                     title: 'Nama Lengkap',
                   ),
                   CustomFormField(
+                    controller: _emailController,
                     title: 'Email',
                   ),
                   CustomFormField(
+                    controller: _passwordController,
                     title: 'Kata Sandi',
                     obscureText: true,
                   ),
                   CustomFormField(
+                    controller: _confirPasswordController,
                     title: 'Konfirmasi Kata Sandi',
                     obscureText: true,
                   ),
@@ -64,8 +81,27 @@ class SignupKeluargaScreen extends StatelessWidget {
               ),
               CustomRedButton(
                 title: 'Daftar',
-                onPressed: () {
-                  Get.toNamed(Routes.onboarding);
+                onPressed: () async {
+                  if (_passwordController.text ==
+                      _confirPasswordController.text) {
+                    KeluargaModel keluargaModel = KeluargaModel(
+                      uid: '',
+                      name: _namaController.text,
+                      userIds: [],
+                      email: _emailController.text,
+                    );
+
+                    await AuthServices().keluargaSignUp(
+                      _emailController.text,
+                      _passwordController.text,
+                      keluargaModel,
+                    );
+                    Get.snackbar('Registration Success', 'Registrasi berhasil');
+                    Get.offAllNamed(Routes.keluargaWrapper);
+                  } else {
+                    Get.snackbar(
+                        'Registration Failed', 'Password tidak sesuai');
+                  }
                 },
               )
             ],
