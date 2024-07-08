@@ -13,6 +13,7 @@ dependencies:
   firebase_storage: ^11.7.7
   flutter:
     sdk: flutter
+  flutter_widget_from_html: ^0.15.1
   get: ^4.6.6
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.1

@@ -1,5 +1,6 @@
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
+import 'package:cardi_care/views/Edukasi/materi_screen.dart';
 import 'package:cardi_care/views/widgets/cards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -44,7 +45,15 @@ class EdukasiScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                EducationCard(nama: 'Seputar Gagal Jantung'),
+                EducationCard(
+                  nama: 'Seputar Gagal Jantung',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Materi()),
+                    );
+                  },
+                ),
                 const SizedBox(
                   height: 12,
                 ),
