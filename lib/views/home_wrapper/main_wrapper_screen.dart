@@ -1,4 +1,5 @@
 import 'package:cardi_care/shared/theme.dart';
+import 'package:cardi_care/views/Edukasi/edukasi_screen.dart';
 import 'package:cardi_care/views/Home/home_screen.dart';
 import 'package:cardi_care/views/Profile/profile_screen.dart';
 import 'package:cardi_care/views/Record/record_screen.dart';
@@ -23,6 +24,7 @@ class MainWrapperScreen extends StatelessWidget {
         children: [
           HomeScreen(),
           RecordScreen(),
+          EdukasiScreen(),
           ProfileScreen(),
         ],
       ),
@@ -48,13 +50,13 @@ class MainWrapperScreen extends StatelessWidget {
                   _bottomAppBar(
                     context,
                     icon: Icons.menu_book,
-                    page: 1,
+                    page: 2,
                     label: 'Edukasi',
                   ),
                   _bottomAppBar(
                     context,
                     icon: Icons.person,
-                    page: 2,
+                    page: 3,
                     label: 'Profile',
                   ),
                 ],
