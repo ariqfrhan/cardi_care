@@ -88,3 +88,77 @@ class ObatListTile extends StatelessWidget {
     );
   }
 }
+
+class EducationCard extends StatelessWidget {
+  final String nama;
+  final bool enabled;
+  final VoidCallback? onTap;
+  const EducationCard({
+    super.key,
+    required this.nama,
+    this.enabled = true,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ZoomTapAnimation(
+      onTap: () {
+        if (enabled && onTap != null) {
+          onTap?.call();
+        }
+      },
+      child: Container(
+        decoration: enabled
+            ? BoxDecoration(
+                color: red100,
+                borderRadius: BorderRadius.circular(12),
+              )
+            : BoxDecoration(
+                color: mono150,
+                borderRadius: BorderRadius.circular(12),
+              ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              enabled
+                  ? Icon(
+                      Icons.menu_book,
+                      size: 24,
+                      color: red950,
+                    )
+                  : Icon(
+                      Icons.lock,
+                      size: 24,
+                      color: mono600,
+                    ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Tema',
+                    style: enabled
+                        ? blackText.copyWith(fontSize: 12, color: redColor)
+                        : TextStyle(fontSize: 12, color: mono600),
+                  ),
+                  Text(
+                    nama,
+                    style: enabled
+                        ? blackText.copyWith(fontSize: 16, fontWeight: bold)
+                        : TextStyle(
+                            fontSize: 16, color: mono600, fontWeight: bold),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
