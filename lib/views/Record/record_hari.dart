@@ -43,6 +43,10 @@ class _RecordHariState extends State<RecordHari> {
     }
   }
 
+  double calculateProgress(int count, int total) {
+    return total > 0 ? count / total : 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,36 +64,39 @@ class _RecordHariState extends State<RecordHari> {
             );
           } else if (snapshot.hasData) {
             final counts = snapshot.data!;
+            double obatProgress = counts['userObat']! > 0
+                ? (counts['obatCount']! / counts['userObat']!) / 1
+                : 0;
             return Column(
               children: [
                 BarIndicator(
                   title: 'Konsumsi Obat',
-                  calculate: (counts['obatCount']! / counts['userObat']!) / 1,
-                  total: '${(counts['obatCount']! / counts['userObat']!)}/1',
+                  calculate: obatProgress,
+                  total: '$obatProgress / 1',
                 ),
                 BarIndicator(
                   title: 'Diet Rendah Garam',
-                  calculate: counts['dietCount']! / 1,
+                  calculate: calculateProgress(counts['dietCount']!, 1),
                   total: '${counts['dietCount']}/1',
                 ),
                 BarIndicator(
                   title: 'Pembatasan Cairan',
-                  calculate: counts['cairanCount']! / 1,
+                  calculate: calculateProgress(counts['cairanCount']!, 1),
                   total: '${counts['cairanCount']}/1',
                 ),
                 BarIndicator(
                   title: 'Berat Badan',
-                  calculate: counts['beratCount']! / 1,
+                  calculate: calculateProgress(counts['beratCount']!, 1),
                   total: '${counts['beratCount']}/1',
                 ),
                 BarIndicator(
                   title: 'Olahraga',
-                  calculate: counts['olahragaCount']! / 1,
+                  calculate: calculateProgress(counts['olahragaCount']!, 1),
                   total: '${counts['olahragaCount']}/1',
                 ),
                 BarIndicator(
                   title: 'Merokok',
-                  calculate: counts['rokokCount']! / 1,
+                  calculate: calculateProgress(counts['rokokCount']!, 1),
                   total: '${counts['rokokCount']}/1',
                 ),
               ],

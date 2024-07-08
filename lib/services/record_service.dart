@@ -203,4 +203,94 @@ class RecordService {
   Future<bool> checkRokokRecords({UserModel? userModel}) async {
     return await checkData('rokok-alkohol', userModel: userModel);
   }
+
+  Future<DateTime?> getLastRecordDate(String subCollection,
+      {UserModel? userModel}) async {
+    try {
+      User? currentUser = _auth.currentUser;
+      String? userId;
+
+      if (userModel != null) {
+        userId = userModel.uid;
+      } else if (currentUser != null) {
+        userId = currentUser.uid;
+      } else {
+        throw Exception('User not logged in');
+      }
+
+      final snapshot = await firestore
+          .collection('riwayat')
+          .doc(userId)
+          .collection(subCollection)
+          .orderBy('date', descending: true)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        return DateTime.parse(snapshot.docs.first['date']);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+
+  Future<DateTime?> getLastSelfCareDate({UserModel? userModel}) async {
+    List<String> subCollections = [
+      'riwayat-obat',
+      'diet-rendah-garam',
+      'pembatasan-cairan',
+      'berat',
+      'olahraga',
+      'rokok-alkohol'
+    ];
+
+    DateTime? lastDate;
+
+    for (String subCollection in subCollections) {
+      DateTime? date =
+          await getLastRecordDate(subCollection, userModel: userModel);
+      if (date != null && (lastDate == null || date.isAfter(lastDate))) {
+        lastDate = date;
+      }
+    }
+
+    return lastDate;
+  }
+
+  Future<bool> checkDataFromYesterday(String subCollection,
+      {UserModel? userModel}) async {
+    DateTime? lastDate =
+        await getLastRecordDate(subCollection, userModel: userModel);
+    if (lastDate == null) return false;
+
+    DateTime now = DateTime.now();
+    DateTime yesterday = now.subtract(const Duration(days: 1));
+    DateTime startOfYesterday =
+        DateTime(yesterday.year, yesterday.month, yesterday.day);
+    DateTime endOfYesterday = startOfYesterday.add(const Duration(days: 14));
+
+    return lastDate.isAfter(startOfYesterday) &&
+        lastDate.isBefore(endOfYesterday);
+  }
+
+  Future<bool> checkSelfCareFromYesterday({UserModel? userModel}) async {
+    List<String> subCollections = [
+      'riwayat-obat',
+      'diet-rendah-garam',
+      'pembatasan-cairan',
+      'berat',
+      'olahraga',
+      'rokok-alkohol'
+    ];
+
+    for (String subCollection in subCollections) {
+      bool hasRecord =
+          await checkDataFromYesterday(subCollection, userModel: userModel);
+      if (hasRecord) return true;
+    }
+
+    return false;
+  }
 }

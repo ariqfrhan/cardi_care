@@ -1,21 +1,18 @@
-import 'package:cardi_care/services/keluarga_services.dart';
+import 'package:cardi_care/services/Admin_services.dart';
 import 'package:cardi_care/shared/theme.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class KeluargaHome extends StatefulWidget {
-  const KeluargaHome({super.key});
+class AdminHome extends StatefulWidget {
+  const AdminHome({super.key});
 
   @override
-  State<KeluargaHome> createState() => _KeluargaHomeState();
+  State<AdminHome> createState() => _AdminHomeState();
 }
 
-class _KeluargaHomeState extends State<KeluargaHome> {
+class _AdminHomeState extends State<AdminHome> {
   Future<List<Map<String, dynamic>>> fetchData() async {
     try {
-      FirebaseAuth auth = FirebaseAuth.instance;
-      String familyId = auth.currentUser!.uid; // Replace with actual family ID
-      return await KeluargaServices().fetchUsersWithoutSelfCare(familyId);
+      return await AdminServices().fetchUsersWithoutSelfCare();
     } catch (e) {
       throw Exception('Error fetching status: $e');
     }

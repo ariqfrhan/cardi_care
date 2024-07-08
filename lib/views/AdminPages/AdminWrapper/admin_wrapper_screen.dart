@@ -1,14 +1,9 @@
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/AdminPages/Admin%20Analisis/admin_analisis_home.dart';
+import 'package:cardi_care/views/AdminPages/Admin%20Home/admin_home.dart';
 import 'package:cardi_care/views/AdminPages/Admin%20Profile/admin_profile.dart';
 import 'package:cardi_care/views/AdminPages/Admin%20Tambah%20Obat/admin_tambah_obat.dart';
-import 'package:cardi_care/views/Home/home_screen.dart';
-import 'package:cardi_care/views/KeluargaPages/Analisis/analisis_home.dart';
-import 'package:cardi_care/views/KeluargaPages/Keluarga%20Home/keluarga_home.dart';
-import 'package:cardi_care/views/KeluargaPages/Keluarga%20Profile/keluarga_profile.dart';
 import 'package:cardi_care/views/KeluargaPages/KeluargaWrapper/keluarga_wrapper_controller.dart';
-import 'package:cardi_care/views/Profile/profile_screen.dart';
-import 'package:cardi_care/views/Record/record_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
@@ -27,8 +22,8 @@ class AdminWrapperScreen extends StatelessWidget {
         controller: controller.pageController,
         onPageChanged: controller.animateToTab,
         physics: const BouncingScrollPhysics(),
-        children: [
-          KeluargaHome(),
+        children: const [
+          AdminHome(),
           AdminAnalisisHome(),
           AdminTambahObatHome(),
           AdminProfile(),
