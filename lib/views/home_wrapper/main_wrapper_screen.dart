@@ -47,6 +47,12 @@ class MainWrapperScreen extends StatelessWidget {
                   ),
                   _bottomAppBar(
                     context,
+                    icon: Icons.menu_book,
+                    page: 1,
+                    label: 'Edukasi',
+                  ),
+                  _bottomAppBar(
+                    context,
                     icon: Icons.person,
                     page: 2,
                     label: 'Profile',
