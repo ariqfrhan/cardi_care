@@ -2,6 +2,7 @@ import 'package:cardi_care/views/AdminPages/Admin%20Tambah%20Obat/admin_edit_det
 import 'package:cardi_care/views/AdminPages/Admin%20Tambah%20Obat/admin_obat_detail.dart';
 import 'package:cardi_care/views/AdminPages/Admin%20Tambah%20Obat/admin_tambah_detail.dart';
 import 'package:cardi_care/views/AdminPages/AdminWrapper/admin_wrapper_screen.dart';
+import 'package:cardi_care/views/Edukasi/materi_screen.dart';
 import 'package:cardi_care/views/KeluargaPages/Analisis/analisis_detail.dart';
 import 'package:cardi_care/views/KeluargaPages/KeluargaWrapper/keluarga_wrapper_screen.dart';
 import 'package:cardi_care/views/Profile/riwayat_screen.dart';
