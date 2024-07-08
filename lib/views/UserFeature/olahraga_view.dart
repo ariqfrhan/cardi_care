@@ -4,9 +4,7 @@ import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:cardi_care/shared/theme.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class OlahragaView extends StatefulWidget {
   const OlahragaView({super.key});
@@ -103,10 +101,9 @@ class _OlahragaViewState extends State<OlahragaView> {
                   DateTime now = DateTime.now();
                   DateTime? dateTime = await showDatePicker(
                     context: context,
-                    initialDate: now.subtract(const Duration(days: 7)),
-                    firstDate: now.subtract(
-                        const Duration(days: 7)), // Seminggu yang lalu
-                    lastDate: now,
+                    initialDate: now,
+                    firstDate: now,
+                    lastDate: now.add(const Duration(days: 7)),
                   );
                   if (dateTime != null) {
                     DateTime selectedDateTime = DateTime(

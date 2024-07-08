@@ -14,11 +14,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class TugasServices {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   UserCredential? userCredential;
   FirebaseStorage storage = FirebaseStorage.instance;
-  final Uuid uuid = Uuid();
+  final Uuid uuid = const Uuid();
 
   Future<void> addOlahragaData(OlahragaModel olahraga) async {
     try {

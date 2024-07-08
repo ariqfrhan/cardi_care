@@ -97,7 +97,7 @@ class _SignupKeluargaScreenState extends State<SignupKeluargaScreen> {
                       keluargaModel,
                     );
                     Get.snackbar('Registration Success', 'Registrasi berhasil');
-                    Get.offAllNamed(Routes.keluargaWrapper);
+                    Get.offAllNamed(Routes.splashDaftar);
                   } else {
                     Get.snackbar(
                         'Registration Failed', 'Password tidak sesuai');

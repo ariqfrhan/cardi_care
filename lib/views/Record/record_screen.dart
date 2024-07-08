@@ -4,12 +4,28 @@ import 'package:cardi_care/views/Record/record_hari.dart';
 import 'package:cardi_care/views/Record/record_minggu.dart';
 import 'package:cardi_care/views/Record/record_screen_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
-class RecordScreen extends StatelessWidget {
-  RecordScreen({super.key});
+class RecordScreen extends StatefulWidget {
+  const RecordScreen({super.key});
+
+  @override
+  State<RecordScreen> createState() => _RecordScreenState();
+}
+
+class _RecordScreenState extends State<RecordScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Get.put(RecordScreenController());
+  }
+
+  @override
+  void dispose() {
+    Get.delete<RecordScreenController>();
+    super.dispose();
+  }
 
   final RecordScreenController controller = Get.put(RecordScreenController());
 
@@ -48,7 +64,7 @@ class RecordScreen extends StatelessWidget {
               controller: controller.pageController,
               onPageChanged: controller.animateToTab,
               physics: const BouncingScrollPhysics(),
-              children: [
+              children: const [
                 RecordHari(),
                 RecordMinggu(),
                 RecordBulan(),
