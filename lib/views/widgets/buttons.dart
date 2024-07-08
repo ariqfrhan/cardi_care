@@ -129,11 +129,13 @@ class FeatureButtons extends StatelessWidget {
   final IconData icons;
   final bool status;
   final VoidCallback? onPressed;
+  final bool enabled;
 
   const FeatureButtons({
     super.key,
     required this.title,
     required this.icons,
+    this.enabled = true,
     this.status = false,
     this.onPressed,
   });
@@ -142,7 +144,9 @@ class FeatureButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return ZoomTapAnimation(
       onTap: () {
-        onPressed?.call();
+        if (enabled && onPressed != null) {
+          onPressed?.call();
+        }
       },
       child: Container(
         margin: const EdgeInsets.only(top: 12),

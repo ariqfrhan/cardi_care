@@ -26,6 +26,7 @@ class _RecordMingguState extends State<RecordMinggu> {
           .countOlahragaRecordsInLastWeek(userModel: widget.user);
       int rokokCount = await RecordService()
           .countRokokRecordsInLastWeek(userModel: widget.user);
+      int userObat = await RecordService().countObat(userModel: widget.user);
 
       return {
         'obatCount': obatCount,
@@ -34,6 +35,7 @@ class _RecordMingguState extends State<RecordMinggu> {
         'beratCount': beratCount,
         'olahragaCount': olahragaCount,
         'rokokCount': rokokCount,
+        'userObat': userObat,
       };
     } catch (e) {
       throw Exception('Error fetching counts: $e');
@@ -61,8 +63,8 @@ class _RecordMingguState extends State<RecordMinggu> {
               children: [
                 BarIndicator(
                   title: 'Konsumsi Obat',
-                  calculate: counts['obatCount']! / 7,
-                  total: '${counts['obatCount']}/7',
+                  calculate: (counts['obatCount']! / counts['userObat']!) / 7,
+                  total: '${(counts['obatCount']! / counts['userObat']!)}/7',
                 ),
                 BarIndicator(
                   title: 'Diet Rendah Garam',

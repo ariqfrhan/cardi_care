@@ -36,6 +36,30 @@ class RecordService {
     }
   }
 
+  Future<int> countObat({UserModel? userModel}) async {
+    try {
+      User? currentUser = _auth.currentUser;
+      String? userId;
+
+      if (userModel != null) {
+        userId = userModel.uid;
+      } else if (currentUser != null) {
+        userId = currentUser.uid;
+      } else {
+        throw Exception('User not logged in');
+      }
+
+      final snapshot = await firestore
+          .collection('obat')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      return snapshot.docs.length;
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+
   Future<int> countObatRecordsInLastDay({UserModel? userModel}) async {
     return await countRecords('riwayat-obat', const Duration(days: 1),
         userModel: userModel);
