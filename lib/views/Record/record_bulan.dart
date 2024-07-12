@@ -26,6 +26,7 @@ class _RecordBulanState extends State<RecordBulan> {
           .countOlahragaRecordsInLastMonth(userModel: widget.user);
       int rokokCount = await RecordService()
           .countRokokRecordsInLastMonth(userModel: widget.user);
+      int userObat = await RecordService().countObat(userModel: widget.user);
 
       return {
         'obatCount': obatCount,
@@ -34,10 +35,15 @@ class _RecordBulanState extends State<RecordBulan> {
         'beratCount': beratCount,
         'olahragaCount': olahragaCount,
         'rokokCount': rokokCount,
+        'userObat': userObat
       };
     } catch (e) {
       throw Exception('Error fetching counts: $e');
     }
+  }
+
+  double calculateProgress(int count, double total) {
+    return total > 0 ? count / total : 0;
   }
 
   @override
@@ -57,36 +63,49 @@ class _RecordBulanState extends State<RecordBulan> {
             );
           } else if (snapshot.hasData) {
             final counts = snapshot.data!;
+            double obatProgress = counts['userObat']! > 0
+                ? (counts['obatCount']! / counts['userObat']!) / 30
+                : 0;
             return Column(
               children: [
                 BarIndicator(
                   title: 'Konsumsi Obat',
-                  calculate: counts['obatCount']! / 30,
-                  total: '${counts['obatCount']}/30',
+                  calculate: double.parse(obatProgress.toStringAsFixed(1)),
+                  total: '${(counts['obatCount']! / counts['userObat']!)} / 30',
                 ),
                 BarIndicator(
                   title: 'Diet Rendah Garam',
-                  calculate: counts['dietCount']! / 30,
+                  calculate: double.parse(
+                      calculateProgress(counts['dietCount']!, 30)
+                          .toStringAsFixed(1)),
                   total: '${counts['dietCount']}/30',
                 ),
                 BarIndicator(
                   title: 'Pembatasan Cairan',
-                  calculate: counts['cairanCount']! / 30,
+                  calculate: double.parse(
+                      calculateProgress(counts['cairanCount']!, 30)
+                          .toStringAsFixed(1)),
                   total: '${counts['cairanCount']}/30',
                 ),
                 BarIndicator(
                   title: 'Berat Badan',
-                  calculate: counts['beratCount']! / 30,
+                  calculate: double.parse(
+                      calculateProgress(counts['beratCount']!, 30)
+                          .toStringAsFixed(1)),
                   total: '${counts['beratCount']}/30',
                 ),
                 BarIndicator(
                   title: 'Olahraga',
-                  calculate: counts['olahragaCount']! / 30,
+                  calculate: double.parse(
+                      calculateProgress(counts['olahragaCount']!, 30)
+                          .toStringAsFixed(1)),
                   total: '${counts['olahragaCount']}/30',
                 ),
                 BarIndicator(
                   title: 'Merokok',
-                  calculate: counts['rokokCount']! / 30,
+                  calculate: double.parse(
+                      calculateProgress(counts['rokokCount']!, 30)
+                          .toStringAsFixed(1)),
                   total: '${counts['rokokCount']}/30',
                 ),
               ],

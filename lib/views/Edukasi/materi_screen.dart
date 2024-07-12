@@ -1,10 +1,10 @@
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
-import 'package:cardi_care/views/Edukasi/quiz_screen.dart';
 import 'package:cardi_care/views/widgets/cards.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:cardi_care/views/Edukasi/quiz_screen.dart';
 
 class Materi extends StatefulWidget {
   const Materi({super.key});
@@ -133,8 +133,7 @@ class _MateriState extends State<Materi> {
           width: double.infinity,
           child: FloatingActionButton.extended(
             onPressed: () {
-              // Action when the button is pressed
-              Navigator.push(
+             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const Quiz()),
               );

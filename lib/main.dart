@@ -3,7 +3,6 @@ import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/shared/utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

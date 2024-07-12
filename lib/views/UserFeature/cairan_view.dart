@@ -7,9 +7,7 @@ import 'package:cardi_care/shared/utils.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 
 class CairanView extends StatefulWidget {
   const CairanView({super.key});
@@ -116,10 +114,9 @@ class _CairanViewState extends State<CairanView> {
                     DateTime now = DateTime.now();
                     DateTime? dateTime = await showDatePicker(
                       context: context,
-                      initialDate: now.subtract(const Duration(days: 7)),
-                      firstDate: now.subtract(
-                          const Duration(days: 7)), // Seminggu yang lalu
-                      lastDate: now,
+                      initialDate: now,
+                      firstDate: now,
+                      lastDate: now.add(const Duration(days: 7)),
                     );
                     if (dateTime != null) {
                       DateTime selectedDateTime = DateTime(

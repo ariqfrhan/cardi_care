@@ -1,5 +1,4 @@
 import 'package:cardi_care/model/user_model.dart';
-import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
@@ -124,6 +123,10 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                         borderSide: const BorderSide(width: 1),
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: redColor),
+                      ),
+                      labelStyle: TextStyle(color: redColor),
                       labelText: 'Nama Penanggung Jawab',
                     ),
                   ),

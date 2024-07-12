@@ -111,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () {
                                 Get.toNamed(Routes.userOlahraga);
                               },
+                              enabled: !(check['olahragaCount'] ?? false),
                             ),
                             FeatureButtons(
                               title: 'Diet Rendah Garam',
@@ -119,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () {
                                 Get.toNamed(Routes.userDiet);
                               },
+                              enabled: !(check['dietCount'] ?? false),
                             ),
                             FeatureButtons(
                               title: 'Konsumsi Obat',
@@ -127,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () {
                                 Get.toNamed(Routes.userObat);
                               },
+                              enabled: !(check['obatCount'] ?? false),
                             ),
                             FeatureButtons(
                               title: 'Berat Badan',
@@ -135,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () {
                                 Get.toNamed(Routes.userBerat);
                               },
+                              enabled: !(check['beratCount'] ?? false),
                             ),
                             FeatureButtons(
                               title: 'Pembatasan Cairan',
@@ -143,6 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () {
                                 Get.toNamed(Routes.userCairan);
                               },
+                              enabled: !(check['cairanCount'] ?? false),
                             ),
                             FeatureButtons(
                               title: 'Merokok & Alkohol',
@@ -151,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () {
                                 Get.toNamed(Routes.userMerokokAlkohol);
                               },
+                              enabled: !(check['rokokCount'] ?? false),
                             ),
                           ],
                         );

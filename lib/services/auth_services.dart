@@ -20,7 +20,7 @@ class AuthServices {
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) async {
         userCredential = value;
-        Get.offAllNamed(Routes.mainWrapper);
+        Get.offAllNamed(Routes.splashDaftar);
 
         user = UserModel(
             uid: value.user!.uid,
