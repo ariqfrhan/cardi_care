@@ -1,7 +1,12 @@
+import 'package:cardi_care/model/materi_model.dart';
+import 'package:cardi_care/model/quiz_model.dart';
 import 'package:cardi_care/services/auth_services.dart';
+import 'package:cardi_care/services/edukasi_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:cardi_care/views/widgets/cards.dart';
+import 'package:cardi_care/views/widgets/quiz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -14,9 +19,35 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
-  final AuthServices auth = Get.find<AuthServices>();
-  int _soal1 = 0;
-  int _soal2 = 0;
+  final MateriModel materi = Get.arguments;
+  late Future<List<QuizModel>> futureQuestions;
+
+  @override
+  void initState() {
+    super.initState();
+    futureQuestions = EdukasiServices().getAllQuiz(materi.uid);
+  }
+
+  void _submitQuiz(
+      List<QuizModel> questions, List<int?> selectedAnswers) async {
+    int correctAnswers = 0;
+    for (int i = 0; i < questions.length; i++) {
+      if (selectedAnswers[i] == questions[i].correctAnswerIndex) {
+        correctAnswers++;
+      }
+    }
+
+    // Ambil userId dari AuthServices
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    User? userId = auth.currentUser;
+
+    // Simpan hasil kuis ke Firestore
+    EdukasiServices().saveQuizResult(userId!.uid, questions, selectedAnswers);
+
+    Get.snackbar(
+        'Quiz Submitted', 'You answered $correctAnswers questions correctly.');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,18 +63,24 @@ class _QuizState extends State<Quiz> {
         ),
         centerTitle: true,
       ),
-      body: FutureBuilder(
-          future: auth.getUserData(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: FutureBuilder<List<QuizModel>>(
+          future: futureQuestions,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData) {
-              return const Center(child: Text('No user data found'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('No quiz available'));
             }
-            return ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+
+            List<QuizModel> questions = snapshot.data!;
+            List<int?> selectedAnswers =
+                List<int?>.filled(questions.length, null);
+
+            return Column(
               children: [
                 const SizedBox(
                   height: 8,
@@ -69,236 +106,49 @@ class _QuizState extends State<Quiz> {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
                 Text(
-                  '5 Pertanyaan',
+                  '${questions.length} pertanyaan',
                   style: blackText.copyWith(
                       fontSize: 14, fontWeight: bold, color: mono600),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(
-                  height: 16,
+                  height: 20,
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '1',
-                          style: blackText.copyWith(
-                            fontSize: 16,
-                            fontWeight: bold,
-                          ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: questions.length,
+                    itemBuilder: (context, index) {
+                      return QuizQuestionWidget(
+                        question: QuizQuestion(
+                          question: questions[index].question,
+                          options: questions[index].options,
+                          correctAnswerIndex:
+                              questions[index].correctAnswerIndex,
                         ),
-                        const SizedBox(
-                            width:
-                                8), // Add some spacing between the number and the text
-                        Flexible(
-                          child: Text(
-                            'Apa yang dimaksud dengan penyakit gagal jantung?',
-                            style: blackText.copyWith(
-                              fontSize: 16,
-                              fontWeight: bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          children: [
-                            Radio(
-                              value: 1,
-                              groupValue: _soal1,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  _soal1 = value!;
-                                });
-                              },
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Penyakit yang disebabkan oleh kelemahan otot',
-                                style: blackText.copyWith(
-                                  fontSize: 14,
-                                  fontWeight: medium,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Radio(
-                              value: 2,
-                              groupValue: _soal1,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  _soal1 = value!;
-                                });
-                              },
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Penyakit akibat peradangan',
-                                style: blackText.copyWith(
-                                  fontSize: 14,
-                                  fontWeight: medium,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Radio(
-                              value: 3,
-                              groupValue: _soal1,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  _soal1 = value!;
-                                });
-                              },
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Kelainan struktur atau fungsi jantung',
-                                style: blackText.copyWith(
-                                  fontSize: 14,
-                                  fontWeight: medium,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '2',
-                          style: blackText.copyWith(
-                            fontSize: 16,
-                            fontWeight: bold,
-                          ),
-                        ),
-                        const SizedBox(
-                            width:
-                                8), // Add some spacing between the number and the text
-                        Flexible(
-                          child: Text(
-                            'Apa yang dimaksud dengan penyakit gagal jantung?',
-                            style: blackText.copyWith(
-                              fontSize: 16,
-                              fontWeight: bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          children: [
-                            Radio(
-                              value: 1,
-                              groupValue: _soal2,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  _soal2 = value!;
-                                });
-                              },
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Penyakit yang disebabkan oleh kelemahan otot',
-                                style: blackText.copyWith(
-                                  fontSize: 14,
-                                  fontWeight: medium,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Radio(
-                              value: 2,
-                              groupValue: _soal2,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  _soal2 = value!;
-                                });
-                              },
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Penyakit akibat peradangan',
-                                style: blackText.copyWith(
-                                  fontSize: 14,
-                                  fontWeight: medium,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Radio(
-                              value: 3,
-                              groupValue: _soal2,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  _soal2 = value!;
-                                });
-                              },
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Kelainan struktur atau fungsi jantung',
-                                style: blackText.copyWith(
-                                  fontSize: 14,
-                                  fontWeight: medium,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                Text('Harap jawab semua pertanyaan!'),
-                BottomAppBar(
-                  color: whiteColor,
-                  child: CustomRedButton(
-                    title: 'Simpan',
-                    onPressed: () {},
+                        onAnswerSelected: (selectedIndex) {
+                          setState(() {
+                            selectedAnswers[index] = selectedIndex;
+                          });
+                        },
+                      );
+                    },
                   ),
                 ),
               ],
             );
-          }),
+          },
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: CustomRedButton(
+          title: 'Submit',
+          onPressed: () async {
+            List<QuizModel> questions = await futureQuestions;
+            _submitQuiz(questions, List<int?>.filled(questions.length, null));
+          },
+        ),
+      ),
     );
   }
 }

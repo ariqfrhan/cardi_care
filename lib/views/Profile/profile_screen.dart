@@ -79,7 +79,6 @@ class ProfileScreen extends StatelessWidget {
                   Get.toNamed(Routes.userRiwayat);
                 },
               ),
-              ProfileButtons(title: 'Obat'),
             ],
           );
         },

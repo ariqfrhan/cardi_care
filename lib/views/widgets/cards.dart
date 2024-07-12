@@ -109,6 +109,10 @@ class EducationCard extends StatelessWidget {
         }
       },
       child: Container(
+        width: 361,
+        height: 64,
+        padding: const EdgeInsets.only(right: 0),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
         decoration: enabled
             ? BoxDecoration(
                 color: red100,
@@ -136,24 +140,28 @@ class EducationCard extends StatelessWidget {
                       color: mono600,
                     ),
               const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Tema',
-                    style: enabled
-                        ? blackText.copyWith(fontSize: 12, color: redColor)
-                        : TextStyle(fontSize: 12, color: mono600),
-                  ),
-                  Text(
-                    nama,
-                    style: enabled
-                        ? blackText.copyWith(fontSize: 16, fontWeight: bold)
-                        : TextStyle(
-                            fontSize: 16, color: mono600, fontWeight: bold),
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Tema',
+                      style: enabled
+                          ? blackText.copyWith(fontSize: 12, color: redColor)
+                          : TextStyle(fontSize: 12, color: mono600),
+                    ),
+                    Text(
+                      nama,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: enabled
+                          ? blackText.copyWith(fontSize: 16, fontWeight: bold)
+                          : TextStyle(
+                              fontSize: 16, color: mono600, fontWeight: bold),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
