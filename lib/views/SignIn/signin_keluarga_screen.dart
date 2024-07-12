@@ -76,12 +76,17 @@ class _SigninKeluargaScreenState extends State<SigninKeluargaScreen> {
               CustomRedButton(
                 title: 'Login',
                 onPressed: () async {
-                  await AuthServices()
-                      .logInWithEmail(
-                          _emailController.text, _passwordController.text)
-                      .then((value) async {
-                    Get.offAllNamed(Routes.keluargaWrapper);
-                  });
+                  if (_emailController.text.isEmpty ||
+                      _passwordController.text.isEmpty) {
+                    Get.snackbar('Error', 'Harap isi email dan password');
+                  } else {
+                    await AuthServices()
+                        .logInWithEmail(
+                            _emailController.text, _passwordController.text)
+                        .then((value) async {
+                      Get.offAllNamed(Routes.keluargaWrapper);
+                    });
+                  }
                 },
               )
             ],

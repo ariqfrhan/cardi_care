@@ -78,12 +78,17 @@ class _SigninPasienScreenState extends State<SigninPasienScreen> {
               CustomRedButton(
                 title: 'Login',
                 onPressed: () async {
-                  await auth
-                      .logInWithEmail(
-                          _emailController.text, _passwordController.text)
-                      .then((value) async {
-                    Get.offAllNamed(Routes.mainWrapper);
-                  });
+                  if (_emailController.text.isEmpty ||
+                      _passwordController.text.isEmpty) {
+                    Get.snackbar('Error', 'Harap isi email dan password');
+                  } else {
+                    await auth
+                        .logInWithEmail(
+                            _emailController.text, _passwordController.text)
+                        .then((value) async {
+                      Get.offAllNamed(Routes.mainWrapper);
+                    });
+                  }
                 },
               )
             ],
