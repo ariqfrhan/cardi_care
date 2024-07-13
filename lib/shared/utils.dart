@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cardi_care/routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +10,26 @@ class Utils {
   static DateTime convertToDateTime(String date) {
     final DateFormat dateFormat = DateFormat('dd-MM-yyyy');
     return dateFormat.parse(date);
+  }
+
+  static String convertToDayFormat(DateTime date) {
+    DateFormat formatter = DateFormat('EEEE, dd MMMM yyyy');
+    String formattedDate = formatter.format(date);
+    return formattedDate;
+  }
+
+  static String convertToHourFormat(DateTime date) {
+    DateFormat formatter = DateFormat('HH.mm');
+    String formattedDate = formatter.format(date);
+    return formattedDate;
+  }
+
+  static String formatDateJanjiTemu(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    DateFormat formatter = DateFormat('dd MMMM yyyy - HH.mm');
+    String formattedDate = formatter.format(dateTime);
+
+    return formattedDate;
   }
 
   static int calculateAge(DateTime birthDate) {

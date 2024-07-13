@@ -109,8 +109,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                     items: familyMembers.map((DocumentSnapshot document) {
                       return DropdownMenuItem<DocumentSnapshot>(
                         value: document,
-                        child:
-                            Text('${document['name']} - ${document['email']}'),
+                        child: Text('${document['email']}'),
                       );
                     }).toList(),
                     onChanged: (DocumentSnapshot? newValue) {

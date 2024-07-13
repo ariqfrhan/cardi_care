@@ -1,4 +1,6 @@
 import 'package:cardi_care/model/obat_model.dart';
+import 'package:cardi_care/routes.dart';
+import 'package:cardi_care/services/internet_controller.dart';
 import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
@@ -39,24 +41,6 @@ class _ObatViewState extends State<ObatView> {
         Get.snackbar('Error', e.toString());
       }
     }
-  }
-
-  Future<void> _saveUpdates() async {
-    for (var obat in obatList) {
-      if (updatedStatuses.containsKey(obat.id)) {
-        final status = updatedStatuses[obat.id]!;
-        final updatedObat = ObatModel(
-          id: obat.id,
-          userId: obat.userId,
-          nama: obat.nama,
-          date: obat.date,
-          status: status,
-        );
-        await TugasServices().addRiwayatObatPasienData(updatedObat);
-      }
-    }
-    Get.snackbar('Success', 'Data obat berhasil diperbarui');
-    _fetchObatData();
   }
 
   List<ObatModel> _filterObatByTime(
@@ -132,9 +116,49 @@ class _ObatViewState extends State<ObatView> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
-        child: CustomRedButton(
-          title: 'Simpan',
-          onPressed: _saveUpdates,
+        child: InternetControllerWidget(
+          builder: (context, isConnected) {
+            return CustomRedButton(
+              title: 'Simpan',
+              onPressed: () async {
+                if (isConnected) {
+                  Get.offAllNamed(Routes.mainWrapper);
+                  for (var obat in obatList) {
+                    if (updatedStatuses.containsKey(obat.id)) {
+                      final status = updatedStatuses[obat.id]!;
+                      final updatedObat = ObatModel(
+                        id: obat.id,
+                        userId: obat.userId,
+                        nama: obat.nama,
+                        date: obat.date,
+                        status: status,
+                      );
+                      await TugasServices()
+                          .addRiwayatObatPasienData(updatedObat);
+                    }
+                  }
+                  Get.snackbar('Success', 'Data obat berhasil diperbarui');
+                } else {
+                  Get.offAllNamed(Routes.mainWrapper);
+                  Get.snackbar('Sukses', 'Akan mengupdate data setelah online');
+                  for (var obat in obatList) {
+                    if (updatedStatuses.containsKey(obat.id)) {
+                      final status = updatedStatuses[obat.id]!;
+                      final updatedObat = ObatModel(
+                        id: obat.id,
+                        userId: obat.userId,
+                        nama: obat.nama,
+                        date: obat.date,
+                        status: status,
+                      );
+                      await TugasServices()
+                          .addRiwayatObatPasienData(updatedObat);
+                    }
+                  }
+                }
+              },
+            );
+          },
         ),
       ),
     );

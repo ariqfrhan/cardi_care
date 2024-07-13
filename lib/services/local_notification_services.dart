@@ -1,5 +1,7 @@
+import 'package:cardi_care/routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 
 class LocalNotificationServices {
   static final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -9,6 +11,7 @@ class LocalNotificationServices {
     const InitializationSettings initializationSettings =
         InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      iOS: DarwinInitializationSettings(),
     );
 
     notificationsPlugin.initialize(initializationSettings);
@@ -18,21 +21,26 @@ class LocalNotificationServices {
     try {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       const NotificationDetails notificationDetails = NotificationDetails(
-        android: AndroidNotificationDetails(
-            icon: "@drawable/ic_launcher",
-            "pushnotification",
-            "pushnotificationchannel",
-            importance: Importance.max,
-            priority: Priority.high,
-            ticker: 'ticker'),
-      );
+          android: AndroidNotificationDetails(
+              icon: "@drawable/ic_launcher",
+              "pushnotification",
+              "pushnotificationchannel",
+              importance: Importance.max,
+              priority: Priority.high,
+              ticker: 'ticker'),
+          iOS: DarwinNotificationDetails());
 
-      await notificationsPlugin.show(
+      await notificationsPlugin
+          .show(
         id,
         message.notification!.title,
         message.notification!.body,
         notificationDetails,
-      );
+        payload: 'alarm',
+      )
+          .then((value) {
+        Get.toNamed(Routes.alarm);
+      });
     } catch (e) {
       throw Exception(e);
     }

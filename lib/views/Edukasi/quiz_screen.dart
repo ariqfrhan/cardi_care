@@ -1,5 +1,6 @@
 import 'package:cardi_care/model/materi_model.dart';
 import 'package:cardi_care/model/quiz_model.dart';
+import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/services/edukasi_services.dart';
 import 'package:cardi_care/shared/theme.dart';
@@ -21,11 +22,17 @@ class Quiz extends StatefulWidget {
 class _QuizState extends State<Quiz> {
   final MateriModel materi = Get.arguments;
   late Future<List<QuizModel>> futureQuestions;
+  List<int?> selectedAnswers = [];
 
   @override
   void initState() {
     super.initState();
     futureQuestions = EdukasiServices().getAllQuiz(materi.uid);
+    futureQuestions.then((questions) {
+      setState(() {
+        selectedAnswers = List<int?>.filled(questions.length, null);
+      });
+    });
   }
 
   void _submitQuiz(
@@ -37,12 +44,11 @@ class _QuizState extends State<Quiz> {
       }
     }
 
-    // Ambil userId dari AuthServices
     final FirebaseAuth auth = FirebaseAuth.instance;
     User? userId = auth.currentUser;
 
-    // Simpan hasil kuis ke Firestore
-    EdukasiServices().saveQuizResult(userId!.uid, questions, selectedAnswers);
+    await EdukasiServices()
+        .saveQuizResult(userId!.uid, materi.uid, questions, selectedAnswers);
 
     Get.snackbar(
         'Quiz Submitted', 'You answered $correctAnswers questions correctly.');
@@ -77,8 +83,6 @@ class _QuizState extends State<Quiz> {
             }
 
             List<QuizModel> questions = snapshot.data!;
-            List<int?> selectedAnswers =
-                List<int?>.filled(questions.length, null);
 
             return Column(
               children: [
@@ -100,7 +104,7 @@ class _QuizState extends State<Quiz> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Seputar Gagal Jantung',
+                      materi.nama,
                       style: blackText.copyWith(fontSize: 22, fontWeight: bold),
                       textAlign: TextAlign.center,
                     ),
@@ -145,7 +149,8 @@ class _QuizState extends State<Quiz> {
           title: 'Submit',
           onPressed: () async {
             List<QuizModel> questions = await futureQuestions;
-            _submitQuiz(questions, List<int?>.filled(questions.length, null));
+            _submitQuiz(questions, selectedAnswers);
+            Get.offAllNamed(Routes.mainWrapper);
           },
         ),
       ),

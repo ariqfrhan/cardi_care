@@ -1,6 +1,7 @@
 import 'package:cardi_care/views/AdminPages/Admin%20Tambah%20Obat/admin_edit_detail.dart';
 import 'package:cardi_care/views/AdminPages/Admin%20Tambah%20Obat/admin_obat_detail.dart';
 import 'package:cardi_care/views/AdminPages/Admin%20Tambah%20Obat/admin_tambah_detail.dart';
+import 'package:cardi_care/views/AdminPages/Admin%20Tambah%20Obat/admin_tambah_janji.dart';
 import 'package:cardi_care/views/AdminPages/AdminWrapper/admin_wrapper_screen.dart';
 import 'package:cardi_care/views/Edukasi/edukasi_screen.dart';
 import 'package:cardi_care/views/Edukasi/materi_screen.dart';
@@ -24,6 +25,7 @@ import 'package:cardi_care/views/signas_screen.dart';
 import 'package:cardi_care/views/signup_keluarga_screen.dart';
 import 'package:cardi_care/views/signup_pasien_screen.dart';
 import 'package:cardi_care/views/splash_screen.dart';
+import 'package:cardi_care/views/widgets/alarm.dart';
 import 'package:cardi_care/views/widgets/splash_daftar.dart';
 import 'package:get/get.dart';
 
@@ -55,9 +57,11 @@ class Routes {
   static String adminObatDetail = '/admin-obat-detail';
   static String adminTambahDetail = '/admin-tambah-detail';
   static String adminEditDetail = '/admin-edit-detail';
+  static String adminTambahJanji = '/admin-tambah-janji';
   static String userEdukasi = '/user-edukasi';
   static String userMateri = '/user-materi';
   static String userQuiz = '/user-quiz';
+  static String alarm = '/alarm';
 
   static List<GetPage> routes = [
     GetPage(
@@ -163,6 +167,10 @@ class Routes {
       page: () => const AdminEditDetail(),
     ),
     GetPage(
+      name: adminTambahJanji,
+      page: () => const AdminTambahJanji(),
+    ),
+    GetPage(
       name: userEdukasi,
       page: () => const EdukasiScreen(),
     ),
@@ -173,6 +181,10 @@ class Routes {
     GetPage(
       name: userQuiz,
       page: () => const Quiz(),
-    )
+    ),
+    GetPage(
+      name: alarm,
+      page: () => const Alarm(),
+    ),
   ];
 }

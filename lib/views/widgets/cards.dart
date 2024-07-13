@@ -89,6 +89,37 @@ class ObatListTile extends StatelessWidget {
   }
 }
 
+class JanjiTile extends StatelessWidget {
+  final String? notes;
+  final String time;
+  final VoidCallback? onTap;
+  const JanjiTile({
+    super.key,
+    this.notes,
+    required this.time,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      tileColor: whiteColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      leading: Icon(
+        Icons.calendar_month,
+        color: redColor,
+      ),
+      title: Text(time),
+      subtitle: Text(notes ?? 'Janji temu dengan dokter'),
+      trailing: ZoomTapAnimation(
+          onTap: () {
+            onTap?.call();
+          },
+          child: const Icon(Icons.more_vert)),
+    );
+  }
+}
+
 class EducationCard extends StatelessWidget {
   final String nama;
   final bool enabled;

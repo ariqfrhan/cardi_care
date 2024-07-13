@@ -1,5 +1,6 @@
 import 'package:cardi_care/model/olahraga_model.dart';
 import 'package:cardi_care/routes.dart';
+import 'package:cardi_care/services/internet_controller.dart';
 import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
@@ -203,28 +204,48 @@ class _OlahragaViewState extends State<OlahragaView> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
-        child: CustomRedButton(
-          title: 'Simpan',
-          onPressed: () async {
-            if (dateCtl.text.isEmpty ||
-                selectedOption == null ||
-                durationController.text.isEmpty) {
-              Get.snackbar('Error', 'Harap isi semua bagian');
-            } else {
-              OlahragaModel olahraga = OlahragaModel(
-                id: '',
-                userId: '',
-                date: dateCtl.text,
-                type: selectedOption!,
-                duration: durationController.text,
-                notes: notesController.text.isNotEmpty
-                    ? notesController.text
-                    : null,
-              );
-
-              await TugasServices().addOlahragaData(olahraga);
-              Get.offAllNamed(Routes.mainWrapper);
-            }
+        child: InternetControllerWidget(
+          builder: (context, isConnected) {
+            return CustomRedButton(
+              title: 'Simpan',
+              onPressed: () async {
+                if (dateCtl.text.isEmpty ||
+                    selectedOption == null ||
+                    durationController.text.isEmpty) {
+                  Get.snackbar('Error', 'Harap isi semua bagian');
+                } else {
+                  if (isConnected) {
+                    OlahragaModel olahraga = OlahragaModel(
+                      id: '',
+                      userId: '',
+                      date: dateCtl.text,
+                      type: selectedOption!,
+                      duration: durationController.text,
+                      notes: notesController.text.isNotEmpty
+                          ? notesController.text
+                          : null,
+                    );
+                    Get.offAllNamed(Routes.mainWrapper);
+                    await TugasServices().addOlahragaData(olahraga);
+                  } else {
+                    Get.offAllNamed(Routes.mainWrapper);
+                    Get.snackbar(
+                        'Sukses', 'Akan mengupdate data setelah online');
+                    OlahragaModel olahraga = OlahragaModel(
+                      id: '',
+                      userId: '',
+                      date: dateCtl.text,
+                      type: selectedOption!,
+                      duration: durationController.text,
+                      notes: notesController.text.isNotEmpty
+                          ? notesController.text
+                          : null,
+                    );
+                    await TugasServices().addOlahragaData(olahraga);
+                  }
+                }
+              },
+            );
           },
         ),
       ),

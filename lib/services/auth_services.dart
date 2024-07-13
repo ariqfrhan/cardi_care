@@ -4,6 +4,7 @@ import 'package:cardi_care/model/user_model.dart';
 import 'package:cardi_care/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -11,6 +12,7 @@ class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   UserCredential? userCredential;
 
   Future<void> signUpWithEmail(
@@ -94,8 +96,10 @@ class AuthServices {
 
   Future<UserModel> getUserData() async {
     User? user = _auth.currentUser;
-    DocumentSnapshot userData =
-        await firestore.collection('users').doc(user!.uid).get();
+    DocumentSnapshot userData = await firestore
+        .collection('users')
+        .doc(user!.uid)
+        .get(const GetOptions(source: Source.cache));
 
     return UserModel.fromMap(userData.data() as Map<String, dynamic>);
   }
@@ -114,5 +118,20 @@ class AuthServices {
         await firestore.collection('admin').doc(admin!.uid).get();
 
     return AdminModel.fromMap(adminData.data() as Map<String, dynamic>);
+  }
+
+  Future<String?> getAdminPhoneNumber() async {
+    try {
+      DocumentSnapshot adminData = await firestore
+          .collection('admin')
+          .doc('T0ATY1zjv1PifODYFjoPzIln4fm2')
+          .get(const GetOptions(source: Source.cache));
+      if (adminData.exists) {
+        return adminData['handphone'];
+      }
+    } catch (e) {
+      throw Exception('Error fetching admin phone number: $e');
+    }
+    return null;
   }
 }

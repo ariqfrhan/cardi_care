@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cardi_care/routes.dart';
+import 'package:cardi_care/services/internet_controller.dart';
 import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/shared/utils.dart';
@@ -255,27 +256,45 @@ class _DietViewState extends State<DietView> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
-        child: CustomRedButton(
-          title: 'Simpan',
-          onPressed: () async {
-            if (dateCtl.text.isEmpty || spoonController.text.isEmpty) {
-              Get.snackbar('Error', 'Harap isi semua bagian');
-            } else {
-              final spoon = double.tryParse(spoonController.text);
-              try {
-                await TugasServices().addDietData(
-                  dateCtl.text,
-                  spoon!,
-                  selectedImage,
-                  notesController.text.isNotEmpty ? notesController.text : null,
-                );
-                Get.offAllNamed(Routes.mainWrapper);
-              } catch (e) {
-                Get.snackbar('Error', e.toString());
+        child: InternetControllerWidget(builder: (context, isConnected) {
+          return CustomRedButton(
+            title: 'Simpan',
+            onPressed: () async {
+              if (dateCtl.text.isEmpty || spoonController.text.isEmpty) {
+                Get.snackbar('Error', 'Harap isi semua bagian');
+              } else {
+                final spoon = double.tryParse(spoonController.text);
+                try {
+                  if (isConnected) {
+                    await TugasServices().addDietData(
+                      dateCtl.text,
+                      spoon!,
+                      selectedImage,
+                      notesController.text.isNotEmpty
+                          ? notesController.text
+                          : null,
+                    );
+                    Get.offAllNamed(Routes.mainWrapper);
+                  } else {
+                    Get.offAllNamed(Routes.mainWrapper);
+                    Get.snackbar(
+                        'Sukses', 'Akan mengupdate data setelah online');
+                    await TugasServices().addDietData(
+                      dateCtl.text,
+                      spoon!,
+                      selectedImage,
+                      notesController.text.isNotEmpty
+                          ? notesController.text
+                          : null,
+                    );
+                  }
+                } catch (e) {
+                  Get.snackbar('Error', e.toString());
+                }
               }
-            }
-          },
-        ),
+            },
+          );
+        }),
       ),
     );
   }

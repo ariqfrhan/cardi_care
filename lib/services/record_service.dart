@@ -28,7 +28,7 @@ class RecordService {
           .doc(userId)
           .collection(subCollection)
           .where('date', isGreaterThanOrEqualTo: targetDate.toIso8601String())
-          .get();
+          .get(const GetOptions(source: Source.cache));
 
       return snapshot.docs.length;
     } catch (e) {
@@ -52,7 +52,7 @@ class RecordService {
       final snapshot = await firestore
           .collection('obat')
           .where('userId', isEqualTo: userId)
-          .get();
+          .get(const GetOptions(source: Source.cache));
 
       return snapshot.docs.length;
     } catch (e) {
@@ -172,7 +172,7 @@ class RecordService {
           .collection(subCollection)
           .where('date', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
           .where('date', isLessThan: endOfDay.toIso8601String())
-          .get();
+          .get(const GetOptions(source: Source.cache));
 
       return snapshot.docs.isNotEmpty;
     } catch (e) {

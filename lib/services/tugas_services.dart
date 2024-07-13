@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cardi_care/model/berat_model.dart';
 import 'package:cardi_care/model/cairan_model.dart';
 import 'package:cardi_care/model/diet_model.dart';
+import 'package:cardi_care/model/janji_temu_model.dart';
 import 'package:cardi_care/model/obat_model.dart';
 import 'package:cardi_care/model/olahraga_model.dart';
 import 'package:cardi_care/model/rokok_alkohol_model.dart';
@@ -279,7 +280,7 @@ class TugasServices {
       final snapshot = await firestore
           .collection('obat')
           .where('userId', isEqualTo: userId)
-          .get();
+          .get(const GetOptions(source: Source.serverAndCache));
 
       return snapshot.docs.map((doc) => ObatModel.fromMap(doc.data())).toList();
     } catch (e) {
@@ -319,5 +320,64 @@ class TugasServices {
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }
+  }
+
+  Future<void> addJanjiTemu(JanjiTemuModel janjiTemu) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user == null) {
+        throw Exception('User not logged in');
+      }
+      String newId = firestore
+          .collection('riwayat')
+          .doc(user.uid)
+          .collection('janji-temu')
+          .doc()
+          .id;
+      janjiTemu = JanjiTemuModel(
+        id: newId,
+        userId: janjiTemu.userId,
+        date: janjiTemu.date,
+        status: janjiTemu.status,
+      );
+
+      await firestore
+          .collection('riwayat')
+          .doc(janjiTemu.userId)
+          .collection('janji-temu')
+          .doc(janjiTemu.id)
+          .set(janjiTemu.toMap());
+
+      Get.snackbar('Success', 'Janji temu berhasil ditambahkan');
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
+
+  Future<List<JanjiTemuModel>> getJanjiTemuByUserId(String userId) async {
+    try {
+      final snapshot = await firestore
+          .collection('riwayat')
+          .doc(userId)
+          .collection('janji-temu')
+          .get(const GetOptions(source: Source.cache));
+
+      return snapshot.docs
+          .map((doc) => JanjiTemuModel.fromMap(doc.data()))
+          .toList();
+    } catch (e) {
+      throw Exception('Error : $e');
+    }
+  }
+
+  List<JanjiTemuModel> getClosestAppointment(
+      List<JanjiTemuModel> appointments) {
+    final now = DateTime.now();
+    appointments.sort((a, b) {
+      final dateA = DateTime.parse(a.date);
+      final dateB = DateTime.parse(b.date);
+      return dateA.difference(now).abs().compareTo(dateB.difference(now).abs());
+    });
+    return [appointments.first];
   }
 }

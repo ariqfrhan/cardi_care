@@ -7,14 +7,15 @@ class CustomRedButton extends StatelessWidget {
   final double width;
   final double height;
   final VoidCallback? onPressed;
+  final double? fontSize;
 
-  const CustomRedButton({
-    super.key,
-    required this.title,
-    this.width = double.infinity,
-    this.height = 50,
-    this.onPressed,
-  });
+  const CustomRedButton(
+      {super.key,
+      required this.title,
+      this.width = double.infinity,
+      this.height = 50,
+      this.onPressed,
+      this.fontSize = 16});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,11 @@ class CustomRedButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12))),
           child: Text(
             title,
-            style: whiteText.copyWith(fontSize: 16, fontWeight: semibold),
+            style: whiteText.copyWith(
+              fontSize: fontSize,
+              fontWeight: semibold,
+            ),
+            textAlign: TextAlign.center,
           )),
     );
   }

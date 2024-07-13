@@ -7,7 +7,9 @@ class EdukasiServices {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<List<MateriModel>> getAllMateri() async {
-    QuerySnapshot snapshot = await firestore.collection("materi").get();
+    QuerySnapshot snapshot = await firestore.collection("materi").get(
+          const GetOptions(source: Source.cache),
+        );
 
     return snapshot.docs
         .map((doc) => MateriModel.fromMap(doc.data() as Map<String, dynamic>))
@@ -19,7 +21,7 @@ class EdukasiServices {
       QuerySnapshot snapshot = await firestore
           .collection("quiz")
           .where('materiId', isEqualTo: materiId)
-          .get();
+          .get(const GetOptions(source: Source.cache));
 
       return snapshot.docs
           .map((doc) => QuizModel.fromMap(doc.data() as Map<String, dynamic>))
@@ -30,8 +32,8 @@ class EdukasiServices {
     }
   }
 
-  Future<void> saveQuizResult(String userId, List<QuizModel> questions,
-      List<int?> selectedAnswers) async {
+  Future<void> saveQuizResult(String userId, String materiId,
+      List<QuizModel> questions, List<int?> selectedAnswers) async {
     final CollectionReference riwayatCollection =
         firestore.collection('riwayat').doc(userId).collection('riwayat_quiz');
 
@@ -47,8 +49,20 @@ class EdukasiServices {
 
     await riwayatCollection.add({
       'userId': userId,
+      'materiId': materiId,
       'timestamp': FieldValue.serverTimestamp(),
       'results': quizResults,
     });
+  }
+
+  Future<bool> hasCompletedQuiz(String userId, String materiId) async {
+    QuerySnapshot snapshot = await firestore
+        .collection('riwayat')
+        .doc(userId)
+        .collection('riwayat_quiz')
+        .where('materiId', isEqualTo: materiId)
+        .get(const GetOptions(source: Source.cache));
+
+    return snapshot.docs.isNotEmpty;
   }
 }

@@ -1,9 +1,11 @@
+import 'package:cardi_care/model/janji_temu_model.dart';
 import 'package:cardi_care/model/obat_model.dart';
 import 'package:cardi_care/model/user_model.dart';
 import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/shared/utils.dart';
+import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:cardi_care/views/widgets/cards.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,10 +21,12 @@ class AdminObatDetail extends StatefulWidget {
 class _AdminObatDetailState extends State<AdminObatDetail> {
   final UserModel user = Get.arguments;
   List<ObatModel> obatList = [];
+  List<JanjiTemuModel> janjiList = [];
 
   @override
   void initState() {
     fetchObat();
+    fetchJanji();
     super.initState();
   }
 
@@ -30,6 +34,14 @@ class _AdminObatDetailState extends State<AdminObatDetail> {
     List<ObatModel> obats = await TugasServices().getObatDataByUserId(user.uid);
     setState(() {
       obatList = obats;
+    });
+  }
+
+  void fetchJanji() async {
+    List<JanjiTemuModel> janjis =
+        await TugasServices().getJanjiTemuByUserId(user.uid);
+    setState(() {
+      janjiList = janjis;
     });
   }
 
@@ -132,18 +144,68 @@ class _AdminObatDetailState extends State<AdminObatDetail> {
       backgroundColor: pinkColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Daftar Obat',
-              style: blackText.copyWith(fontSize: 22, fontWeight: bold),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Expanded(
-                child: ListView.builder(
+        child: Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        'Janji Temu',
+                        style:
+                            blackText.copyWith(fontSize: 22, fontWeight: bold),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: CustomRedButton(
+                        width: 48,
+                        height: 48,
+                        title: 'Tambah Janji',
+                        fontSize: 12,
+                        onPressed: () {
+                          Get.toNamed(Routes.adminTambahJanji, arguments: user);
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: janjiList.length,
+                    itemBuilder: (context, index) {
+                      JanjiTemuModel janji = janjiList[index];
+                      String date = Utils.formatDateJanjiTemu(janji.date);
+                      return Column(
+                        children: [
+                          JanjiTile(
+                            notes: janji.status,
+                            time: date,
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          )
+                        ],
+                      );
+                    }),
+                const SizedBox(
+                  height: 24,
+                ),
+                Text(
+                  'Daftar Obat',
+                  style: blackText.copyWith(fontSize: 22, fontWeight: bold),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ListView.builder(
+                    shrinkWrap: true,
                     itemCount: obatList.length,
                     itemBuilder: (context, index) {
                       ObatModel obat = obatList[index];
@@ -162,8 +224,10 @@ class _AdminObatDetailState extends State<AdminObatDetail> {
                           )
                         ],
                       );
-                    }))
-          ],
+                    })
+              ],
+            ),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(

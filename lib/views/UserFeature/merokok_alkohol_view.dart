@@ -1,4 +1,5 @@
 import 'package:cardi_care/model/rokok_alkohol_model.dart';
+import 'package:cardi_care/services/internet_controller.dart';
 import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
@@ -165,25 +166,32 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
-        child: CustomRedButton(
-          title: 'Simpan',
-          onPressed: () async {
-            if (selectedOptionAlkohol == null || selectedOptionRokok == null) {
-              Get.snackbar('Error', 'Harap isi semua bagian');
-            } else {
-              RokokAlkoholModel rokok = RokokAlkoholModel(
-                id: '',
-                userId: '',
-                date: DateTime.now().toIso8601String(),
-                merokok: selectedOptionRokok!,
-                alkohol: selectedOptionAlkohol!,
-                notes: notesController.text.isNotEmpty
-                    ? notesController.text
-                    : null,
-              );
+        child: InternetControllerWidget(
+          builder: (context, isConnected) {
+            return CustomRedButton(
+              title: 'Simpan',
+              onPressed: () async {
+                if (selectedOptionAlkohol == null ||
+                    selectedOptionRokok == null) {
+                  Get.snackbar('Error', 'Harap isi semua bagian');
+                } else {
+                  if (isConnected) {
+                    RokokAlkoholModel rokok = RokokAlkoholModel(
+                      id: '',
+                      userId: '',
+                      date: DateTime.now().toIso8601String(),
+                      merokok: selectedOptionRokok!,
+                      alkohol: selectedOptionAlkohol!,
+                      notes: notesController.text.isNotEmpty
+                          ? notesController.text
+                          : null,
+                    );
 
-              await TugasServices().addRokokAlkoholData(rokok);
-            }
+                    await TugasServices().addRokokAlkoholData(rokok);
+                  } else {}
+                }
+              },
+            );
           },
         ),
       ),

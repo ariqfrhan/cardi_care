@@ -5,6 +5,7 @@ import 'package:cardi_care/services/edukasi_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/Edukasi/materi_screen.dart';
 import 'package:cardi_care/views/widgets/cards.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,7 @@ class EdukasiScreen extends StatefulWidget {
 
 class _EdukasiScreenState extends State<EdukasiScreen> {
   List<MateriModel> materiList = [];
+  Map<String, bool> accessStatus = {}; // to track access status for each materi
 
   @override
   void initState() {
@@ -27,9 +29,23 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
   }
 
   void fetchMateri() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    User? userId = auth.currentUser;
     List<MateriModel> materis = await EdukasiServices().getAllMateri();
+    Map<String, bool> statusMap = {};
+
+    for (var i = 0; i < materis.length; i++) {
+      if (i == 0) {
+        statusMap[materis[i].uid] = true;
+      } else {
+        bool hasCompletedPrevious = await EdukasiServices()
+            .hasCompletedQuiz(userId!.uid, materis[i - 1].uid);
+        statusMap[materis[i].uid] = hasCompletedPrevious;
+      }
+    }
     setState(() {
       materiList = materis;
+      accessStatus = statusMap;
     });
   }
 
@@ -73,15 +89,18 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
                     itemCount: materiList.length,
                     itemBuilder: (context, index) {
                       MateriModel materi = materiList[index];
+                      bool isEnabled = accessStatus[materi.uid] ?? false;
                       return Column(
                         children: [
                           EducationCard(
                               nama: materi.nama,
-                              enabled: materi.status,
-                              onTap: () {
-                                Get.toNamed(Routes.userMateri,
-                                    arguments: materi);
-                              }),
+                              enabled: isEnabled,
+                              onTap: isEnabled
+                                  ? () {
+                                      Get.toNamed(Routes.userMateri,
+                                          arguments: materi);
+                                    }
+                                  : null),
                           const SizedBox(
                             height: 12,
                           )
