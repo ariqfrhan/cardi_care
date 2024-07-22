@@ -82,25 +82,31 @@ class _SignupKeluargaScreenState extends State<SignupKeluargaScreen> {
               CustomRedButton(
                 title: 'Daftar',
                 onPressed: () async {
-                  if (_passwordController.text ==
-                      _confirPasswordController.text) {
-                    KeluargaModel keluargaModel = KeluargaModel(
-                      uid: '',
-                      name: _namaController.text,
-                      userIds: [],
-                      email: _emailController.text,
-                    );
-
-                    await AuthServices().keluargaSignUp(
-                      _emailController.text,
-                      _passwordController.text,
-                      keluargaModel,
-                    );
-                    Get.snackbar('Registration Success', 'Registrasi berhasil');
-                    Get.offAllNamed(Routes.splashDaftar);
+                  if (_emailController.text.isEmpty ||
+                      _passwordController.text.isEmpty) {
+                    Get.snackbar('Error', 'Harap lengkapi semua field');
                   } else {
-                    Get.snackbar(
-                        'Registration Failed', 'Password tidak sesuai');
+                    if (_passwordController.text ==
+                        _confirPasswordController.text) {
+                      KeluargaModel keluargaModel = KeluargaModel(
+                        uid: '',
+                        name: _namaController.text,
+                        userIds: [],
+                        email: _emailController.text,
+                      );
+
+                      await AuthServices().keluargaSignUp(
+                        _emailController.text,
+                        _passwordController.text,
+                        keluargaModel,
+                      );
+                      Get.snackbar(
+                          'Registration Success', 'Registrasi berhasil');
+                      Get.offAllNamed(Routes.splashDaftar);
+                    } else {
+                      Get.snackbar(
+                          'Registration Failed', 'Password tidak sesuai');
+                    }
                   }
                 },
               )

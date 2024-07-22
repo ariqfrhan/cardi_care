@@ -4,7 +4,6 @@ import 'package:cardi_care/model/user_model.dart';
 import 'package:cardi_care/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -66,7 +65,7 @@ class AuthServices {
             .set(keluarga.toMap());
       });
     } catch (e) {
-      throw Exception('Error');
+      Get.snackbar('Error', e.toString());
     }
   }
 
@@ -125,12 +124,12 @@ class AuthServices {
       DocumentSnapshot adminData = await firestore
           .collection('admin')
           .doc('T0ATY1zjv1PifODYFjoPzIln4fm2')
-          .get(const GetOptions(source: Source.cache));
+          .get(const GetOptions(source: Source.serverAndCache));
       if (adminData.exists) {
         return adminData['handphone'];
       }
     } catch (e) {
-      throw Exception('Error fetching admin phone number: $e');
+      Get.snackbar('Error', e.toString());
     }
     return null;
   }

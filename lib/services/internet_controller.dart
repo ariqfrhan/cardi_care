@@ -5,10 +5,10 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 class InternetControllerWidget extends StatefulWidget {
   final Widget Function(BuildContext context, bool isConnected) builder;
 
-  const InternetControllerWidget({Key? key, required this.builder})
-      : super(key: key);
+  const InternetControllerWidget({super.key, required this.builder});
 
   @override
+  // ignore: library_private_types_in_public_api
   _InternetControllerWidgetState createState() =>
       _InternetControllerWidgetState();
 }

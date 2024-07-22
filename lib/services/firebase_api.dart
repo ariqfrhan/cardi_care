@@ -1,20 +1,18 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class FirebaseApi {
-  final _firebaseMessage = FirebaseMessaging.instance;
+  final _firebaseMessaging = FirebaseMessaging.instance;
 
   Future<void> initNotifications() async {
-    await _firebaseMessage.requestPermission();
+    await _firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
 
-    final fCMToken = await _firebaseMessage.getToken();
+    final fCMToken = await _firebaseMessaging.getToken();
+    print('Token: $fCMToken');
 
-    print('token : $fCMToken');
-  }
-
-  void handleMessage(RemoteMessage? message) {
-    if (message == null) {
-      return;
-    }
-    print(message);
+    // You might want to send this token to your server
   }
 }

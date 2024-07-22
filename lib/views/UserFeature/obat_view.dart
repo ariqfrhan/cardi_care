@@ -195,6 +195,7 @@ class _ObatViewState extends State<ObatView> {
                 )
               ],
             );
+            // ignore: unnecessary_to_list_in_spreads
           }).toList(),
         ],
       ),

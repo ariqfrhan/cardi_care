@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:cardi_care/routes.dart';
@@ -9,9 +8,7 @@ import 'package:cardi_care/shared/utils.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 class CairanView extends StatefulWidget {
   const CairanView({super.key});

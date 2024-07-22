@@ -5,7 +5,6 @@ import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/shared/utils.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -72,7 +71,7 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 64),
-              ProfileButtons(title: 'Pengaturan'),
+              const ProfileButtons(title: 'Pengaturan'),
               ProfileButtons(
                 title: 'Riwayat',
                 onPressed: () {
