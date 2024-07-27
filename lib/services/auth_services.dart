@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -73,7 +74,30 @@ class AuthServices {
     try {
       await _auth
           .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) async {});
+          .then((value) async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+
+        // Simpan status login
+        await prefs.setBool('isLoggedIn', true);
+
+        DocumentSnapshot userSnapshot =
+            await firestore.collection('users').doc(value.user!.uid).get();
+        if (userSnapshot.exists) {
+          await prefs.setString('role', 'user');
+        }
+
+        DocumentSnapshot keluargaSnapshot =
+            await firestore.collection('keluarga').doc(value.user!.uid).get();
+        if (keluargaSnapshot.exists) {
+          await prefs.setString('role', 'keluarga');
+        }
+
+        DocumentSnapshot adminSnapshot =
+            await firestore.collection('admin').doc(value.user!.uid).get();
+        if (adminSnapshot.exists) {
+          await prefs.setString('role', 'admin');
+        }
+      });
     } catch (e) {
       if (e is FirebaseAuthException) {
         if (e.code == 'wrong-password') {
@@ -90,6 +114,11 @@ class AuthServices {
   Future<void> signOut() async {
     await _auth.signOut();
     await _googleSignIn.signOut();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false);
+    await prefs.remove('role');
+
     Get.offAllNamed(Routes.splash);
   }
 
@@ -98,7 +127,7 @@ class AuthServices {
     DocumentSnapshot userData = await firestore
         .collection('users')
         .doc(user!.uid)
-        .get(const GetOptions(source: Source.cache));
+        .get(const GetOptions(source: Source.serverAndCache));
 
     return UserModel.fromMap(userData.data() as Map<String, dynamic>);
   }

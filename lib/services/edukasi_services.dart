@@ -8,7 +8,7 @@ class EdukasiServices {
 
   Future<List<MateriModel>> getAllMateri() async {
     QuerySnapshot snapshot = await firestore.collection("materi").get(
-          const GetOptions(source: Source.cache),
+          const GetOptions(source: Source.serverAndCache),
         );
 
     return snapshot.docs
@@ -21,7 +21,7 @@ class EdukasiServices {
       QuerySnapshot snapshot = await firestore
           .collection("quiz")
           .where('materiId', isEqualTo: materiId)
-          .get(const GetOptions(source: Source.cache));
+          .get(const GetOptions(source: Source.serverAndCache));
 
       return snapshot.docs
           .map((doc) => QuizModel.fromMap(doc.data() as Map<String, dynamic>))
@@ -61,7 +61,7 @@ class EdukasiServices {
         .doc(userId)
         .collection('riwayat_quiz')
         .where('materiId', isEqualTo: materiId)
-        .get(const GetOptions(source: Source.cache));
+        .get(const GetOptions(source: Source.serverAndCache));
 
     return snapshot.docs.isNotEmpty;
   }

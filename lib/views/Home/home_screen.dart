@@ -55,7 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
         final dateB = DateTime.parse(b.date);
         return dateA.compareTo(dateB);
       });
-      // Cari janji temu yang terdekat tapi belum lewat dari waktu saat ini
       for (JanjiTemuModel janji in janjis) {
         final date = DateTime.parse(janji.date);
         if (date.isAfter(now)) {
@@ -65,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
           return;
         }
       }
-      // Jika semua janji sudah lewat, pilih yang paling dekat
       setState(() {
         closestJanjiTemu = janjis.first;
       });

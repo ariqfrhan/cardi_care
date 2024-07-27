@@ -1,8 +1,6 @@
 import 'package:cardi_care/main.dart';
-import 'package:cardi_care/routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
 
 class LocalNotificationServices {
   static final FlutterLocalNotificationsPlugin notificationsPlugin =

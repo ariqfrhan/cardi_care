@@ -1,4 +1,5 @@
 import 'package:cardi_care/model/rokok_alkohol_model.dart';
+import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/internet_controller.dart';
 import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
@@ -188,7 +189,23 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
                     );
 
                     await TugasServices().addRokokAlkoholData(rokok);
-                  } else {}
+                    Get.offAllNamed(Routes.mainWrapper);
+                  } else {
+                    Get.offAllNamed(Routes.mainWrapper);
+                    Get.snackbar(
+                        'Sukses', 'Akan mengupdate data setelah online');
+                    RokokAlkoholModel rokok = RokokAlkoholModel(
+                      id: '',
+                      userId: '',
+                      date: DateTime.now().toIso8601String(),
+                      merokok: selectedOptionRokok!,
+                      alkohol: selectedOptionAlkohol!,
+                      notes: notesController.text.isNotEmpty
+                          ? notesController.text
+                          : null,
+                    );
+                    await TugasServices().addRokokAlkoholData(rokok);
+                  }
                 }
               },
             );

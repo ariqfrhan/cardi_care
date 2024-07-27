@@ -144,89 +144,88 @@ class _AdminObatDetailState extends State<AdminObatDetail> {
       backgroundColor: pinkColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Janji Temu',
-                        style:
-                            blackText.copyWith(fontSize: 22, fontWeight: bold),
-                      ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      'Janji Temu',
+                      style: blackText.copyWith(fontSize: 22, fontWeight: bold),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: CustomRedButton(
-                        width: 48,
-                        height: 48,
-                        title: 'Tambah Janji',
-                        fontSize: 12,
-                        onPressed: () {
-                          Get.toNamed(Routes.adminTambahJanji, arguments: user);
-                        },
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: janjiList.length,
-                    itemBuilder: (context, index) {
-                      JanjiTemuModel janji = janjiList[index];
-                      String date = Utils.formatDateJanjiTemu(janji.date);
-                      return Column(
-                        children: [
-                          JanjiTile(
-                            notes: janji.status,
-                            time: date,
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          )
-                        ],
-                      );
-                    }),
-                const SizedBox(
-                  height: 24,
-                ),
-                Text(
-                  'Daftar Obat',
-                  style: blackText.copyWith(fontSize: 22, fontWeight: bold),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: obatList.length,
-                    itemBuilder: (context, index) {
-                      ObatModel obat = obatList[index];
-                      String waktu = Utils.getWaktu(obat.date);
-                      return Column(
-                        children: [
-                          ObatListTile(
-                            name: obat.nama,
-                            time: waktu,
-                            onTap: () {
-                              showEditDeleteDialog(context, obat);
-                            },
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          )
-                        ],
-                      );
-                    })
-              ],
-            ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: CustomRedButton(
+                      width: 48,
+                      height: 48,
+                      title: 'Tambah Janji',
+                      fontSize: 12,
+                      onPressed: () {
+                        Get.toNamed(Routes.adminTambahJanji, arguments: user);
+                      },
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: janjiList.length,
+                  itemBuilder: (context, index) {
+                    JanjiTemuModel janji = janjiList[index];
+                    String date = Utils.formatDateJanjiTemu(janji.date);
+                    return Column(
+                      children: [
+                        JanjiTile(
+                          notes: janji.status,
+                          time: date,
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        )
+                      ],
+                    );
+                  }),
+              const SizedBox(
+                height: 24,
+              ),
+              Text(
+                'Daftar Obat',
+                style: blackText.copyWith(fontSize: 22, fontWeight: bold),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: obatList.length,
+                  itemBuilder: (context, index) {
+                    ObatModel obat = obatList[index];
+                    String waktu = Utils.getWaktu(obat.date);
+                    return Column(
+                      children: [
+                        ObatListTile(
+                          name: obat.nama,
+                          time: waktu,
+                          onTap: () {
+                            showEditDeleteDialog(context, obat);
+                          },
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        )
+                      ],
+                    );
+                  })
+            ],
           ),
         ),
       ),
