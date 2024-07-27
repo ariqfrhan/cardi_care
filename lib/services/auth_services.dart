@@ -70,34 +70,10 @@ class AuthServices {
     }
   }
 
-  Future<void> logInWithEmail(String email, String password) async {
+  Future<bool> logInWithEmail(String email, String password) async {
     try {
-      await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-
-        // Simpan status login
-        await prefs.setBool('isLoggedIn', true);
-
-        DocumentSnapshot userSnapshot =
-            await firestore.collection('users').doc(value.user!.uid).get();
-        if (userSnapshot.exists) {
-          await prefs.setString('role', 'user');
-        }
-
-        DocumentSnapshot keluargaSnapshot =
-            await firestore.collection('keluarga').doc(value.user!.uid).get();
-        if (keluargaSnapshot.exists) {
-          await prefs.setString('role', 'keluarga');
-        }
-
-        DocumentSnapshot adminSnapshot =
-            await firestore.collection('admin').doc(value.user!.uid).get();
-        if (adminSnapshot.exists) {
-          await prefs.setString('role', 'admin');
-        }
-      });
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return true;
     } catch (e) {
       if (e is FirebaseAuthException) {
         if (e.code == 'wrong-password') {
@@ -108,17 +84,13 @@ class AuthServices {
       } else {
         Get.snackbar('Login Failed', 'An error occurred during login');
       }
+      return false;
     }
   }
 
   Future<void> signOut() async {
     await _auth.signOut();
     await _googleSignIn.signOut();
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', false);
-    await prefs.remove('role');
-
     Get.offAllNamed(Routes.splash);
   }
 
