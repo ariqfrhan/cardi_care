@@ -17,7 +17,7 @@ class EdukasiScreen extends StatefulWidget {
 
 class _EdukasiScreenState extends State<EdukasiScreen> {
   List<MateriModel> materiList = [];
-  Map<String, bool> accessStatus = {}; // to track access status for each materi
+  Map<String, bool> accessStatus = {};
 
   @override
   void initState() {
@@ -64,7 +64,7 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
                 const SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.max,

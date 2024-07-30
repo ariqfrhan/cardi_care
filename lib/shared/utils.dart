@@ -105,7 +105,6 @@ class Utils {
         return Routes.adminWrapper;
       }
     } catch (e) {
-      Get.snackbar('error', e.toString());
       return Routes.splash;
     }
 

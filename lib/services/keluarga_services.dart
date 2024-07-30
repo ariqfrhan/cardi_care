@@ -53,9 +53,21 @@ class KeluargaServices {
     List<Map<String, dynamic>> usersWithoutSelfCare =
         await Future.wait(futures);
 
-    // Filter pengguna yang tidak melakukan self-care
-    return usersWithoutSelfCare
+    usersWithoutSelfCare = usersWithoutSelfCare
         .where((entry) => entry['daysSinceLastSelfCare'] != 0)
         .toList();
+
+    usersWithoutSelfCare.sort((a, b) {
+      int? daysA = a['daysSinceLastSelfCare'];
+      int? daysB = b['daysSinceLastSelfCare'];
+
+      if (daysA == null && daysB == null) return 0;
+      if (daysA == null) return 1;
+      if (daysB == null) return -1;
+
+      return daysB.compareTo(daysA);
+    });
+
+    return usersWithoutSelfCare;
   }
 }

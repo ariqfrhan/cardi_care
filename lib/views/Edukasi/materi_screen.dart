@@ -34,18 +34,14 @@ class _MateriState extends State<Materi> {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
-          const SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
           Text(
             'Tema',
             style: blackText.copyWith(
                 fontSize: 14, fontWeight: bold, color: redColor),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(
-            height: 4,
-          ),
+          const SizedBox(height: 4),
           Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,21 +56,40 @@ class _MateriState extends State<Materi> {
               ),
             ],
           ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           SingleChildScrollView(
             child: Html(data: materi.materi),
-          )
+          ),
+          // Tambahkan padding di bawah untuk memberikan ruang pada konten scroll
+          const SizedBox(height: 100),
         ],
       ),
       bottomNavigationBar: BottomAppBar(
         color: whiteColor,
-        child: CustomRedButton(
-          title: 'Quiz',
-          onPressed: () {
-            Get.toNamed(Routes.userQuiz, arguments: materi);
-          },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: CustomRedButton(
+                  title: 'Teka Teki Silang',
+                  onPressed: () {
+                    Get.toNamed(Routes.tekaTekiSilang, arguments: materi);
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: CustomRedButton(
+                  title: 'Quiz',
+                  onPressed: () {
+                    Get.toNamed(Routes.userQuiz, arguments: materi);
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -65,12 +65,12 @@ class AdminProfile extends StatelessWidget {
               ),
               const SizedBox(height: 64),
               const ProfileButtons(title: 'Pengaturan'),
-              ProfileButtons(
-                title: 'Riwayat',
-                onPressed: () {
-                  Get.toNamed(Routes.userRiwayat);
-                },
-              ),
+              // ProfileButtons(
+              //   title: 'Riwayat',
+              //   onPressed: () {
+              //     Get.toNamed(Routes.userRiwayat);
+              //   },
+              // ),
             ],
           );
         },

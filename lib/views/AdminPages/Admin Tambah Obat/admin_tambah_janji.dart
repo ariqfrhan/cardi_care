@@ -174,8 +174,9 @@ class _AdminTambahJanjiState extends State<AdminTambahJanji> {
                     ? notesController.text
                     : null,
               );
-              await TugasServices().addJanjiTemu(janjiTemu);
-              Get.offNamed(Routes.adminObatDetail, arguments: user);
+              await TugasServices().addJanjiTemu(janjiTemu).then((value) async {
+                Get.offNamed(Routes.adminObatDetail, arguments: user);
+              });
             }
           },
         ),

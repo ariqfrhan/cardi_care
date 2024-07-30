@@ -25,7 +25,7 @@ class TtsService {
     try {
       QuerySnapshot ttsData = await firestore
           .collection(COLLECTION_NAME)
-          .where('materi_id', isEqualTo: id)
+          .where('materiID', isEqualTo: id)
           .get();
 
       return TtsModel.fromMap(
