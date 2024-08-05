@@ -37,7 +37,7 @@ class _TekaTekiSilangWidget extends ConsumerState<TekaTekiSilangWidget> {
 
   _buildSpan(BuildContext context, int index) {
     return const TableSpan(
-      extent: FixedTableSpanExtent(60),
+      extent: FixedTableSpanExtent(55),
       // foregroundDecoration: TableSpanDecoration(
       //   border: TableSpanBorder(
       //     // leading: BorderSide(
