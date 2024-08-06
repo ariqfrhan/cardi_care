@@ -47,7 +47,17 @@ class _TekaTekiSilangWidgetState extends ConsumerState<TekaTekiSilangWidget> {
 
   TableSpan _buildSpan(BuildContext context, int index) {
     return const TableSpan(
-      extent: FixedTableSpanExtent(60),
+      extent: FixedTableSpanExtent(55),
+      // foregroundDecoration: TableSpanDecoration(
+      //   border: TableSpanBorder(
+      //     // leading: BorderSide(
+      //     //   color: Colors.black54,
+      //     // ),
+      //     trailing: BorderSide(
+      //       color: Colors.black54,
+      //     ),
+      //   ),
+      // ),
     );
   }
 
