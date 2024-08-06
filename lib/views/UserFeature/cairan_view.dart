@@ -150,13 +150,13 @@ class _CairanViewState extends State<CairanView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Sendok teh',
+                          'ml',
                           style: blackText.copyWith(
                               fontSize: 12, fontWeight: bold),
                         ),
                       ],
                     ),
-                    labelText: 'Jumlah Garam',
+                    labelText: 'Jumlah Cairan',
                   ),
                 ),
                 const SizedBox(

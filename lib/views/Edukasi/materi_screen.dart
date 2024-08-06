@@ -73,7 +73,7 @@ class _MateriState extends State<Materi> {
             children: [
               Expanded(
                 child: CustomRedButton(
-                  title: 'Teka Teki Silang',
+                  title: 'TTS',
                   onPressed: () {
                     Get.toNamed(Routes.tekaTekiSilang, arguments: materi);
                   },

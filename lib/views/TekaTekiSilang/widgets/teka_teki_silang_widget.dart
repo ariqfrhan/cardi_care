@@ -5,37 +5,47 @@ import 'teka_teki_silang_drawer_answer.dart';
 import '../providers.dart';
 
 class TekaTekiSilangWidget extends ConsumerStatefulWidget {
-  const TekaTekiSilangWidget({super.key});
+  const TekaTekiSilangWidget({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<TekaTekiSilangWidget> createState() => _TekaTekiSilangWidget();
+  ConsumerState<TekaTekiSilangWidget> createState() =>
+      _TekaTekiSilangWidgetState();
 }
 
-class _TekaTekiSilangWidget extends ConsumerState<TekaTekiSilangWidget> {
+class _TekaTekiSilangWidgetState extends ConsumerState<TekaTekiSilangWidget> {
   @override
   void initState() {
     super.initState();
-    // "ref" can be used in all life-cycles of a StatefulWidget.
     ref.read(ttsNotifierProvider.notifier);
   }
-
-  bool open = false;
 
   @override
   Widget build(BuildContext context) {
     final ttsData = ref.watch(ttsNotifierProvider);
 
-    return TableView.builder(
-      diagonalDragBehavior: DiagonalDragBehavior.free,
-      cellBuilder: _buildCell,
-      columnCount: ttsData.col,
-      columnBuilder: (index) => _buildSpan(context, index),
-      rowCount: ttsData.row,
-      rowBuilder: (index) => _buildSpan(context, index),
+    if (ttsData.col <= 0 || ttsData.row <= 0) {
+      return const Center(child: Text('Data TTS tidak valid'));
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox(
+          width: constraints.maxWidth,
+          height: constraints.maxHeight,
+          child: TableView.builder(
+            diagonalDragBehavior: DiagonalDragBehavior.free,
+            cellBuilder: _buildCell,
+            columnCount: ttsData.col,
+            columnBuilder: (index) => _buildSpan(context, index),
+            rowCount: ttsData.row,
+            rowBuilder: (index) => _buildSpan(context, index),
+          ),
+        );
+      },
     );
   }
 
-  _buildSpan(BuildContext context, int index) {
+  TableSpan _buildSpan(BuildContext context, int index) {
     return const TableSpan(
       extent: FixedTableSpanExtent(55),
       // foregroundDecoration: TableSpanDecoration(
@@ -122,11 +132,7 @@ class _TekaTekiSilangWidget extends ConsumerState<TekaTekiSilangWidget> {
     );
   }
 
-  containerEventListener(
-    BuildContext context,
-    int row,
-    int column,
-  ) {
+  void containerEventListener(BuildContext context, int row, int column) {
     final ttsData = ref.watch(ttsNotifierProvider);
     final currentMatrix = ttsData.table[row][column];
     final currentItem = ref.read(ttsNotifierProvider).items.where((element) {
@@ -135,7 +141,6 @@ class _TekaTekiSilangWidget extends ConsumerState<TekaTekiSilangWidget> {
           element.startRow == row;
     }).toList();
 
-    // when direction horizontal and vertical is true then show floating action button to change direction
     if (currentMatrix.direction.horizontal &&
         currentMatrix.direction.vertical) {
       if (currentItem.isEmpty) return;
@@ -160,7 +165,7 @@ class _TekaTekiSilangWidget extends ConsumerState<TekaTekiSilangWidget> {
     }
   }
 
-  showDrawerAnswer(
+  void showDrawerAnswer(
     BuildContext context,
     int row,
     int column,
@@ -191,10 +196,6 @@ class _TekaTekiSilangWidget extends ConsumerState<TekaTekiSilangWidget> {
       isScrollControlled: true,
       useSafeArea: true,
       isDismissible: false,
-      sheetAnimationStyle: AnimationStyle(
-        curve: Curves.easeInOut,
-        duration: const Duration(milliseconds: 500),
-      ),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
@@ -204,59 +205,56 @@ class _TekaTekiSilangWidget extends ConsumerState<TekaTekiSilangWidget> {
     );
   }
 
-  void showFloatingActionButton(
-    BuildContext context,
-    int row,
-    int column,
-  ) {
+  void showFloatingActionButton(BuildContext context, int row, int column) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            alignment: Alignment.center,
-            title: const Text(
-              'Pilih Arah yang ingin di jawab',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          alignment: Alignment.center,
+          title: const Text(
+            'Pilih Arah yang ingin di jawab',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+            ),
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          content: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  showDrawerAnswer(context, row, column, 'horizontal');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                child: const Text(
+                  'Mendatar',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
-            ),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            content: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    showDrawerAnswer(context, row, column, 'horizontal');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                  ),
-                  child: const Text(
-                    'Mendatar',
-                    style: TextStyle(color: Colors.white),
-                  ),
+              const SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  showDrawerAnswer(context, row, column, 'vertical');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    showDrawerAnswer(context, row, column, 'vertical');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                  ),
-                  child: const Text(
-                    'Menurun',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                child: const Text(
+                  'Menurun',
+                  style: TextStyle(color: Colors.white),
                 ),
-              ],
-            ),
-          );
-        });
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

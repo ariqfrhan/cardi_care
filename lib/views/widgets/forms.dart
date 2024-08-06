@@ -77,7 +77,12 @@ class ObatForms extends StatefulWidget {
 class _ObatFormsState extends State<ObatForms> {
   late TextEditingController dateCtl = TextEditingController();
   String? selectedOptions;
-  List<String> options = ['Belum', 'Mandiri', 'Dibantu'];
+  List<String> options = [
+    'Belum',
+    'Mandiri',
+    'Dibantu Keluarga',
+    'Dibantu Perawat'
+  ];
 
   @override
   void initState() {
@@ -137,7 +142,7 @@ class _ObatFormsState extends State<ObatForms> {
                     value: value,
                     child: Text(
                       value,
-                      style: whiteText.copyWith(fontSize: 16, fontWeight: bold),
+                      style: whiteText.copyWith(fontSize: 13, fontWeight: bold),
                     ),
                   );
                 },

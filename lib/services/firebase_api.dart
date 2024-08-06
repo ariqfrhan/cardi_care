@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
@@ -11,8 +12,8 @@ class FirebaseApi {
     );
 
     final fCMToken = await _firebaseMessaging.getToken();
-    print('Token: $fCMToken');
-
-    // You might want to send this token to your server
+    if (kDebugMode) {
+      print('Token: $fCMToken');
+    }
   }
 }
