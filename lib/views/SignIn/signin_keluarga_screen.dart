@@ -81,7 +81,8 @@ class _SigninKeluargaScreenState extends State<SigninKeluargaScreen> {
                     Get.snackbar('Error', 'Harap isi email dan password');
                   } else {
                     bool loginSuccess = await AuthServices().logInWithEmail(
-                        _emailController.text, _passwordController.text);
+                        _emailController.text, _passwordController.text,
+                        userType: 'keluarga');
                     if (loginSuccess) {
                       Get.offAllNamed(Routes.keluargaWrapper);
                     }

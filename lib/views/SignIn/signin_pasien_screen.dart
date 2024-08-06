@@ -83,7 +83,8 @@ class _SigninPasienScreenState extends State<SigninPasienScreen> {
                     Get.snackbar('Error', 'Harap isi email dan password');
                   } else {
                     bool loginSuccess = await AuthServices().logInWithEmail(
-                        _emailController.text, _passwordController.text);
+                        _emailController.text, _passwordController.text,
+                        userType: 'pasien');
                     if (loginSuccess) {
                       Get.offAllNamed(Routes.mainWrapper);
                     }

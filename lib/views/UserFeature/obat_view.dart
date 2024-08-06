@@ -92,7 +92,7 @@ class _ObatViewState extends State<ObatView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Kenapa obat penting?',
+                  'Mengapa pengobatan penting?',
                   style: blackText.copyWith(
                     fontSize: 18,
                     fontWeight: semibold,
@@ -175,7 +175,7 @@ class _ObatViewState extends State<ObatView> {
           Text(
             title,
             style: blackText.copyWith(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: bold,
             ),
           ),

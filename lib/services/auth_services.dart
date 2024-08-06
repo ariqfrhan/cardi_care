@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -70,9 +69,42 @@ class AuthServices {
     }
   }
 
-  Future<bool> logInWithEmail(String email, String password) async {
+  Future<bool> logInWithEmail(String email, String password,
+      {required String userType}) async {
     try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      if (userType == 'admin') {
+        bool isAdmin = await isUserAdmin(userCredential.user!.uid);
+        if (!isAdmin) {
+          await _auth.signOut();
+          Get.snackbar(
+              'Login Failed', 'Akun ini tidak terdaftar sebagai admin');
+          return false;
+        }
+      }
+
+      if (userType == 'keluarga') {
+        bool isAdmin = await isUserKeluarga(userCredential.user!.uid);
+        if (!isAdmin) {
+          await _auth.signOut();
+          Get.snackbar(
+              'Login Failed', 'Akun ini tidak terdaftar sebagai keluarga');
+          return false;
+        }
+      }
+
+      if (userType == 'pasien') {
+        bool isAdmin = await isUserPasien(userCredential.user!.uid);
+        if (!isAdmin) {
+          await _auth.signOut();
+          Get.snackbar(
+              'Login Failed', 'Akun ini tidak terdaftar sebagai pasien');
+          return false;
+        }
+      }
+
       return true;
     } catch (e) {
       if (e is FirebaseAuthException) {
@@ -84,6 +116,39 @@ class AuthServices {
       } else {
         Get.snackbar('Login Failed', 'An error occurred during login');
       }
+      return false;
+    }
+  }
+
+  Future<bool> isUserAdmin(String uid) async {
+    try {
+      DocumentSnapshot adminDoc =
+          await firestore.collection('admin').doc(uid).get();
+      return adminDoc.exists;
+    } catch (e) {
+      // print('Error checking admin status: $e');
+      return false;
+    }
+  }
+
+  Future<bool> isUserPasien(String uid) async {
+    try {
+      DocumentSnapshot adminDoc =
+          await firestore.collection('users').doc(uid).get();
+      return adminDoc.exists;
+    } catch (e) {
+      // print('Error checking admin status: $e');
+      return false;
+    }
+  }
+
+  Future<bool> isUserKeluarga(String uid) async {
+    try {
+      DocumentSnapshot adminDoc =
+          await firestore.collection('keluarga').doc(uid).get();
+      return adminDoc.exists;
+    } catch (e) {
+      // print('Error checking admin status: $e');
       return false;
     }
   }

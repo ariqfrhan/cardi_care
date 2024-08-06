@@ -19,7 +19,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
+  String? selectedGender;
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -30,6 +30,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
 
   List<DocumentSnapshot> familyMembers = [];
   DocumentSnapshot? selectedFamilyMember;
+  List<String> jenisKelamin = ['Laki-Laki', 'Perempuan'];
 
   @override
   void initState() {
@@ -50,7 +51,6 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _dobController.dispose();
-    _genderController.dispose();
     _heightController.dispose();
     _weightController.dispose();
     _passwordController.dispose();
@@ -105,11 +105,13 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                     height: 8,
                   ),
                   DropdownButtonFormField<DocumentSnapshot>(
+                    isExpanded: true,
+                    menuMaxHeight: 300,
                     value: selectedFamilyMember,
                     items: familyMembers.map((DocumentSnapshot document) {
                       return DropdownMenuItem<DocumentSnapshot>(
                         value: document,
-                        child: Text('${document['email']}'),
+                        child: Text('${document['name']}'),
                       );
                     }).toList(),
                     onChanged: (DocumentSnapshot? newValue) {
@@ -125,6 +127,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: redColor),
                       ),
+                      floatingLabelStyle: TextStyle(color: redColor),
                       labelStyle: TextStyle(color: mono600),
                       labelText: 'Nama Penanggung Jawab',
                     ),
@@ -139,7 +142,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                           controller: _dobController,
                           decoration: InputDecoration(
                             fillColor: pinkColor,
-                            labelText: 'Tanggal',
+                            labelText: 'Tanggal lahir',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
@@ -171,9 +174,32 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                         width: 5,
                       ),
                       Expanded(
-                        child: CustomFormField(
-                          title: 'Jenis Kelamin',
-                          controller: _genderController,
+                        child: DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            fillColor: pinkColor,
+                            labelText: 'Jenis Kelamin',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: redColor),
+                            ),
+                            floatingLabelStyle: TextStyle(color: redColor),
+                          ),
+                          value: selectedGender,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedGender = newValue;
+                            });
+                          },
+                          items: jenisKelamin.map<DropdownMenuItem<String>>(
+                            (String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            },
+                          ).toList(),
                         ),
                       ),
                     ],
@@ -233,7 +259,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                         name: _nameController.text,
                         email: _emailController.text,
                         tempatTL: _dobController.text,
-                        gender: _genderController.text,
+                        gender: selectedGender!,
                         height: _heightController.text,
                         weight: _weightController.text,
                       );

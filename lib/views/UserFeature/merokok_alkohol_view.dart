@@ -54,7 +54,7 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Kenapa alkohol penting?',
+              'Kenapa penting untuk mencatat?',
               style: blackText.copyWith(
                 fontSize: 18,
                 fontWeight: semibold,

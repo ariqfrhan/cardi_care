@@ -59,7 +59,7 @@ class OnboardingScreen extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12))),
                       child: Text(
-                        'Continue',
+                        'Daftar',
                         style:
                             whiteText.copyWith(fontWeight: bold, fontSize: 14),
                       ),

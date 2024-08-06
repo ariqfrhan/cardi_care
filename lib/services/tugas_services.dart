@@ -35,6 +35,7 @@ class TugasServices {
           userId: user.uid,
           date: olahraga.date,
           type: olahraga.type,
+          activity: olahraga.activity,
           duration: olahraga.duration,
           notes: olahraga.notes,
         );

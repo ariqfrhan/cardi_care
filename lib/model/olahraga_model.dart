@@ -3,6 +3,7 @@ class OlahragaModel {
   final String userId;
   final String date;
   final String type;
+  final String activity;
   final String duration;
   final String? notes;
 
@@ -11,6 +12,7 @@ class OlahragaModel {
       required this.userId,
       required this.date,
       required this.type,
+      required this.activity,
       required this.duration,
       required this.notes});
 
@@ -20,6 +22,7 @@ class OlahragaModel {
       'userId': userId,
       'date': date,
       'type': type,
+      'activity': activity,
       'duration': duration,
       'notes': notes,
     };
@@ -31,6 +34,7 @@ class OlahragaModel {
       userId: map['userId'],
       date: map['date'],
       type: map['type'],
+      activity: map['activity'],
       duration: map['duration'],
       notes: map['notes'],
     );

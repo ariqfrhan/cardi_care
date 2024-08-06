@@ -17,11 +17,14 @@ class OlahragaView extends StatefulWidget {
 class _OlahragaViewState extends State<OlahragaView> {
   late TextEditingController dateCtl = TextEditingController();
   final TextEditingController typeController = TextEditingController();
+  final TextEditingController activityController = TextEditingController();
   final TextEditingController durationController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
   String? selectedOption;
+  String? selectedOptionAktivitas;
 
   List<String> options = ['Berat', 'Ringan', 'Sedang'];
+  List<String> aktivitasOptions = ['Jalan', 'Renang', 'Bulutangkis'];
 
   @override
   void initState() {
@@ -156,6 +159,45 @@ class _OlahragaViewState extends State<OlahragaView> {
                 height: 8,
               ),
               TextFormField(
+                controller: activityController,
+                decoration: InputDecoration(
+                  labelText: 'List aktivitas',
+                  filled: true,
+                  fillColor: pinkColor,
+                  floatingLabelStyle: TextStyle(color: redColor),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: redColor,
+                    ),
+                  ),
+                  hintText: 'Klik icon untuk memilih list aktivitas',
+                  suffixIcon: PopupMenuButton<String>(
+                    icon: const Icon(Icons.arrow_drop_down),
+                    onSelected: (String value) {
+                      setState(() {
+                        activityController.text = value;
+                      });
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return aktivitasOptions.map((String value) {
+                        return PopupMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    selectedOptionAktivitas = value;
+                  });
+                },
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
                 controller: durationController,
                 decoration: InputDecoration(
                   filled: true,
@@ -211,7 +253,8 @@ class _OlahragaViewState extends State<OlahragaView> {
               onPressed: () async {
                 if (dateCtl.text.isEmpty ||
                     selectedOption == null ||
-                    durationController.text.isEmpty) {
+                    durationController.text.isEmpty ||
+                    activityController.text.isEmpty) {
                   Get.snackbar('Error', 'Harap isi semua bagian');
                 } else {
                   if (isConnected) {
@@ -220,6 +263,7 @@ class _OlahragaViewState extends State<OlahragaView> {
                       userId: '',
                       date: dateCtl.text,
                       type: selectedOption!,
+                      activity: activityController.text,
                       duration: durationController.text,
                       notes: notesController.text.isNotEmpty
                           ? notesController.text
@@ -236,6 +280,7 @@ class _OlahragaViewState extends State<OlahragaView> {
                       userId: '',
                       date: dateCtl.text,
                       type: selectedOption!,
+                      activity: activityController.text,
                       duration: durationController.text,
                       notes: notesController.text.isNotEmpty
                           ? notesController.text
