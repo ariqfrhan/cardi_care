@@ -2,7 +2,6 @@ import 'package:cardi_care/firebase_options.dart';
 import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/services/firebase_api.dart';
-import 'package:cardi_care/services/internet_controller.dart';
 import 'package:cardi_care/services/local_notification_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/shared/utils.dart';
@@ -11,10 +10,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final BehaviorSubject<String> selectNotificationSubject =
+    BehaviorSubject<String>();
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print("Handling a background message: ${message.messageId}");
   LocalNotificationServices.createNotification(message);
 }
 
@@ -36,6 +40,7 @@ Future<void> main() async {
       await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
     initialRoute = Routes.alarm;
+    selectNotificationSubject.add('alarm');
   }
 
   FirebaseFirestore.instance.settings = const Settings(
@@ -43,8 +48,10 @@ Future<void> main() async {
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
 
-  runApp(MainApp(
-    initialRoute: initialRoute,
+  runApp(ProviderScope(
+    child: MainApp(
+      initialRoute: initialRoute,
+    ),
   ));
 }
 
@@ -59,16 +66,26 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   @override
   void initState() {
-    FirebaseMessaging.onMessage.listen((message) {
+    super.initState();
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
         LocalNotificationServices.createNotification(message);
-        if (Get.isRegistered<GlobalKey<NavigatorState>>()) {
-          Get.toNamed(Routes.alarm);
-        }
+        selectNotificationSubject.add('alarm');
       }
     });
 
-    super.initState();
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        selectNotificationSubject.add('alarm');
+      }
+    });
+
+    selectNotificationSubject.stream.listen((String payload) async {
+      if (payload == 'alarm' && Get.currentRoute != Routes.alarm) {
+        Get.toNamed(Routes.alarm);
+      }
+    });
   }
 
   @override

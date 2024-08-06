@@ -2,7 +2,6 @@ import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/shared/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class Alarm extends StatelessWidget {

@@ -125,7 +125,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: redColor),
                       ),
-                      labelStyle: TextStyle(color: redColor),
+                      labelStyle: TextStyle(color: mono600),
                       labelText: 'Nama Penanggung Jawab',
                     ),
                   ),
@@ -217,38 +217,45 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
               CustomRedButton(
                 title: 'Daftar',
                 onPressed: () async {
-                  if (_passwordController.text ==
-                      _confirmPasswordController.text) {
-                    UserModel user = UserModel(
-                      uid: '',
-                      familyId: selectedFamilyMember != null
-                          ? selectedFamilyMember!.id
-                          : '',
-                      name: _nameController.text,
-                      email: _emailController.text,
-                      tempatTL: _dobController.text,
-                      gender: _genderController.text,
-                      height: _heightController.text,
-                      weight: _weightController.text,
-                    );
-
-                    await _authServices.signUpWithEmail(
-                      _emailController.text,
-                      _passwordController.text,
-                      user,
-                    );
-
-                    if (selectedFamilyMember != null) {
-                      await FirebaseFirestore.instance
-                          .collection('keluarga')
-                          .doc(selectedFamilyMember!.id)
-                          .update({
-                        'userIds': FieldValue.arrayUnion([user.uid]),
-                      });
-                    }
+                  if (_emailController.text.isEmpty ||
+                      _passwordController.text.isEmpty ||
+                      _dobController.text.isEmpty ||
+                      selectedFamilyMember == null) {
+                    Get.snackbar('Error', 'Harap isi semua field');
                   } else {
-                    Get.snackbar(
-                        'Registration Failed', 'Password tidak sesuai');
+                    if (_passwordController.text ==
+                        _confirmPasswordController.text) {
+                      UserModel user = UserModel(
+                        uid: '',
+                        familyId: selectedFamilyMember != null
+                            ? selectedFamilyMember!.id
+                            : '',
+                        name: _nameController.text,
+                        email: _emailController.text,
+                        tempatTL: _dobController.text,
+                        gender: _genderController.text,
+                        height: _heightController.text,
+                        weight: _weightController.text,
+                      );
+
+                      await _authServices.signUpWithEmail(
+                        _emailController.text,
+                        _passwordController.text,
+                        user,
+                      );
+
+                      if (selectedFamilyMember != null) {
+                        await FirebaseFirestore.instance
+                            .collection('keluarga')
+                            .doc(selectedFamilyMember!.id)
+                            .update({
+                          'userIds': FieldValue.arrayUnion([user.uid]),
+                        });
+                      }
+                    } else {
+                      Get.snackbar(
+                          'Registration Failed', 'Password tidak sesuai');
+                    }
                   }
                 },
               ),

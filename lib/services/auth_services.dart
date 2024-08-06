@@ -4,9 +4,9 @@ import 'package:cardi_care/model/user_model.dart';
 import 'package:cardi_care/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -66,15 +66,14 @@ class AuthServices {
             .set(keluarga.toMap());
       });
     } catch (e) {
-      throw Exception('Error');
+      Get.snackbar('Error', e.toString());
     }
   }
 
-  Future<void> logInWithEmail(String email, String password) async {
+  Future<bool> logInWithEmail(String email, String password) async {
     try {
-      await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) async {});
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return true;
     } catch (e) {
       if (e is FirebaseAuthException) {
         if (e.code == 'wrong-password') {
@@ -85,6 +84,7 @@ class AuthServices {
       } else {
         Get.snackbar('Login Failed', 'An error occurred during login');
       }
+      return false;
     }
   }
 
@@ -99,7 +99,7 @@ class AuthServices {
     DocumentSnapshot userData = await firestore
         .collection('users')
         .doc(user!.uid)
-        .get(const GetOptions(source: Source.cache));
+        .get(const GetOptions(source: Source.serverAndCache));
 
     return UserModel.fromMap(userData.data() as Map<String, dynamic>);
   }
@@ -130,7 +130,7 @@ class AuthServices {
         return adminData['handphone'];
       }
     } catch (e) {
-      throw Exception('Error fetching admin phone number: $e');
+      Get.snackbar('Error', e.toString());
     }
     return null;
   }

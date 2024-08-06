@@ -64,7 +64,7 @@ class KeluargaProfile extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 64),
-              ProfileButtons(title: 'Pengaturan'),
+              const ProfileButtons(title: 'Pengaturan'),
               ProfileButtons(
                 title: 'Riwayat',
                 onPressed: () {

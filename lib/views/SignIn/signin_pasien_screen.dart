@@ -82,12 +82,11 @@ class _SigninPasienScreenState extends State<SigninPasienScreen> {
                       _passwordController.text.isEmpty) {
                     Get.snackbar('Error', 'Harap isi email dan password');
                   } else {
-                    await auth
-                        .logInWithEmail(
-                            _emailController.text, _passwordController.text)
-                        .then((value) async {
+                    bool loginSuccess = await AuthServices().logInWithEmail(
+                        _emailController.text, _passwordController.text);
+                    if (loginSuccess) {
                       Get.offAllNamed(Routes.mainWrapper);
-                    });
+                    }
                   }
                 },
               )

@@ -1,7 +1,6 @@
-import 'package:cardi_care/routes.dart';
+import 'package:cardi_care/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
 
 class LocalNotificationServices {
   static final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -14,7 +13,12 @@ class LocalNotificationServices {
       iOS: DarwinInitializationSettings(),
     );
 
-    notificationsPlugin.initialize(initializationSettings);
+    notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        selectNotificationSubject.add(response.payload ?? '');
+      },
+    );
   }
 
   static void createNotification(RemoteMessage message) async {
@@ -30,17 +34,13 @@ class LocalNotificationServices {
               ticker: 'ticker'),
           iOS: DarwinNotificationDetails());
 
-      await notificationsPlugin
-          .show(
+      await notificationsPlugin.show(
         id,
         message.notification!.title,
         message.notification!.body,
         notificationDetails,
         payload: 'alarm',
-      )
-          .then((value) {
-        Get.toNamed(Routes.alarm);
-      });
+      );
     } catch (e) {
       throw Exception(e);
     }

@@ -45,32 +45,35 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void fetchClosestJanjiTemu() async {
-    UserModel user = await AuthServices().getUserData();
-    List<JanjiTemuModel> janjis =
-        await TugasServices().getJanjiTemuByUserId(user.uid);
-    if (janjis.isNotEmpty) {
-      final now = DateTime.now();
-      janjis.sort((a, b) {
-        final dateA = DateTime.parse(a.date);
-        final dateB = DateTime.parse(b.date);
-        return dateA.compareTo(dateB);
-      });
-      // Cari janji temu yang terdekat tapi belum lewat dari waktu saat ini
-      for (JanjiTemuModel janji in janjis) {
-        final date = DateTime.parse(janji.date);
-        if (date.isAfter(now)) {
-          setState(() {
-            closestJanjiTemu = janji;
-          });
-          return;
-        }
+  UserModel user = await AuthServices().getUserData();
+  List<JanjiTemuModel> janjis =
+      await TugasServices().getJanjiTemuByUserId(user.uid);
+  if (janjis.isNotEmpty) {
+    final now = DateTime.now();
+    janjis.sort((a, b) {
+      final dateA = DateTime.parse(a.date);
+      final dateB = DateTime.parse(b.date);
+      return dateA.compareTo(dateB);
+    });
+
+    JanjiTemuModel? nextJanjiTemu;
+    for (JanjiTemuModel janji in janjis) {
+      final dateTime = DateTime.parse(janji.date);
+      if (dateTime.isAfter(now)) {
+        nextJanjiTemu = janji;
+        break;
       }
-      // Jika semua janji sudah lewat, pilih yang paling dekat
-      setState(() {
-        closestJanjiTemu = janjis.first;
-      });
     }
+
+    setState(() {
+      closestJanjiTemu = nextJanjiTemu;
+    });
+  } else {
+    setState(() {
+      closestJanjiTemu = null;
+    });
   }
+}
 
   void fetchAdminPhoneNumber() async {
     adminPhoneNumber = await AuthServices().getAdminPhoneNumber();
@@ -97,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(
-                  height: 14,
+                  height: 20,
                 ),
                 FutureBuilder(
                     future: auth.getUserData(),

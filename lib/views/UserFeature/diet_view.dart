@@ -114,10 +114,9 @@ class _DietViewState extends State<DietView> {
                   DateTime now = DateTime.now();
                   DateTime? dateTime = await showDatePicker(
                     context: context,
-                    initialDate: now.subtract(const Duration(days: 7)),
-                    firstDate: now.subtract(
-                        const Duration(days: 7)), // Seminggu yang lalu
-                    lastDate: now,
+                    initialDate: now,
+                    firstDate: now,
+                    lastDate: now.add(const Duration(days: 7)),
                   );
                   if (dateTime != null) {
                     DateTime selectedDateTime = DateTime(

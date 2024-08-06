@@ -21,7 +21,7 @@ class MainWrapperScreen extends StatelessWidget {
         controller: controller.pageController,
         onPageChanged: controller.animateToTab,
         physics: const BouncingScrollPhysics(),
-        children: [
+        children: const [
           HomeScreen(),
           RecordScreen(),
           EdukasiScreen(),

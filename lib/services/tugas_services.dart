@@ -360,7 +360,7 @@ class TugasServices {
           .collection('riwayat')
           .doc(userId)
           .collection('janji-temu')
-          .get(const GetOptions(source: Source.cache));
+          .get(const GetOptions(source: Source.serverAndCache));
 
       return snapshot.docs
           .map((doc) => JanjiTemuModel.fromMap(doc.data()))

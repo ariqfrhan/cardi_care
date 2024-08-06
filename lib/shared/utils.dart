@@ -1,10 +1,10 @@
-import 'dart:io';
-
 import 'package:cardi_care/routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Utils {
   static DateTime convertToDateTime(String date) {
@@ -62,38 +62,52 @@ class Utils {
     }
   }
 
+  static Future<DocumentSnapshot> getDocumentWithCache(
+      DocumentReference docRef) async {
+    try {
+      DocumentSnapshot doc =
+          await docRef.get(const GetOptions(source: Source.cache));
+      if (doc.exists) {
+        return doc;
+      }
+
+      return await docRef.get(const GetOptions(source: Source.server));
+    } catch (e) {
+      return await docRef.get(const GetOptions(source: Source.cache));
+    }
+  }
+
   static Future<String> getInitialRoute() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       return Routes.splash;
     }
 
-    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get();
+    try {
+      DocumentSnapshot userSnapshot = await getDocumentWithCache(
+          FirebaseFirestore.instance.collection('users').doc(user.uid));
 
-    if (userSnapshot.exists) {
-      return Routes.mainWrapper;
+      if (userSnapshot.exists) {
+        return Routes.mainWrapper;
+      }
+
+      DocumentSnapshot keluargaSnapshot = await getDocumentWithCache(
+          FirebaseFirestore.instance.collection('keluarga').doc(user.uid));
+
+      if (keluargaSnapshot.exists) {
+        return Routes.keluargaWrapper;
+      }
+
+      DocumentSnapshot adminSnapshot = await getDocumentWithCache(
+          FirebaseFirestore.instance.collection('admin').doc(user.uid));
+
+      if (adminSnapshot.exists) {
+        return Routes.adminWrapper;
+      }
+    } catch (e) {
+      return Routes.splash;
     }
 
-    DocumentSnapshot keluargaSnapshot = await FirebaseFirestore.instance
-        .collection('keluarga')
-        .doc(user.uid)
-        .get();
-
-    if (keluargaSnapshot.exists) {
-      return Routes.keluargaWrapper;
-    }
-
-    DocumentSnapshot adminSnapshot = await FirebaseFirestore.instance
-        .collection('admin')
-        .doc(user.uid)
-        .get();
-
-    if (adminSnapshot.exists) {
-      return Routes.adminWrapper;
-    }
     return Routes.splash;
   }
 }

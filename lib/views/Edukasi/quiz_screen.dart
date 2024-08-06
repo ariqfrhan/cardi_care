@@ -1,16 +1,13 @@
 import 'package:cardi_care/model/materi_model.dart';
 import 'package:cardi_care/model/quiz_model.dart';
 import 'package:cardi_care/routes.dart';
-import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/services/edukasi_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
-import 'package:cardi_care/views/widgets/cards.dart';
 import 'package:cardi_care/views/widgets/quiz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class Quiz extends StatefulWidget {
   const Quiz({super.key});

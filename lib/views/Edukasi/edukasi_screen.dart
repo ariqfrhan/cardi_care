@@ -3,13 +3,10 @@ import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/services/edukasi_services.dart';
 import 'package:cardi_care/shared/theme.dart';
-import 'package:cardi_care/views/Edukasi/materi_screen.dart';
 import 'package:cardi_care/views/widgets/cards.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class EdukasiScreen extends StatefulWidget {
   const EdukasiScreen({super.key});
@@ -20,7 +17,7 @@ class EdukasiScreen extends StatefulWidget {
 
 class _EdukasiScreenState extends State<EdukasiScreen> {
   List<MateriModel> materiList = [];
-  Map<String, bool> accessStatus = {}; // to track access status for each materi
+  Map<String, bool> accessStatus = {};
 
   @override
   void initState() {
@@ -67,7 +64,7 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
                 const SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.max,

@@ -28,6 +28,7 @@ import 'package:cardi_care/views/splash_screen.dart';
 import 'package:cardi_care/views/widgets/alarm.dart';
 import 'package:cardi_care/views/widgets/splash_daftar.dart';
 import 'package:get/get.dart';
+import 'package:cardi_care/views/TekaTekiSilang/tekaTekiSilangPage.dart';
 
 class Routes {
   static String splash = '/';
@@ -62,6 +63,7 @@ class Routes {
   static String userMateri = '/user-materi';
   static String userQuiz = '/user-quiz';
   static String alarm = '/alarm';
+  static String tekaTekiSilang = '/teka-teki-silang';
 
   static List<GetPage> routes = [
     GetPage(
@@ -185,6 +187,10 @@ class Routes {
     GetPage(
       name: alarm,
       page: () => const Alarm(),
+    ),
+    GetPage(
+      name: tekaTekiSilang,
+      page: () => const TekaTekiSilangPage(),
     ),
   ];
 }

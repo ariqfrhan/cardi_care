@@ -1,5 +1,4 @@
 import 'package:cardi_care/model/janji_temu_model.dart';
-import 'package:cardi_care/model/olahraga_model.dart';
 import 'package:cardi_care/model/user_model.dart';
 import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/tugas_services.dart';
@@ -47,6 +46,7 @@ class _AdminTambahJanjiState extends State<AdminTambahJanji> {
 
     if (selectedDate != null) {
       TimeOfDay? selectedTime = await showTimePicker(
+        // ignore: use_build_context_synchronously
         context: context,
         initialTime: TimeOfDay.now(),
       );
@@ -174,8 +174,9 @@ class _AdminTambahJanjiState extends State<AdminTambahJanji> {
                     ? notesController.text
                     : null,
               );
-              await TugasServices().addJanjiTemu(janjiTemu);
-              Get.offNamed(Routes.adminObatDetail, arguments: user);
+              await TugasServices().addJanjiTemu(janjiTemu).then((value) async {
+                Get.offNamed(Routes.adminObatDetail, arguments: user);
+              });
             }
           },
         ),
