@@ -8,7 +8,7 @@ class EdukasiServices {
 
   Future<List<MateriModel>> getAllMateri() async {
     QuerySnapshot snapshot = await firestore.collection("materi").get(
-          const GetOptions(source: Source.cache),
+          const GetOptions(source: Source.serverAndCache),
         );
 
     return snapshot.docs

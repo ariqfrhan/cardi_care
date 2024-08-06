@@ -125,7 +125,7 @@ class AuthServices {
       DocumentSnapshot adminData = await firestore
           .collection('admin')
           .doc('T0ATY1zjv1PifODYFjoPzIln4fm2')
-          .get(const GetOptions(source: Source.cache));
+          .get(const GetOptions(source: Source.serverAndCache));
       if (adminData.exists) {
         return adminData['handphone'];
       }
