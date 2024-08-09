@@ -3,6 +3,7 @@ class UserModel {
   final String name;
   final String email;
   final String tempatTL;
+  final String bloodPressure;
   final String gender;
   final String height;
   final String weight;
@@ -13,6 +14,7 @@ class UserModel {
       required this.name,
       required this.email,
       required this.tempatTL,
+      required this.bloodPressure,
       required this.gender,
       required this.height,
       required this.weight,
@@ -24,6 +26,7 @@ class UserModel {
       'name': name,
       'email': email,
       'tempatTL': tempatTL,
+      'bloodPressure': bloodPressure,
       'gender': gender,
       'height': height,
       'weight': weight,
@@ -37,6 +40,7 @@ class UserModel {
         name: map['name'],
         email: map['email'],
         tempatTL: map['tempatTL'],
+        bloodPressure: map['bloodPressure'] ?? "",
         gender: map['gender'],
         height: map['height'],
         weight: map['weight'],

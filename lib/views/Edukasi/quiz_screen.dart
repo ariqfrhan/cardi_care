@@ -147,7 +147,7 @@ class _QuizState extends State<Quiz> {
           onPressed: () async {
             List<QuizModel> questions = await futureQuestions;
             _submitQuiz(questions, selectedAnswers);
-            Get.offAllNamed(Routes.mainWrapper);
+            Get.offAllNamed(Routes.keluargaWrapper);
           },
         ),
       ),

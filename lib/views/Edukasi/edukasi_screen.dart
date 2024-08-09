@@ -3,6 +3,7 @@ import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/services/edukasi_services.dart';
 import 'package:cardi_care/shared/theme.dart';
+import 'package:cardi_care/shared/utils.dart';
 import 'package:cardi_care/views/widgets/cards.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class EdukasiScreen extends StatefulWidget {
 class _EdukasiScreenState extends State<EdukasiScreen> {
   List<MateriModel> materiList = [];
   Map<String, bool> accessStatus = {};
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -26,7 +28,6 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
   }
 
   void fetchMateri() async {
-    final FirebaseAuth auth = FirebaseAuth.instance;
     User? userId = auth.currentUser;
     List<MateriModel> materis = await EdukasiServices().getAllMateri();
     Map<String, bool> statusMap = {};
@@ -49,17 +50,21 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
   @override
   Widget build(BuildContext context) {
     final AuthServices auth = Get.find<AuthServices>();
+    Future<dynamic> fetchUserData() async {
+      String actor = await Utils.fetchActor();
+      if (actor == "user") {
+        return await auth.getUserData();
+      } else if (actor == "keluarga") {
+        return await auth.getKeluargaData();
+      } else {
+        throw Exception('Unknown user type');
+      }
+    }
+
     return Scaffold(
       body: FutureBuilder(
-          future: auth.getUserData(),
+          future: fetchUserData(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData) {
-              return const Center(child: Text('No user data found'));
-            }
             return ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [

@@ -1,4 +1,6 @@
 import 'package:cardi_care/shared/theme.dart';
+import 'package:cardi_care/views/Edukasi/edukasi_screen.dart';
+import 'package:cardi_care/views/KeluargaPages/Analisis/analisis_detail.dart';
 import 'package:cardi_care/views/KeluargaPages/Analisis/analisis_home.dart';
 import 'package:cardi_care/views/KeluargaPages/Keluarga%20Home/keluarga_home.dart';
 import 'package:cardi_care/views/KeluargaPages/Keluarga%20Profile/keluarga_profile.dart';
@@ -22,8 +24,8 @@ class KeluargaWrapperScreen extends StatelessWidget {
         onPageChanged: controller.animateToTab,
         physics: const BouncingScrollPhysics(),
         children: const [
-          KeluargaHome(),
-          AnalisisHome(),
+          EdukasiScreen(),
+          AnalisisDetail(),
           KeluargaProfile(),
         ],
       ),
@@ -36,9 +38,9 @@ class KeluargaWrapperScreen extends StatelessWidget {
                 children: [
                   _bottomAppBar(
                     context,
-                    icon: Icons.warning_rounded,
+                    icon: Icons.menu_book,
                     page: 0,
-                    label: 'Peringatan',
+                    label: 'Edukasi',
                   ),
                   _bottomAppBar(
                     context,

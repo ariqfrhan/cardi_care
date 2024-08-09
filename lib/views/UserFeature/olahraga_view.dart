@@ -128,36 +128,36 @@ class _OlahragaViewState extends State<OlahragaView> {
               const SizedBox(
                 height: 8,
               ),
-              DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  labelText: 'Jenis olahraga',
-                  filled: true,
-                  fillColor: pinkColor,
-                  floatingLabelStyle: TextStyle(color: redColor),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(
-                      color: redColor,
-                    ),
-                  ),
-                ),
-                value: selectedOption,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedOption = newValue;
-                  });
-                },
-                items: options.map<DropdownMenuItem<String>>(
-                  (String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  },
-                ).toList(),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
+              // DropdownButtonFormField<String>(
+              //   decoration: InputDecoration(
+              //     labelText: 'Jenis olahraga',
+              //     filled: true,
+              //     fillColor: pinkColor,
+              //     floatingLabelStyle: TextStyle(color: redColor),
+              //     focusedBorder: UnderlineInputBorder(
+              //       borderSide: BorderSide(
+              //         color: redColor,
+              //       ),
+              //     ),
+              //   ),
+              //   value: selectedOption,
+              //   onChanged: (String? newValue) {
+              //     setState(() {
+              //       selectedOption = newValue;
+              //     });
+              //   },
+              //   items: options.map<DropdownMenuItem<String>>(
+              //     (String value) {
+              //       return DropdownMenuItem<String>(
+              //         value: value,
+              //         child: Text(value),
+              //       );
+              //     },
+              //   ).toList(),
+              // ),
+              // const SizedBox(
+              //   height: 8,
+              // ),
               TextFormField(
                 controller: activityController,
                 decoration: InputDecoration(
@@ -279,7 +279,7 @@ class _OlahragaViewState extends State<OlahragaView> {
                       id: '',
                       userId: '',
                       date: dateCtl.text,
-                      type: selectedOption!,
+                      type: "",
                       activity: activityController.text,
                       duration: durationController.text,
                       notes: notesController.text.isNotEmpty

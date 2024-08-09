@@ -1,6 +1,7 @@
 import 'package:cardi_care/model/materi_model.dart';
 import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/shared/theme.dart';
+import 'package:cardi_care/shared/utils.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -15,6 +16,17 @@ class Materi extends StatefulWidget {
 
 class _MateriState extends State<Materi> {
   final MateriModel materi = Get.arguments;
+
+  Future<String> fetchUserData() async {
+    String actor = await Utils.fetchActor();
+    if (actor == "user") {
+      return "user";
+    } else if (actor == "keluarga") {
+      return "keluarga";
+    } else {
+      throw Exception('Unknown user type');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,33 +76,38 @@ class _MateriState extends State<Materi> {
           const SizedBox(height: 100),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: whiteColor,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: CustomRedButton(
-                  title: 'TTS',
-                  onPressed: () {
-                    Get.toNamed(Routes.tekaTekiSilang, arguments: materi);
-                  },
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: CustomRedButton(
-                  title: 'Quiz',
-                  onPressed: () {
-                    Get.toNamed(Routes.userQuiz, arguments: materi);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+      bottomNavigationBar: FutureBuilder<String>(
+        future: fetchUserData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const BottomAppBar(
+              child: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            return BottomAppBar(
+              color: whiteColor,
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            final userType = snapshot.data;
+            return BottomAppBar(
+              color: whiteColor,
+              child: userType == "user"
+                  ? CustomRedButton(
+                      title: 'Teka Teki Silang',
+                      onPressed: () {
+                        Get.toNamed(Routes.tekaTekiSilang, arguments: materi);
+                      },
+                    )
+                  : CustomRedButton(
+                      title: 'Quiz',
+                      onPressed: () {
+                        Get.toNamed(Routes.userQuiz, arguments: materi);
+                      },
+                    ),
+            );
+          }
+        },
       ),
     );
   }
