@@ -23,7 +23,7 @@ class _OlahragaViewState extends State<OlahragaView> {
   String? selectedOption;
   String? selectedOptionAktivitas;
 
-  List<String> options = ['Berat', 'Ringan', 'Sedang'];
+  
   List<String> aktivitasOptions = ['Jalan', 'Renang', 'Bulutangkis'];
 
   @override
@@ -228,6 +228,7 @@ class _OlahragaViewState extends State<OlahragaView> {
                   fontWeight: semibold,
                 ),
               ),
+              
               TextFormField(
                 maxLines: 2,
                 decoration: InputDecoration(
