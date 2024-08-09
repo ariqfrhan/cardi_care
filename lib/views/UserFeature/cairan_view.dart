@@ -67,22 +67,6 @@ class _CairanViewState extends State<CairanView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Kenapa pembatasan cairan penting?',
-                  style: blackText.copyWith(
-                    fontSize: 18,
-                    fontWeight: semibold,
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.',
-                  style: blackText.copyWith(
-                    fontSize: 12,
-                  ),
-                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -149,7 +133,11 @@ class _CairanViewState extends State<CairanView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
+<<<<<<< Updated upstream
                           'Sendok teh',
+=======
+                          'Gelas',
+>>>>>>> Stashed changes
                           style: blackText.copyWith(
                               fontSize: 12, fontWeight: bold),
                         ),
@@ -186,7 +174,7 @@ class _CairanViewState extends State<CairanView> {
                   child: selectedImage == null
                       ? Center(
                           child: Text(
-                            'Dokumentasikan aktivitas dietmu',
+                            'Fotokan gelas yang digunakan',
                             style: blackText,
                           ),
                         )
@@ -256,6 +244,7 @@ class _CairanViewState extends State<CairanView> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
+<<<<<<< Updated upstream
         child: CustomRedButton(
           title: 'Simpan',
           onPressed: () async {
@@ -275,6 +264,49 @@ class _CairanViewState extends State<CairanView> {
                 Get.snackbar('Error', e.toString());
               }
             }
+=======
+        child: InternetControllerWidget(
+          builder: (context, isConnected) {
+            return CustomRedButton(
+              title: 'Simpan',
+              onPressed: () async {
+                if (dateCtl.text.isEmpty ||
+                    spoonController.text.isEmpty ||
+                    selectedImage == null) {
+                  Get.snackbar('Error', 'Harap isi semua bagian');
+                } else {
+                  final spoon = double.tryParse(spoonController.text);
+                  try {
+                    if (isConnected) {
+                      await TugasServices().addCairanData(
+                        dateCtl.text,
+                        spoon!,
+                        selectedImage,
+                        notesController.text.isNotEmpty
+                            ? notesController.text
+                            : null,
+                      );
+                      Get.offAllNamed(Routes.mainWrapper);
+                    } else {
+                      Get.offAllNamed(Routes.mainWrapper);
+                      await TugasServices().addCairanData(
+                        dateCtl.text,
+                        spoon!,
+                        selectedImage,
+                        notesController.text.isNotEmpty
+                            ? notesController.text
+                            : null,
+                      );
+                      Get.snackbar(
+                          'Sukses', 'Akan mengupdate data ketika online');
+                    }
+                  } catch (e) {
+                    Get.snackbar('Error', e.toString());
+                  }
+                }
+              },
+            );
+>>>>>>> Stashed changes
           },
         ),
       ),

@@ -186,7 +186,7 @@ class _DietViewState extends State<DietView> {
                 child: selectedImage == null
                     ? Center(
                         child: Text(
-                          'Dokumentasikan aktivitas dietmu',
+                          'Fotokan takaran garam dan \n sendok yang digunakan',
                           style: blackText,
                         ),
                       )
@@ -255,6 +255,7 @@ class _DietViewState extends State<DietView> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
+<<<<<<< Updated upstream
         child: CustomRedButton(
           title: 'Simpan',
           onPressed: () async {
@@ -272,6 +273,45 @@ class _DietViewState extends State<DietView> {
                 Get.offAllNamed(Routes.mainWrapper);
               } catch (e) {
                 Get.snackbar('Error', e.toString());
+=======
+        child: InternetControllerWidget(builder: (context, isConnected) {
+          return CustomRedButton(
+            title: 'Simpan',
+            onPressed: () async {
+              if (dateCtl.text.isEmpty ||
+                  spoonController.text.isEmpty ||
+                  selectedImage == null) {
+                Get.snackbar('Error', 'Harap isi semua bagian');
+              } else {
+                final spoon = double.tryParse(spoonController.text);
+                try {
+                  if (isConnected) {
+                    await TugasServices().addDietData(
+                      dateCtl.text,
+                      spoon!,
+                      selectedImage,
+                      notesController.text.isNotEmpty
+                          ? notesController.text
+                          : null,
+                    );
+                    Get.offAllNamed(Routes.mainWrapper);
+                  } else {
+                    Get.offAllNamed(Routes.mainWrapper);
+                    Get.snackbar(
+                        'Sukses', 'Akan mengupdate data setelah online');
+                    await TugasServices().addDietData(
+                      dateCtl.text,
+                      spoon!,
+                      selectedImage,
+                      notesController.text.isNotEmpty
+                          ? notesController.text
+                          : null,
+                    );
+                  }
+                } catch (e) {
+                  Get.snackbar('Error', e.toString());
+                }
+>>>>>>> Stashed changes
               }
             }
           },

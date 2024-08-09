@@ -185,7 +185,7 @@ class _BeratViewState extends State<BeratView> {
                 child: selectedImage == null
                     ? Center(
                         child: Text(
-                          'Dokumentasikan aktivitas dietmu',
+                          'Fotokan hasil berat badan',
                           style: blackText,
                         ),
                       )
@@ -235,6 +235,7 @@ class _BeratViewState extends State<BeratView> {
                   fontWeight: semibold,
                 ),
               ),
+              // ubah jadi Dropdown optionya nnanti ada
               TextFormField(
                 controller: notesController,
                 maxLines: 2,
@@ -254,6 +255,7 @@ class _BeratViewState extends State<BeratView> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
+<<<<<<< Updated upstream
         child: CustomRedButton(
           title: 'Simpan',
           onPressed: () async {
@@ -271,6 +273,46 @@ class _BeratViewState extends State<BeratView> {
                 Get.offAllNamed(Routes.mainWrapper);
               } catch (e) {
                 Get.snackbar('Error', e.toString());
+=======
+        child: InternetControllerWidget(builder: (context, isConnected) {
+          return CustomRedButton(
+            title: 'Simpan',
+            onPressed: () async {
+              if (dateCtl.text.isEmpty ||
+                  weightController.text.isEmpty ||
+                  selectedImage == null) {
+                // tambahin condition buat ngecek image null ato engga
+                Get.snackbar('Error', 'Harap isi semua bagian');
+              } else {
+                final weight = double.tryParse(weightController.text);
+                try {
+                  if (isConnected) {
+                    await TugasServices().addBeratData(
+                      dateCtl.text,
+                      weight!,
+                      selectedImage,
+                      notesController.text.isNotEmpty
+                          ? notesController.text
+                          : null,
+                    );
+                    Get.offAllNamed(Routes.mainWrapper);
+                  } else {
+                    Get.offAllNamed(Routes.mainWrapper);
+                    Get.snackbar(
+                        'Sukses', 'Akan mengupdate data setelah online');
+                    await TugasServices().addBeratData(
+                      dateCtl.text,
+                      weight!,
+                      selectedImage,
+                      notesController.text.isNotEmpty
+                          ? notesController.text
+                          : null,
+                    );
+                  }
+                } catch (e) {
+                  Get.snackbar('Error', e.toString());
+                }
+>>>>>>> Stashed changes
               }
             }
           },

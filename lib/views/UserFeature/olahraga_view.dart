@@ -155,6 +155,48 @@ class _OlahragaViewState extends State<OlahragaView> {
                 height: 8,
               ),
               TextFormField(
+<<<<<<< Updated upstream
+=======
+                controller: activityController,
+                decoration: InputDecoration(
+                  labelText: 'Jenis aktivitas',
+                  filled: true,
+                  fillColor: pinkColor,
+                  floatingLabelStyle: TextStyle(color: redColor),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: redColor,
+                    ),
+                  ),
+                  hintText: 'Klik icon untuk memilih list aktivitas',
+                  suffixIcon: PopupMenuButton<String>(
+                    icon: const Icon(Icons.arrow_drop_down),
+                    onSelected: (String value) {
+                      setState(() {
+                        activityController.text = value;
+                      });
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return aktivitasOptions.map((String value) {
+                        return PopupMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList();
+                    },
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    selectedOptionAktivitas = value;
+                  });
+                },
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              TextFormField(
+>>>>>>> Stashed changes
                 controller: durationController,
                 decoration: InputDecoration(
                   filled: true,
