@@ -22,10 +22,8 @@ class _MateriState extends State<Materi> {
     String actor = await Utils.fetchActor();
     if (actor == "user") {
       return "user";
-    } else if (actor == "keluarga") {
-      return "keluarga";
     } else {
-      throw Exception('Unknown user type');
+      return "keluarga";
     }
   }
 
@@ -73,27 +71,13 @@ class _MateriState extends State<Materi> {
           SingleChildScrollView(
             child: Html(data: materi.materi),
           ),
-          // Check the value of materi.uid to determine which video content to display
-          if (materi.uid == 'materi3') ...[
-            // If the uid is 'materi3', display two video players
-            // The first video player displays a video on "diet_garam_dan_cairan"
-            const VideoPlayer(
-              videoPath: "assets/edukasi/materi3/diet_garam_dan_cairan.mp4",
-            ),
-            // Add a SizedBox to provide vertical space between the two video players
-            const SizedBox(height: 20),
-            // The second video player displays a video on "napas_dalam"
-            const VideoPlayer(
-              videoPath: "assets/edukasi/materi3/napas_dalam.mp4",
-            ),
-          ] else if (materi.uid == 'materi4') ...[
-            // If the uid is 'materi4', display only one video player
-            // This video player displays a video on "six_minute_walk"
-            const VideoPlayer(
-              videoPath: "assets/edukasi/materi4/six_minute_walk.mp4",
-            ),
+          if (materi.videoUrl.isNotEmpty) ...[
+            for (String videoPath in materi.videoUrl)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: VideoPlayer(videoPath: videoPath),
+              ),
           ],
-          // Tambahkan padding di bawah untuk memberikan ruang pada konten scroll
           const SizedBox(height: 100),
         ],
       ),

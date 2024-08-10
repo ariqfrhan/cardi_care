@@ -45,16 +45,17 @@ class _VideoPlayerState extends State<VideoPlayer> {
   void initializeVideoPlayer(String videoPath) {
     print("Video path: $videoPath");
     try {
-      CachedVideoPlayerController _videoPlayerController;
+      CachedVideoPlayerPlusController _videoPlayerController;
 
-      _videoPlayerController = CachedVideoPlayerController.asset(videoPath)
-        ..initialize().then((_) {
-          setState(() {});
-        }).catchError((error) {
-          setState(() {
-            _errorMessage = "Error initializing video: ${error.toString()}";
-          });
-        });
+      _videoPlayerController =
+          CachedVideoPlayerPlusController.networkUrl(Uri.parse(videoPath))
+            ..initialize().then((_) {
+              setState(() {});
+            }).catchError((error) {
+              setState(() {
+                _errorMessage = "Error initializing video: ${error.toString()}";
+              });
+            });
 
       _customVideoPlayerController = CustomVideoPlayerController(
         context: context,

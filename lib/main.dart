@@ -21,6 +21,17 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   LocalNotificationServices.createNotification(message);
 }
 
+Future<String> _getInitialRoute() async {
+  String route = await Utils.getInitialRoute();
+  final RemoteMessage? initialMessage =
+      await FirebaseMessaging.instance.getInitialMessage();
+  if (initialMessage != null) {
+    route = Routes.alarm;
+    selectNotificationSubject.add('alarm');
+  }
+  return route;
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -33,19 +44,12 @@ Future<void> main() async {
 
   Get.put(AuthServices());
 
-  String initialRoute = await Utils.getInitialRoute();
-
-  final RemoteMessage? initialMessage =
-      await FirebaseMessaging.instance.getInitialMessage();
-  if (initialMessage != null) {
-    initialRoute = Routes.alarm;
-    selectNotificationSubject.add('alarm');
-  }
-
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
+
+  String initialRoute = await _getInitialRoute();
 
   runApp(ProviderScope(
     child: MainApp(
@@ -66,7 +70,10 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
     super.initState();
+    _setupFirebaseMessaging();
+  }
 
+  void _setupFirebaseMessaging() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
         LocalNotificationServices.createNotification(message);
