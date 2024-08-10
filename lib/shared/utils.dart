@@ -108,6 +108,33 @@ class Utils {
 
     return Routes.splash;
   }
+
+  static Future<String> fetchActor() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return "Please Login";
+    }
+
+    try {
+      DocumentSnapshot userSnapshot = await getDocumentWithCache(
+          FirebaseFirestore.instance.collection('users').doc(user.uid));
+
+      if (userSnapshot.exists) {
+        return "user";
+      }
+
+      DocumentSnapshot keluargaSnapshot = await getDocumentWithCache(
+          FirebaseFirestore.instance.collection('keluarga').doc(user.uid));
+
+      if (keluargaSnapshot.exists) {
+        return "keluarga";
+      }
+    } catch (e) {
+      return "";
+    }
+
+    return "user";
+  }
 }
 
 Future<XFile?> selectGalleryImage() async {

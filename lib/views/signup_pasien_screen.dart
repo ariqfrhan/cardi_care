@@ -20,6 +20,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
   String? selectedGender;
+  final TextEditingController _pressureController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -51,6 +52,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _dobController.dispose();
+    _pressureController.dispose();
     _heightController.dispose();
     _weightController.dispose();
     _passwordController.dispose();
@@ -135,41 +137,47 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                   const SizedBox(
                     height: 8,
                   ),
+                  TextFormField(
+                    controller: _dobController,
+                    decoration: InputDecoration(
+                      fillColor: pinkColor,
+                      labelText: 'Tanggal lahir',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      suffixIcon: const Icon(Icons.date_range),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: redColor),
+                      ),
+                    ),
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      DateTime now = DateTime.now();
+                      DateTime? dateTime = await showDatePicker(
+                        context: context,
+                        firstDate: now.subtract(const Duration(days: 36500)),
+                        lastDate: now,
+                      );
+                      if (dateTime != null) {
+                        String formattedDate =
+                            DateFormat('dd-MM-yyyy').format(dateTime);
+                        setState(() {
+                          _dobController.text = formattedDate;
+                        });
+                      }
+                    },
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
                   Row(
                     children: [
                       Expanded(
-                        child: TextFormField(
-                          controller: _dobController,
-                          decoration: InputDecoration(
-                            fillColor: pinkColor,
-                            labelText: 'Tanggal lahir',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            suffixIcon: const Icon(Icons.date_range),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: redColor),
-                            ),
-                          ),
-                          onTap: () async {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            DateTime now = DateTime.now();
-                            DateTime? dateTime = await showDatePicker(
-                              context: context,
-                              firstDate:
-                                  now.subtract(const Duration(days: 36500)),
-                              lastDate: now,
-                            );
-                            if (dateTime != null) {
-                              String formattedDate =
-                                  DateFormat('dd-MM-yyyy').format(dateTime);
-                              setState(() {
-                                _dobController.text = formattedDate;
-                              });
-                            }
-                          },
-                        ),
-                      ),
+                          child: CustomFormField(
+                        title: 'Tekanan darah',
+                        suffixText: "mmHg",
+                        controller: _pressureController,
+                      )),
                       const SizedBox(
                         width: 5,
                       ),
@@ -182,8 +190,8 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: redColor),
-                            ),
+                                borderSide: BorderSide(color: redColor),
+                                borderRadius: BorderRadius.circular(12)),
                             floatingLabelStyle: TextStyle(color: redColor),
                           ),
                           value: selectedGender,
@@ -259,6 +267,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                         name: _nameController.text,
                         email: _emailController.text,
                         tempatTL: _dobController.text,
+                        bloodPressure: _pressureController.text,
                         gender: selectedGender!,
                         height: _heightController.text,
                         weight: _weightController.text,

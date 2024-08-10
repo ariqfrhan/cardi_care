@@ -1,7 +1,9 @@
 import 'package:cardi_care/model/materi_model.dart';
 import 'package:cardi_care/routes.dart';
 import 'package:cardi_care/shared/theme.dart';
+import 'package:cardi_care/shared/utils.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
+import 'package:cardi_care/views/widgets/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
@@ -15,6 +17,17 @@ class Materi extends StatefulWidget {
 
 class _MateriState extends State<Materi> {
   final MateriModel materi = Get.arguments;
+
+  Future<String> fetchUserData() async {
+    String actor = await Utils.fetchActor();
+    if (actor == "user") {
+      return "user";
+    } else if (actor == "keluarga") {
+      return "keluarga";
+    } else {
+      throw Exception('Unknown user type');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,37 +73,62 @@ class _MateriState extends State<Materi> {
           SingleChildScrollView(
             child: Html(data: materi.materi),
           ),
+          // Check the value of materi.uid to determine which video content to display
+          if (materi.uid == 'materi3') ...[
+            // If the uid is 'materi3', display two video players
+            // The first video player displays a video on "diet_garam_dan_cairan"
+            const VideoPlayer(
+              videoPath: "assets/edukasi/materi3/diet_garam_dan_cairan.mp4",
+            ),
+            // Add a SizedBox to provide vertical space between the two video players
+            const SizedBox(height: 20),
+            // The second video player displays a video on "napas_dalam"
+            const VideoPlayer(
+              videoPath: "assets/edukasi/materi3/napas_dalam.mp4",
+            ),
+          ] else if (materi.uid == 'materi4') ...[
+            // If the uid is 'materi4', display only one video player
+            // This video player displays a video on "six_minute_walk"
+            const VideoPlayer(
+              videoPath: "assets/edukasi/materi4/six_minute_walk.mp4",
+            ),
+          ],
           // Tambahkan padding di bawah untuk memberikan ruang pada konten scroll
           const SizedBox(height: 100),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: whiteColor,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: CustomRedButton(
-                  title: 'TTS',
-                  onPressed: () {
-                    Get.toNamed(Routes.tekaTekiSilang, arguments: materi);
-                  },
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: CustomRedButton(
-                  title: 'Quiz',
-                  onPressed: () {
-                    Get.toNamed(Routes.userQuiz, arguments: materi);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+      bottomNavigationBar: FutureBuilder<String>(
+        future: fetchUserData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const BottomAppBar(
+              child: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            return BottomAppBar(
+              color: whiteColor,
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            final userType = snapshot.data;
+            return BottomAppBar(
+              color: whiteColor,
+              child: userType == "user"
+                  ? CustomRedButton(
+                      title: 'Teka Teki Silang',
+                      onPressed: () {
+                        Get.toNamed(Routes.tekaTekiSilang, arguments: materi);
+                      },
+                    )
+                  : CustomRedButton(
+                      title: 'Quiz',
+                      onPressed: () {
+                        Get.toNamed(Routes.userQuiz, arguments: materi);
+                      },
+                    ),
+            );
+          }
+        },
       ),
     );
   }

@@ -28,6 +28,7 @@ class AuthServices {
             name: user.name,
             email: user.email,
             tempatTL: user.tempatTL,
+            bloodPressure: user.bloodPressure,
             gender: user.gender,
             height: user.height,
             weight: user.weight,

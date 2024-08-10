@@ -240,7 +240,7 @@ class _OlahragaViewState extends State<OlahragaView> {
                       id: '',
                       userId: '',
                       date: dateCtl.text,
-                      type: selectedOption!,
+                      type: "",
                       activity: activityController.text,
                       duration: durationController.text,
                       notes: notesController.text.isNotEmpty

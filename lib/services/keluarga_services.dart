@@ -2,6 +2,7 @@ import 'package:cardi_care/model/user_model.dart';
 import 'package:cardi_care/services/record_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 
 class KeluargaServices {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -30,6 +31,26 @@ class KeluargaServices {
     return snapshot.docs
         .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>))
         .toList();
+  }
+
+  Future<UserModel?> getFirstUserByKeluargaId(String familyId) async {
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('users')
+          .where('familyId', isEqualTo: familyId)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return UserModel.fromMap(
+            querySnapshot.docs.first.data() as Map<String, dynamic>);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'No User');
+      return null;
+    }
   }
 
   Future<List<Map<String, dynamic>>> fetchUsersWithoutSelfCare(
