@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Utils {
   static DateTime convertToDateTime(String date) {
@@ -26,7 +27,6 @@ class Utils {
     DateTime dateTime = DateTime.parse(dateString);
     DateFormat formatter = DateFormat('dd MMMM yyyy - HH.mm');
     String formattedDate = formatter.format(dateTime);
-
     return formattedDate;
   }
 
@@ -71,7 +71,7 @@ class Utils {
 
       return await docRef.get(const GetOptions(source: Source.server));
     } catch (e) {
-      return await docRef.get(const GetOptions(source: Source.cache));
+      return await docRef.get(const GetOptions(source: Source.server));
     }
   }
 
@@ -81,32 +81,61 @@ class Utils {
       return Routes.splash;
     }
 
-    try {
-      DocumentSnapshot userSnapshot = await getDocumentWithCache(
-          FirebaseFirestore.instance.collection('users').doc(user.uid));
+    final prefs = await SharedPreferences.getInstance();
+    String? userType = prefs.getString('user_type');
 
-      if (userSnapshot.exists) {
+    if (userType != null) {
+      return _getUserRoute(userType);
+    }
+
+    try {
+      if (await _checkUserExists('users', user.uid)) {
+        await prefs.setString('user_type', 'user');
         return Routes.mainWrapper;
       }
-
-      DocumentSnapshot keluargaSnapshot = await getDocumentWithCache(
-          FirebaseFirestore.instance.collection('keluarga').doc(user.uid));
-
-      if (keluargaSnapshot.exists) {
+      if (await _checkUserExists('keluarga', user.uid)) {
+        await prefs.setString('user_type', 'keluarga');
         return Routes.keluargaWrapper;
       }
-
-      DocumentSnapshot adminSnapshot = await getDocumentWithCache(
-          FirebaseFirestore.instance.collection('admin').doc(user.uid));
-
-      if (adminSnapshot.exists) {
+      if (await _checkUserExists('admin', user.uid)) {
+        await prefs.setString('user_type', 'admin');
         return Routes.adminWrapper;
       }
     } catch (e) {
-      return Routes.splash;
+      print("Error checking user type: $e");
+      // Jika terjadi error, gunakan data terakhir yang tersimpan
+      if (userType != null) {
+        return _getUserRoute(userType);
+      }
     }
 
     return Routes.splash;
+  }
+
+  static Future<bool> _checkUserExists(String collection, String uid) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection(collection)
+          .doc(uid)
+          .get();
+      return doc.exists;
+    } catch (e) {
+      print("Error checking $collection: $e");
+      return false;
+    }
+  }
+
+  static String _getUserRoute(String userType) {
+    switch (userType) {
+      case 'user':
+        return Routes.mainWrapper;
+      case 'keluarga':
+        return Routes.keluargaWrapper;
+      case 'admin':
+        return Routes.adminWrapper;
+      default:
+        return Routes.splash;
+    }
   }
 
   static Future<String> fetchActor() async {
@@ -115,25 +144,31 @@ class Utils {
       return "Please Login";
     }
 
-    try {
-      DocumentSnapshot userSnapshot = await getDocumentWithCache(
-          FirebaseFirestore.instance.collection('users').doc(user.uid));
+    final prefs = await SharedPreferences.getInstance();
+    String? userType = prefs.getString('user_type');
 
-      if (userSnapshot.exists) {
-        return "user";
-      }
-
-      DocumentSnapshot keluargaSnapshot = await getDocumentWithCache(
-          FirebaseFirestore.instance.collection('keluarga').doc(user.uid));
-
-      if (keluargaSnapshot.exists) {
-        return "keluarga";
-      }
-    } catch (e) {
-      return "";
+    if (userType != null) {
+      return userType;
     }
 
-    return "user";
+    try {
+      if (await _checkUserExists('users', user.uid)) {
+        await prefs.setString('user_type', 'user');
+        return "user";
+      }
+      if (await _checkUserExists('keluarga', user.uid)) {
+        await prefs.setString('user_type', 'keluarga');
+        return "keluarga";
+      }
+      if (await _checkUserExists('admin', user.uid)) {
+        await prefs.setString('user_type', 'admin');
+        return "admin";
+      }
+    } catch (e) {
+      print("Error fetching actor: $e");
+    }
+
+    return "";
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:appinio_video_player/appinio_video_player.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class VideoPlayer extends StatefulWidget {
@@ -38,8 +39,12 @@ class _VideoPlayerState extends State<VideoPlayer> {
       );
     }
 
-    return CustomVideoPlayer(
-        customVideoPlayerController: _customVideoPlayerController);
+    return CupertinoPageScaffold(
+      child: SafeArea(
+        child: CustomVideoPlayer(
+            customVideoPlayerController: _customVideoPlayerController),
+      ),
+    );
   }
 
   void initializeVideoPlayer(String videoPath) {
@@ -58,9 +63,13 @@ class _VideoPlayerState extends State<VideoPlayer> {
             });
 
       _customVideoPlayerController = CustomVideoPlayerController(
-        context: context,
-        videoPlayerController: _videoPlayerController,
-      );
+          context: context,
+          videoPlayerController: _videoPlayerController,
+          customVideoPlayerSettings: const CustomVideoPlayerSettings(
+            showPlayButton: true,
+            showFullscreenButton: true,
+            playButton: Icon(Icons.play_arrow),
+          ));
     } catch (e) {
       setState(() {
         _errorMessage = "Unexpected error: ${e.toString()}";

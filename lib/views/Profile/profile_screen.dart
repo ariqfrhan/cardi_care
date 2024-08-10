@@ -6,6 +6,7 @@ import 'package:cardi_care/shared/utils.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -86,8 +87,10 @@ class ProfileScreen extends StatelessWidget {
         color: whiteColor,
         child: CustomRedButton(
           title: 'Keluar',
-          onPressed: () {
+          onPressed: () async {
             auth.signOut();
+            final prefs = await SharedPreferences.getInstance();
+            prefs.remove('user_type');
           },
         ),
       ),
