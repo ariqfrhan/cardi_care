@@ -5,6 +5,7 @@ import 'package:cardi_care/services/tugas_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class OlahragaView extends StatefulWidget {
@@ -23,7 +24,7 @@ class _OlahragaViewState extends State<OlahragaView> {
   String? selectedOption;
   String? selectedOptionAktivitas;
 
-  List<String> options = ['Berat', 'Ringan', 'Sedang'];
+  
   List<String> aktivitasOptions = ['Jalan', 'Renang', 'Bulutangkis'];
 
   @override
@@ -58,24 +59,8 @@ class _OlahragaViewState extends State<OlahragaView> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Kenapa aktivitas fisik?',
-                style: blackText.copyWith(
-                  fontSize: 18,
-                  fontWeight: semibold,
-                ),
-              ),
               const SizedBox(
-                height: 8,
-              ),
-              Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.',
-                style: blackText.copyWith(
-                  fontSize: 12,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
+                height: 12,
               ),
               Text(
                 'Aktivitasku',
@@ -126,38 +111,8 @@ class _OlahragaViewState extends State<OlahragaView> {
                 },
               ),
               const SizedBox(
-                height: 8,
+                height: 20,
               ),
-              // DropdownButtonFormField<String>(
-              //   decoration: InputDecoration(
-              //     labelText: 'Jenis olahraga',
-              //     filled: true,
-              //     fillColor: pinkColor,
-              //     floatingLabelStyle: TextStyle(color: redColor),
-              //     focusedBorder: UnderlineInputBorder(
-              //       borderSide: BorderSide(
-              //         color: redColor,
-              //       ),
-              //     ),
-              //   ),
-              //   value: selectedOption,
-              //   onChanged: (String? newValue) {
-              //     setState(() {
-              //       selectedOption = newValue;
-              //     });
-              //   },
-              //   items: options.map<DropdownMenuItem<String>>(
-              //     (String value) {
-              //       return DropdownMenuItem<String>(
-              //         value: value,
-              //         child: Text(value),
-              //       );
-              //     },
-              //   ).toList(),
-              // ),
-              // const SizedBox(
-              //   height: 8,
-              // ),
               TextFormField(
                 controller: activityController,
                 decoration: InputDecoration(
@@ -195,10 +150,15 @@ class _OlahragaViewState extends State<OlahragaView> {
                 },
               ),
               const SizedBox(
-                height: 8,
+                height: 20,
               ),
               TextFormField(
                 controller: durationController,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter
+                      .digitsOnly, // Memastikan hanya angka yang bisa diinput
+                ],
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: pinkColor,
@@ -228,6 +188,7 @@ class _OlahragaViewState extends State<OlahragaView> {
                   fontWeight: semibold,
                 ),
               ),
+              
               TextFormField(
                 maxLines: 2,
                 decoration: InputDecoration(

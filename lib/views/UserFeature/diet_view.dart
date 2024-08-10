@@ -24,7 +24,10 @@ class _DietViewState extends State<DietView> {
   String? selectedOption;
   XFile? selectedImage;
 
-  List<String> options = ['Berat', 'Ringan', 'Sedang'];
+  List<String> keteranganOptions = [
+    'Keluarga membantu takaran garam \ndi masakan',
+    'Mandiri'
+  ];
 
   @override
   void initState() {
@@ -67,22 +70,6 @@ class _DietViewState extends State<DietView> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Kenapa diet garam rendah penting?',
-                style: blackText.copyWith(
-                  fontSize: 18,
-                  fontWeight: semibold,
-                ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.',
-                style: blackText.copyWith(
-                  fontSize: 12,
-                ),
-              ),
               const SizedBox(
                 height: 20,
               ),
@@ -161,6 +148,36 @@ class _DietViewState extends State<DietView> {
               const SizedBox(
                 height: 20,
               ),
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: 'Keterangan',
+                  filled: true,
+                  fillColor: pinkColor,
+                  floatingLabelStyle: TextStyle(color: redColor),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: redColor,
+                    ),
+                  ),
+                ),
+                value: selectedOption,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedOption = newValue;
+                  });
+                },
+                items: keteranganOptions.map<DropdownMenuItem<String>>(
+                  (String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  },
+                ).toList(),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               Text(
                 'Foto',
                 style: blackText.copyWith(
@@ -229,26 +246,6 @@ class _DietViewState extends State<DietView> {
               const SizedBox(
                 height: 20,
               ),
-              Text(
-                'Catatan',
-                style: blackText.copyWith(
-                  fontSize: 14,
-                  fontWeight: semibold,
-                ),
-              ),
-              TextFormField(
-                controller: notesController,
-                maxLines: 2,
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: pinkColor,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    floatingLabelStyle: TextStyle(color: redColor),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: redColor)),
-                    hintText: 'Tambahkan catatan disini'),
-              ),
             ],
           ),
         ]),
@@ -259,7 +256,7 @@ class _DietViewState extends State<DietView> {
           return CustomRedButton(
             title: 'Simpan',
             onPressed: () async {
-              if (dateCtl.text.isEmpty || spoonController.text.isEmpty) {
+              if (dateCtl.text.isEmpty || spoonController.text.isEmpty || selectedOption == null || selectedImage == null) {
                 Get.snackbar('Error', 'Harap isi semua bagian');
               } else {
                 final spoon = double.tryParse(spoonController.text);
@@ -269,9 +266,7 @@ class _DietViewState extends State<DietView> {
                       dateCtl.text,
                       spoon!,
                       selectedImage,
-                      notesController.text.isNotEmpty
-                          ? notesController.text
-                          : null,
+                      selectedOption,
                     );
                     Get.offAllNamed(Routes.mainWrapper);
                   } else {
@@ -282,9 +277,7 @@ class _DietViewState extends State<DietView> {
                       dateCtl.text,
                       spoon!,
                       selectedImage,
-                      notesController.text.isNotEmpty
-                          ? notesController.text
-                          : null,
+                      selectedOption,
                     );
                   }
                 } catch (e) {
