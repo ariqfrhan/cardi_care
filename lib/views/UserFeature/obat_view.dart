@@ -91,20 +91,6 @@ class _ObatViewState extends State<ObatView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Mengapa pengobatan penting?',
-                  style: blackText.copyWith(
-                    fontSize: 18,
-                    fontWeight: semibold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.',
-                  style: blackText.copyWith(
-                    fontSize: 12,
-                  ),
-                ),
                 _buildObatSection('Pagi (07.00-12.00)', 7, 12),
                 _buildObatSection('Siang (12.00-15.00)', 12, 15),
                 _buildObatSection('Sore (15.00-19.00)', 15, 19),

@@ -72,7 +72,6 @@ class _CairanViewState extends State<CairanView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                
                 const SizedBox(
                   height: 12,
                 ),
@@ -144,7 +143,7 @@ class _CairanViewState extends State<CairanView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'ml',
+                          'gelas',
                           style: blackText.copyWith(
                               fontSize: 12, fontWeight: bold),
                         ),
@@ -254,7 +253,6 @@ class _CairanViewState extends State<CairanView> {
                 const SizedBox(
                   height: 20,
                 ),
-                
               ],
             ),
           ],
@@ -267,7 +265,10 @@ class _CairanViewState extends State<CairanView> {
             return CustomRedButton(
               title: 'Simpan',
               onPressed: () async {
-                if (dateCtl.text.isEmpty || spoonController.text.isEmpty || selectedImage == null || selectedOption == null) {
+                if (dateCtl.text.isEmpty ||
+                    spoonController.text.isEmpty ||
+                    selectedImage == null ||
+                    selectedOption == null) {
                   Get.snackbar('Error', 'Harap isi semua bagian');
                 } else {
                   final spoon = double.tryParse(spoonController.text);

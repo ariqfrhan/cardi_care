@@ -80,8 +80,7 @@ class _ObatFormsState extends State<ObatForms> {
   List<String> options = [
     'Belum',
     'Mandiri',
-    'Dibantu Keluarga',
-    'Dibantu Perawat'
+    'Keluarga mengingatkan\ndan memastikan obat\nsesuai anjuran'
   ];
 
   @override
@@ -108,12 +107,16 @@ class _ObatFormsState extends State<ObatForms> {
       child: Row(
         children: [
           Expanded(
+            flex: 2,
             child: Text(
               widget.namaObat,
               style: blackText.copyWith(fontWeight: bold),
+              maxLines: 1, // Membatasi teks hanya pada satu baris
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           Expanded(
+            flex: 3,
             child: DropdownButtonFormField<String>(
               decoration: InputDecoration(
                 filled: true,
