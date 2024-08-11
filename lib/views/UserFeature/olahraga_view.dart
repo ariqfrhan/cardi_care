@@ -24,8 +24,8 @@ class _OlahragaViewState extends State<OlahragaView> {
   String? selectedOption;
   String? selectedOptionAktivitas;
 
-  
   List<String> aktivitasOptions = ['Jalan', 'Renang', 'Bulutangkis'];
+  List<String> keteranganOptions = ['Mandiri', 'Keluarga bantu mendampingi'];
 
   @override
   void initState() {
@@ -181,25 +181,32 @@ class _OlahragaViewState extends State<OlahragaView> {
               const SizedBox(
                 height: 20,
               ),
-              Text(
-                'Catatan',
-                style: blackText.copyWith(
-                  fontSize: 14,
-                  fontWeight: semibold,
-                ),
-              ),
-              
-              TextFormField(
-                maxLines: 2,
+              DropdownButtonFormField<String>(
                 decoration: InputDecoration(
-                    filled: true,
-                    fillColor: pinkColor,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    floatingLabelStyle: TextStyle(color: redColor),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: redColor)),
-                    hintText: 'Tambahkan catatan disini'),
+                  labelText: 'Keterangan',
+                  filled: true,
+                  fillColor: pinkColor,
+                  floatingLabelStyle: TextStyle(color: redColor),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: redColor,
+                    ),
+                  ),
+                ),
+                value: selectedOption,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedOption = newValue;
+                  });
+                },
+                items: keteranganOptions.map<DropdownMenuItem<String>>(
+                  (String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  },
+                ).toList(),
               ),
             ],
           ),
@@ -226,9 +233,7 @@ class _OlahragaViewState extends State<OlahragaView> {
                       type: selectedOption!,
                       activity: activityController.text,
                       duration: durationController.text,
-                      notes: notesController.text.isNotEmpty
-                          ? notesController.text
-                          : null,
+                      notes: selectedOption,
                     );
                     Get.offAllNamed(Routes.mainWrapper);
                     await TugasServices().addOlahragaData(olahraga);
@@ -243,9 +248,7 @@ class _OlahragaViewState extends State<OlahragaView> {
                       type: "",
                       activity: activityController.text,
                       duration: durationController.text,
-                      notes: notesController.text.isNotEmpty
-                          ? notesController.text
-                          : null,
+                      notes: selectedOption,
                     );
                     await TugasServices().addOlahragaData(olahraga);
                   }

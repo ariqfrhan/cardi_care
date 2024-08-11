@@ -18,10 +18,15 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
   final TextEditingController notesController = TextEditingController();
   String? selectedOptionRokok;
   String? selectedOptionAlkohol;
+  String? selectedOption;
 
   List<String> options = [
     'Ya',
     'Tidak',
+  ];
+  List<String> keteranganOptions = [
+    'Mandiri',
+    'Keluarga bantu mengingatkan untuk\nmengurangi/berhenti'
   ];
 
   @override
@@ -53,24 +58,8 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Kenapa penting untuk mencatat?',
-              style: blackText.copyWith(
-                fontSize: 18,
-                fontWeight: semibold,
-              ),
-            ),
             const SizedBox(
               height: 8,
-            ),
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.',
-              style: blackText.copyWith(
-                fontSize: 12,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
             ),
             const SizedBox(
               height: 8,
@@ -105,7 +94,7 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
               ).toList(),
             ),
             const SizedBox(
-              height: 8,
+              height: 20,
             ),
             DropdownButtonFormField<String>(
               decoration: InputDecoration(
@@ -137,30 +126,34 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
               ).toList(),
             ),
             const SizedBox(
-              height: 8,
-            ),
-            const SizedBox(
               height: 20,
             ),
-            Text(
-              'Catatan',
-              style: blackText.copyWith(
-                fontSize: 14,
-                fontWeight: semibold,
-              ),
-            ),
-            TextFormField(
-              controller: notesController,
-              maxLines: 2,
+            DropdownButtonFormField<String>(
               decoration: InputDecoration(
-                  filled: true,
-                  fillColor: pinkColor,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  floatingLabelStyle: TextStyle(color: redColor),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: redColor)),
-                  hintText: 'Tambahkan catatan disini'),
+                labelText: 'Keterangan',
+                filled: true,
+                fillColor: pinkColor,
+                floatingLabelStyle: TextStyle(color: redColor),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: redColor,
+                  ),
+                ),
+              ),
+              value: selectedOption,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedOption = newValue;
+                });
+              },
+              items: keteranganOptions.map<DropdownMenuItem<String>>(
+                (String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                },
+              ).toList(),
             ),
           ],
         ),
@@ -173,7 +166,8 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
               title: 'Simpan',
               onPressed: () async {
                 if (selectedOptionAlkohol == null ||
-                    selectedOptionRokok == null) {
+                    selectedOptionRokok == null ||
+                    selectedOption == null) {
                   Get.snackbar('Error', 'Harap isi semua bagian');
                 } else {
                   if (isConnected) {
@@ -183,9 +177,7 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
                       date: DateTime.now().toIso8601String(),
                       merokok: selectedOptionRokok!,
                       alkohol: selectedOptionAlkohol!,
-                      notes: notesController.text.isNotEmpty
-                          ? notesController.text
-                          : null,
+                      notes: selectedOption,
                     );
 
                     await TugasServices().addRokokAlkoholData(rokok);
@@ -200,9 +192,7 @@ class _MerokokAlkoholViewState extends State<MerokokAlkoholView> {
                       date: DateTime.now().toIso8601String(),
                       merokok: selectedOptionRokok!,
                       alkohol: selectedOptionAlkohol!,
-                      notes: notesController.text.isNotEmpty
-                          ? notesController.text
-                          : null,
+                      notes: selectedOption,
                     );
                     await TugasServices().addRokokAlkoholData(rokok);
                   }
