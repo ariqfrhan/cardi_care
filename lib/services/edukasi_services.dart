@@ -21,7 +21,7 @@ class EdukasiServices {
       QuerySnapshot snapshot = await firestore
           .collection("quiz")
           .where('materiId', isEqualTo: materiId)
-          .get(const GetOptions(source: Source.serverAndCache));
+          .get(const GetOptions(source: Source.server));
 
       return snapshot.docs
           .map((doc) => QuizModel.fromMap(doc.data() as Map<String, dynamic>))

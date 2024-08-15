@@ -75,7 +75,7 @@ class _QuizState extends State<Quiz> {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            } else if (snapshot.data!.isEmpty) {
               return const Center(child: Text('No quiz available'));
             }
 
@@ -102,7 +102,7 @@ class _QuizState extends State<Quiz> {
                   children: [
                     Text(
                       materi.nama,
-                      style: blackText.copyWith(fontSize: 22, fontWeight: bold),
+                      style: blackText.copyWith(fontSize: 14, fontWeight: bold),
                       textAlign: TextAlign.center,
                     ),
                   ],

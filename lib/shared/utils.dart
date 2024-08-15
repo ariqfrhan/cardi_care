@@ -103,10 +103,10 @@ class Utils {
       }
     } catch (e) {
       print("Error checking user type: $e");
-      // Jika terjadi error, gunakan data terakhir yang tersimpan
       if (userType != null) {
         return _getUserRoute(userType);
       }
+      Routes.splash;
     }
 
     return Routes.splash;

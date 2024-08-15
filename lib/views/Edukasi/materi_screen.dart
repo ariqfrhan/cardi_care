@@ -61,7 +61,7 @@ class _MateriState extends State<Materi> {
               Expanded(
                 child: Text(
                   materi.nama,
-                  style: blackText.copyWith(fontSize: 22, fontWeight: bold),
+                  style: blackText.copyWith(fontSize: 24, fontWeight: bold),
                   textAlign: TextAlign.center,
                 ),
               ),

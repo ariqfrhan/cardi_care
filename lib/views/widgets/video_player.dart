@@ -63,13 +63,38 @@ class _VideoPlayerState extends State<VideoPlayer> {
             });
 
       _customVideoPlayerController = CustomVideoPlayerController(
-          context: context,
-          videoPlayerController: _videoPlayerController,
-          customVideoPlayerSettings: const CustomVideoPlayerSettings(
-            showPlayButton: true,
-            showFullscreenButton: true,
-            playButton: Icon(Icons.play_arrow),
-          ));
+        context: context,
+        videoPlayerController: _videoPlayerController,
+        customVideoPlayerSettings: const CustomVideoPlayerSettings(
+          showPlayButton: true,
+          showFullscreenButton: true,
+          playButton: Icon(
+            Icons.play_arrow,
+            color: Colors.white,
+            size: 24,
+          ),
+          pauseButton: Icon(
+            Icons.pause,
+            color: Colors.white,
+            size: 24,
+          ),
+          enterFullscreenButton: Icon(
+            Icons.fullscreen,
+            color: Colors.white,
+            size: 24,
+          ),
+          exitFullscreenButton: Icon(
+            Icons.fullscreen,
+            color: Colors.white,
+            size: 24,
+          ),
+          settingsButton: Icon(
+            Icons.settings,
+            color: Colors.white,
+            size: 20,
+          ),
+        ),
+      );
     } catch (e) {
       setState(() {
         _errorMessage = "Unexpected error: ${e.toString()}";
