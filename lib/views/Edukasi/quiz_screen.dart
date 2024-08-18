@@ -48,7 +48,7 @@ class _QuizState extends State<Quiz> {
         .saveQuizResult(userId!.uid, materi.uid, questions, selectedAnswers);
 
     Get.snackbar(
-        'Quiz Submitted', 'You answered $correctAnswers questions correctly.');
+        'Kuis tersimpan', 'Kamu menjawab $correctAnswers jawaban benar.');
   }
 
   @override
