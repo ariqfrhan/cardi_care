@@ -24,7 +24,10 @@ class _BeratViewState extends State<BeratView> {
   String? selectedOption;
   XFile? selectedImage;
 
-  List<String> keteranganOptions = ['keluarga membantu melihat timbangan', 'Mandiri'];
+  List<String> keteranganOptions = [
+    'keluarga membantu melihat timbangan',
+    'Mandiri'
+  ];
 
   @override
   void initState() {
@@ -67,7 +70,6 @@ class _BeratViewState extends State<BeratView> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
               const SizedBox(
                 height: 20,
               ),
@@ -201,7 +203,7 @@ class _BeratViewState extends State<BeratView> {
                 child: selectedImage == null
                     ? Center(
                         child: Text(
-                          'Dokumentasikan aktivitas dietmu',
+                          'Dokumentasikan hasil pengukuran berat badan',
                           style: blackText,
                         ),
                       )
@@ -254,7 +256,10 @@ class _BeratViewState extends State<BeratView> {
           return CustomRedButton(
             title: 'Simpan',
             onPressed: () async {
-              if (dateCtl.text.isEmpty || weightController.text.isEmpty || selectedOption == null || selectedImage == null) {
+              if (dateCtl.text.isEmpty ||
+                  weightController.text.isEmpty ||
+                  selectedOption == null ||
+                  selectedImage == null) {
                 Get.snackbar('Error', 'Harap isi semua bagian');
               } else {
                 final weight = double.tryParse(weightController.text);
