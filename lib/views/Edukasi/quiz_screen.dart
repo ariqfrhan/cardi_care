@@ -32,8 +32,17 @@ class _QuizState extends State<Quiz> {
     });
   }
 
+  bool _isAllAnswered() {
+    return selectedAnswers.every((answer) => answer != null);
+  }
+
   void _submitQuiz(
       List<QuizModel> questions, List<int?> selectedAnswers) async {
+    if (!_isAllAnswered()) {
+      Get.snackbar('Error', 'Semua pertanyaan harus dijawab.');
+      return;
+    }
+
     int correctAnswers = 0;
     for (int i = 0; i < questions.length; i++) {
       if (selectedAnswers[i] == questions[i].correctAnswerIndex) {
@@ -145,9 +154,15 @@ class _QuizState extends State<Quiz> {
         child: CustomRedButton(
           title: 'Submit',
           onPressed: () async {
-            List<QuizModel> questions = await futureQuestions;
-            _submitQuiz(questions, selectedAnswers);
-            Get.offAllNamed(Routes.keluargaWrapper);
+            try {
+              List<QuizModel> questions = await futureQuestions;
+              _submitQuiz(questions, selectedAnswers);
+              if (_isAllAnswered()) {
+                Get.offAllNamed(Routes.keluargaWrapper);
+              }
+            } catch (e) {
+              Get.snackbar('Error', 'Cant Submit');
+            }
           },
         ),
       ),

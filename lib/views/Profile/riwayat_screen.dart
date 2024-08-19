@@ -1,3 +1,4 @@
+import 'package:cardi_care/services/edukasi_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/widgets/cards.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,6 +15,7 @@ class UserRiwayat extends StatelessWidget {
       throw Exception('User not logged in');
     }
     List<String> subCollections = [
+      'riwayat_quiz',
       'olahraga',
       'berat',
       'diet-rendah-garam',
@@ -38,6 +40,8 @@ class UserRiwayat extends StatelessWidget {
 
   String getUserActivity(String collectionName, Map<String, dynamic> data) {
     switch (collectionName) {
+      case 'riwayat_quiz':
+        return 'Riwayat Kuis ${data['materiId'] ?? ''}';
       case 'olahraga':
         return 'Aktivitas Fisik';
       case 'berat':
@@ -57,6 +61,14 @@ class UserRiwayat extends StatelessWidget {
 
   String getSubtitle(String collectionName, Map<String, dynamic> data) {
     switch (collectionName) {
+      case 'riwayat_quiz':
+        List<dynamic> results = data['results'] ?? [];
+        int correctCount = results
+            .where((result) =>
+                result['selectedAnswer'] == result['correctAnswerIndex'])
+            .length;
+        double scorePercentage = (correctCount / results.length) * 100;
+        return "Skor: ${scorePercentage.toStringAsFixed(2)}% dari ${results.length} pertanyaan";
       case 'olahraga':
         return "Durasi olahraga : ${data['duration'] ?? ''} menit";
       case 'berat':
@@ -105,11 +117,16 @@ class UserRiwayat extends StatelessWidget {
               String collectionName = doc.reference.parent.id;
               String userActivity = getUserActivity(collectionName, data);
               String subtitle = getSubtitle(collectionName, data);
-              String date = data['date']?.toString() ?? '';
+              DateTime? parsedDate;
+              if (data['timestamp'] != null) {
+                parsedDate = (data['timestamp'] as Timestamp).toDate();
+              } else if (data['date'] != null) {
+                parsedDate = DateTime.parse(data['date'].toString());
+              }
 
-              DateTime parsedDate = DateTime.parse(date);
-              String formattedDate =
-                  DateFormat('EEEE, dd MMMM yyyy').format(parsedDate);
+              String formattedDate = parsedDate != null
+                  ? DateFormat('EEEE, dd MMMM yyyy').format(parsedDate)
+                  : 'Tanggal tidak tersedia';
 
               return ActivityListTile(
                 userActivity: userActivity,

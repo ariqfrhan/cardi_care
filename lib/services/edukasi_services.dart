@@ -16,6 +16,17 @@ class EdukasiServices {
         .toList();
   }
 
+  Future<MateriModel> getMateriById(String materiId) async {
+    QuerySnapshot snapshot = await firestore
+        .collection("materi")
+        .where('materiId', isEqualTo: materiId)
+        .get(
+          const GetOptions(source: Source.serverAndCache),
+        );
+
+    return MateriModel.fromMap(snapshot.docs.first as Map<String, dynamic>);
+  }
+
   Future<List<QuizModel>> getAllQuiz(String materiId) async {
     try {
       QuerySnapshot snapshot = await firestore
