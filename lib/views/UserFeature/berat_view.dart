@@ -205,6 +205,7 @@ class _BeratViewState extends State<BeratView> {
                         child: Text(
                           'Dokumentasikan hasil pengukuran berat badan',
                           style: blackText,
+                          textAlign: TextAlign.center,
                         ),
                       )
                     : null,

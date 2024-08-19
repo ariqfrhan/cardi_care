@@ -66,8 +66,11 @@ class _VideoPlayerState extends State<VideoPlayer> {
         context: context,
         videoPlayerController: _videoPlayerController,
         customVideoPlayerSettings: const CustomVideoPlayerSettings(
+          showMuteButton: false,
+          playbackSpeedButtonAvailable: false,
+          settingsButtonAvailable: false,
           showPlayButton: true,
-          showFullscreenButton: true,
+          showFullscreenButton: false,
           playButton: Icon(
             Icons.play_arrow,
             color: Colors.white,

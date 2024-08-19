@@ -203,8 +203,9 @@ class _DietViewState extends State<DietView> {
                 child: selectedImage == null
                     ? Center(
                         child: Text(
-                          'Dokumentasikan garam yang dikonsumsi?',
+                          'Dokumentasikan sendok & garam\nyang dikonsumsi hari ini',
                           style: blackText,
+                          textAlign: TextAlign.center,
                         ),
                       )
                     : null,
