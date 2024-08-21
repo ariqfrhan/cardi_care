@@ -43,7 +43,14 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
     var snapshot =
         await FirebaseFirestore.instance.collection('keluarga').get();
     setState(() {
-      familyMembers = snapshot.docs;
+      familyMembers = snapshot.docs.where((doc) {
+        // Ambil field userIds dari dokumen
+        var userIds = doc['userIds'];
+
+        // Periksa apakah userIds adalah List dan apakah userIds[0] bernilai null atau belum ada
+        return userIds == null ||
+            (userIds is List && (userIds.isEmpty || userIds[0] == null));
+      }).toList();
     });
   }
 
@@ -113,7 +120,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                     items: familyMembers.map((DocumentSnapshot document) {
                       return DropdownMenuItem<DocumentSnapshot>(
                         value: document,
-                        child: Text('${document['name']}'),
+                        child: Text('${document['email']}'),
                       );
                     }).toList(),
                     onChanged: (DocumentSnapshot? newValue) {
@@ -255,7 +262,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                       _passwordController.text.isEmpty ||
                       _dobController.text.isEmpty ||
                       selectedFamilyMember == null) {
-                    Get.snackbar('Error', 'Harap isi semua field');
+                    Get.snackbar('Error', 'Harap lengkapi semua data');
                   } else {
                     if (_passwordController.text ==
                         _confirmPasswordController.text) {
