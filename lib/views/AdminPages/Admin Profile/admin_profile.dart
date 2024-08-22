@@ -64,7 +64,7 @@ class AdminProfile extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 64),
-              const ProfileButtons(title: 'Pengaturan'),
+              // const ProfileButtons(title: 'Pengaturan'),
               // ProfileButtons(
               //   title: 'Riwayat',
               //   onPressed: () {

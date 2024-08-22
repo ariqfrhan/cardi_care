@@ -1,8 +1,6 @@
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/Edukasi/edukasi_screen.dart';
 import 'package:cardi_care/views/KeluargaPages/Analisis/analisis_detail.dart';
-import 'package:cardi_care/views/KeluargaPages/Analisis/analisis_home.dart';
-import 'package:cardi_care/views/KeluargaPages/Keluarga%20Home/keluarga_home.dart';
 import 'package:cardi_care/views/KeluargaPages/Keluarga%20Profile/keluarga_profile.dart';
 import 'package:cardi_care/views/KeluargaPages/KeluargaWrapper/keluarga_wrapper_controller.dart';
 import 'package:flutter/material.dart';
