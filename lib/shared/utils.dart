@@ -25,7 +25,7 @@ class Utils {
 
   static String formatDateJanjiTemu(String dateString) {
     DateTime dateTime = DateTime.parse(dateString);
-    DateFormat formatter = DateFormat('dd MMMM yyyy - HH.mm');
+    DateFormat formatter = DateFormat('dd/MM/yyyy - HH:mm');
     String formattedDate = formatter.format(dateTime);
     return formattedDate;
   }

@@ -76,4 +76,45 @@ class EdukasiServices {
 
     return snapshot.docs.isNotEmpty;
   }
+
+  Future<DateTime?> getLastQuizCompletionTime(
+      String userId, String materiId) async {
+    QuerySnapshot snapshot = await firestore
+        .collection('riwayat')
+        .doc(userId)
+        .collection('riwayat_quiz')
+        .where('materiId', isEqualTo: materiId)
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      return (snapshot.docs.first.data() as Map<String, dynamic>)['timestamp']
+          .toDate();
+    }
+    return null;
+  }
+
+  Future<int> getQuizAttemptCount(String userId, String materiId) async {
+    QuerySnapshot snapshot = await firestore
+        .collection('riwayat')
+        .doc(userId)
+        .collection('riwayat_quiz')
+        .where('materiId', isEqualTo: materiId)
+        .get();
+
+    return snapshot.docs.length;
+  }
+
+  Future<bool> hasAccessedBefore(String userId, String? materiId) async {
+    QuerySnapshot snapshot = await firestore
+        .collection('riwayat')
+        .doc(userId)
+        .collection('riwayat_materi')
+        .where('materiId', isEqualTo: materiId)
+        .limit(1)
+        .get();
+
+    return snapshot.docs.isNotEmpty;
+  }
 }

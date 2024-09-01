@@ -45,35 +45,35 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void fetchClosestJanjiTemu() async {
-  UserModel user = await AuthServices().getUserData();
-  List<JanjiTemuModel> janjis =
-      await TugasServices().getJanjiTemuByUserId(user.uid);
-  if (janjis.isNotEmpty) {
-    final now = DateTime.now();
-    janjis.sort((a, b) {
-      final dateA = DateTime.parse(a.date);
-      final dateB = DateTime.parse(b.date);
-      return dateA.compareTo(dateB);
-    });
+    UserModel user = await AuthServices().getUserData();
+    List<JanjiTemuModel> janjis =
+        await TugasServices().getJanjiTemuByUserId(user.uid);
+    if (janjis.isNotEmpty) {
+      final now = DateTime.now();
+      janjis.sort((a, b) {
+        final dateA = DateTime.parse(a.date);
+        final dateB = DateTime.parse(b.date);
+        return dateA.compareTo(dateB);
+      });
 
-    JanjiTemuModel? nextJanjiTemu;
-    for (JanjiTemuModel janji in janjis) {
-      final dateTime = DateTime.parse(janji.date);
-      if (dateTime.isAfter(now)) {
-        nextJanjiTemu = janji;
-        break;
+      JanjiTemuModel? nextJanjiTemu;
+      for (JanjiTemuModel janji in janjis) {
+        final dateTime = DateTime.parse(janji.date);
+        if (dateTime.isAfter(now)) {
+          nextJanjiTemu = janji;
+          break;
+        }
       }
-    }
 
-    setState(() {
-      closestJanjiTemu = nextJanjiTemu;
-    });
-  } else {
-    setState(() {
-      closestJanjiTemu = null;
-    });
+      setState(() {
+        closestJanjiTemu = nextJanjiTemu;
+      });
+    } else {
+      setState(() {
+        closestJanjiTemu = null;
+      });
+    }
   }
-}
 
   void fetchAdminPhoneNumber() async {
     adminPhoneNumber = await AuthServices().getAdminPhoneNumber();
@@ -253,9 +253,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     CustomRedButton(
                       title: 'Keluhan',
                       onPressed: () async {
+                        UserModel user = await AuthServices().getUserData();
                         await launchUrlString(
                             mode: LaunchMode.externalApplication,
-                            "https://wa.me/$adminPhoneNumber?text=Saya%20punya%20keluhan");
+                            "https://wa.me/$adminPhoneNumber?text=Saya ${user.name}, punya keluhan");
                       },
                     ),
                   ],
