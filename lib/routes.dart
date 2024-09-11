@@ -28,7 +28,7 @@ import 'package:cardi_care/views/splash_screen.dart';
 import 'package:cardi_care/views/widgets/alarm.dart';
 import 'package:cardi_care/views/widgets/splash_daftar.dart';
 import 'package:get/get.dart';
-import 'package:cardi_care/views/TekaTekiSilang/tekaTekiSilangPage.dart';
+import 'package:cardi_care/views/TekaTekiSilang/teka_teki_silang_page.dart';
 
 class Routes {
   static String splash = '/';
@@ -150,7 +150,7 @@ class Routes {
     ),
     GetPage(
       name: keluargaAnalisisDetail,
-      page: () => AnalisisDetail(),
+      page: () => const AnalisisDetail(),
     ),
     GetPage(
       name: adminWrapper,

@@ -5,7 +5,7 @@ import 'teka_teki_silang_drawer_answer.dart';
 import '../providers.dart';
 
 class TekaTekiSilangWidget extends ConsumerStatefulWidget {
-  const TekaTekiSilangWidget({Key? key}) : super(key: key);
+  const TekaTekiSilangWidget({super.key});
 
   @override
   ConsumerState<TekaTekiSilangWidget> createState() =>
