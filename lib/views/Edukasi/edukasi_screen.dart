@@ -75,9 +75,14 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
         .getLastQuizCompletionTime(userId, previousMateriId);
     if (lastCompletionTime == null) return false;
 
+    Duration remainingTime;
     Duration timeSinceCompletion =
         DateTime.now().difference(lastCompletionTime);
-    Duration remainingTime = Duration(hours: 24) - timeSinceCompletion;
+    if (materiId == 'materi3') {
+      remainingTime = const Duration(hours: 116) - timeSinceCompletion;
+    } else {
+      remainingTime = const Duration(hours: 92) - timeSinceCompletion;
+    }
 
     if (remainingTime > Duration.zero) {
       if (nextMateriCountdown == null || remainingTime < nextMateriCountdown!) {
@@ -102,7 +107,7 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
       bool canAccess = await canAccessMateri(
           user.uid, materis[i].uid, previousMateriId, nextMateriId);
       statusMap[materis[i].uid] = canAccess;
-      if (!canAccess) break; // Stop checking once we find a locked materi
+      if (!canAccess) break;
     }
 
     setState(() {
@@ -154,7 +159,7 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
             ),
           ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: materiList.length,
               itemBuilder: (context, index) {
                 MateriModel materi = materiList[index];

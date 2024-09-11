@@ -112,6 +112,7 @@ class EdukasiServices {
         .doc(userId)
         .collection('riwayat_materi')
         .where('materiId', isEqualTo: materiId)
+        .orderBy('timestamp', descending: true)
         .limit(1)
         .get();
 
