@@ -119,8 +119,14 @@ class EdukasiServices {
     return snapshot.docs.isNotEmpty;
   }
 
-  // Future <void> createLog(String userId, String materiId) async {
-  //   final CollectionReference riwayatCollection =
-  //       firestore.collection('log_materi').doc(userId);
-  // }
+  Future<void> createLog(String userId, String materiId) async {
+    final CollectionReference riwayatCollection =
+        firestore.collection('log_materi').doc(userId).collection('logs');
+
+    // Create a document with materiId and timestamp
+    await riwayatCollection.add({
+      'materiId': materiId,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+  }
 }
