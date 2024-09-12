@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cardi_care/model/materi_model.dart';
 import 'package:cardi_care/routes.dart';
+import 'package:cardi_care/services/analytics_servise.dart';
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/services/edukasi_services.dart';
 import 'package:cardi_care/shared/theme.dart';
@@ -172,6 +173,10 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
                       onTap: isEnabled
                           ? () {
                               Get.toNamed(Routes.userMateri, arguments: materi);
+                              User? user = auth.currentUser;
+                              if (user == null) return;
+                              AnalyticsService()
+                                  .logMateri(user.uid, materi.uid).then((value) => print(materi.uid));
                             }
                           : null,
                     ),
