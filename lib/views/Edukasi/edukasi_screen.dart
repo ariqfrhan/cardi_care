@@ -80,9 +80,9 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
     Duration timeSinceCompletion =
         DateTime.now().difference(lastCompletionTime);
     if (materiId == 'materi3') {
-      remainingTime = const Duration(hours: 116) - timeSinceCompletion;
+      remainingTime = const Duration(hours: 96) - timeSinceCompletion;
     } else {
-      remainingTime = const Duration(hours: 92) - timeSinceCompletion;
+      remainingTime = const Duration(hours: 72) - timeSinceCompletion;
     }
 
     if (remainingTime > Duration.zero) {
