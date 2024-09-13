@@ -1,3 +1,6 @@
+import 'package:cardi_care/views/TekaTekiSilang/types/history_answer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'types/item_datas.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'services/tts_service.dart';
@@ -45,14 +48,21 @@ class TtsNotifier extends StateNotifier<Tts> {
       name: json['name'],
       col: json['col'],
       row: json['row'],
+      materiID: json['materi_id'],
       items: itemsConverted,
     );
 
     convertToMatrix(state.items, state.col, state.row);
 
+    await getHistoryAnswers();
+
     state = state.copyWith(isLoading: false);
 
     return state;
+  }
+
+  String getTtsMateriId() {
+    return state.materiID;
   }
 
   void updateTts(Tts tts) {
@@ -73,7 +83,10 @@ class TtsNotifier extends StateNotifier<Tts> {
   List<String> getVerticalQuestion() {
     List<String> questions = [];
 
-    for (final item in state.items) {
+    final sortetState = state.items.toList()
+      ..sort((a, b) => a.number.compareTo(b.number));
+
+    for (final item in sortetState) {
       if (item.direction == 'vertical') {
         questions.add('${item.number}. ${item.title}');
       }
@@ -236,6 +249,34 @@ class TtsNotifier extends StateNotifier<Tts> {
         );
       }
     }
+  }
+
+  Future<List<HistoryAnswers>> getHistoryAnswers() async {
+    List<HistoryAnswers> historyAnswers = [];
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    User? userId = auth.currentUser;
+    final ttsHistoryAnswer =
+        await _ttsService.getHistoryAnswer(userId!.uid, state.materiID);
+
+    for (final answer in ttsHistoryAnswer) {
+      historyAnswers.add(HistoryAnswers(
+          materiId: answer.materiId,
+          results: ItemDatas(
+            title: answer.results.title,
+            direction: answer.results.direction,
+            answer: answer.results.answer,
+            startCol: answer.results.startCol,
+            startRow: answer.results.startRow,
+            number: answer.results.number,
+            isAnswered: true,
+          ),
+          timestamp: answer.timestamp,
+          userId: answer.userId));
+
+      answerQuestion(answer.results);
+    }
+
+    return historyAnswers;
   }
 }
 

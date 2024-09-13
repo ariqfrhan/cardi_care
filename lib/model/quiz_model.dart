@@ -24,12 +24,18 @@ class QuizModel {
   }
 
   factory QuizModel.fromMap(Map<String, dynamic> map) {
-    return QuizModel(
-      uid: map['id'],
-      materiId: map['materiId'],
-      question: map['question'],
-      options: List<String>.from(map['options']),
-      correctAnswerIndex: map['correctAnswerIndex'],
-    );
+    try {
+      return QuizModel(
+        uid: map['id'] ?? '',
+        materiId: map['materiId'] ?? '',
+        question: map['question'] ?? '',
+        options: List<String>.from(map['options'] ?? []),
+        correctAnswerIndex: map['correctAnswerIndex'] ?? 0,
+      );
+    } catch (e) {
+      print('Error in QuizModel.fromMap: $e');
+      print('Problematic map: $map');
+      rethrow;
+    }
   }
 }

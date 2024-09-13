@@ -170,6 +170,15 @@ class AuthServices {
     return UserModel.fromMap(userData.data() as Map<String, dynamic>);
   }
 
+  Future<UserModel> getUserDataById(String userId) async {
+    DocumentSnapshot userData = await firestore
+        .collection('users')
+        .doc(userId)
+        .get(const GetOptions(source: Source.serverAndCache));
+
+    return UserModel.fromMap(userData.data() as Map<String, dynamic>);
+  }
+
   Future<KeluargaModel> getKeluargaData() async {
     User? keluarga = _auth.currentUser;
     DocumentSnapshot keluargaData =

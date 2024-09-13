@@ -1,9 +1,11 @@
 import 'package:cardi_care/model/materi_model.dart';
 import 'package:cardi_care/routes.dart';
+import 'package:cardi_care/services/edukasi_services.dart';
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/shared/utils.dart';
 import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:cardi_care/views/widgets/video_player.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
@@ -17,6 +19,26 @@ class Materi extends StatefulWidget {
 
 class _MateriState extends State<Materi> {
   final MateriModel materi = Get.arguments;
+  final EdukasiServices _edukasiServices = EdukasiServices();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  int accessCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAccessCount();
+  }
+
+  Future<void> _fetchAccessCount() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      int count =
+          await _edukasiServices.getMateriAccessed(user.uid, materi.uid);
+      setState(() {
+        accessCount = count;
+      });
+    }
+  }
 
   Future<String> fetchUserData() async {
     String actor = await Utils.fetchActor();
@@ -61,11 +83,20 @@ class _MateriState extends State<Materi> {
               Expanded(
                 child: Text(
                   materi.nama,
-                  style: blackText.copyWith(fontSize: 22, fontWeight: bold),
+                  style: blackText.copyWith(fontSize: 24, fontWeight: bold),
                   textAlign: TextAlign.center,
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Anda sudah $accessCount kali mengakses materi ini',
+            style: blackText.copyWith(
+              fontSize: 12,
+              fontWeight: regular,
+            ),
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
           SingleChildScrollView(

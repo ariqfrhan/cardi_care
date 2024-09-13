@@ -1,8 +1,6 @@
 import 'package:cardi_care/shared/theme.dart';
 import 'package:cardi_care/views/Edukasi/edukasi_screen.dart';
 import 'package:cardi_care/views/KeluargaPages/Analisis/analisis_detail.dart';
-import 'package:cardi_care/views/KeluargaPages/Analisis/analisis_home.dart';
-import 'package:cardi_care/views/KeluargaPages/Keluarga%20Home/keluarga_home.dart';
 import 'package:cardi_care/views/KeluargaPages/Keluarga%20Profile/keluarga_profile.dart';
 import 'package:cardi_care/views/KeluargaPages/KeluargaWrapper/keluarga_wrapper_controller.dart';
 import 'package:flutter/material.dart';
@@ -46,13 +44,13 @@ class KeluargaWrapperScreen extends StatelessWidget {
                     context,
                     icon: Icons.bar_chart,
                     page: 1,
-                    label: 'Analisis',
+                    label: 'Akumulasi',
                   ),
                   _bottomAppBar(
                     context,
                     icon: Icons.person,
                     page: 2,
-                    label: 'Profile',
+                    label: 'Profil',
                   ),
                 ],
               ),

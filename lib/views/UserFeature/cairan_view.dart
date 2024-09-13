@@ -210,8 +210,9 @@ class _CairanViewState extends State<CairanView> {
                   child: selectedImage == null
                       ? Center(
                           child: Text(
-                            'Dokumentasikan aktivitas dietmu',
+                            'Dokumentasikan gelas yang digunakan\nuntuk minum hari ini',
                             style: blackText,
+                            textAlign: TextAlign.center,
                           ),
                         )
                       : null,

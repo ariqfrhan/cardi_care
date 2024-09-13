@@ -22,12 +22,20 @@ class _AnalisisDetailState extends State<AnalisisDetail> {
       Get.put(AnalisisDetailController());
   final AuthServices auth = Get.find<AuthServices>();
   final KeluargaServices keluargaServices = KeluargaServices();
+  final UserModel? passUser = Get.arguments;
   UserModel? user;
 
   @override
   void initState() {
     super.initState();
-    fetchFirstUser();
+
+    if (passUser != null) {
+      setState(() {
+        user = passUser;
+      });
+    } else {
+      fetchFirstUser();
+    }
   }
 
   void fetchFirstUser() async {

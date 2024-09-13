@@ -203,8 +203,9 @@ class _DietViewState extends State<DietView> {
                 child: selectedImage == null
                     ? Center(
                         child: Text(
-                          'Dokumentasikan aktivitas dietmu',
+                          'Dokumentasikan sendok & garam\nyang dikonsumsi hari ini',
                           style: blackText,
+                          textAlign: TextAlign.center,
                         ),
                       )
                     : null,
@@ -256,7 +257,10 @@ class _DietViewState extends State<DietView> {
           return CustomRedButton(
             title: 'Simpan',
             onPressed: () async {
-              if (dateCtl.text.isEmpty || spoonController.text.isEmpty || selectedOption == null || selectedImage == null) {
+              if (dateCtl.text.isEmpty ||
+                  spoonController.text.isEmpty ||
+                  selectedOption == null ||
+                  selectedImage == null) {
                 Get.snackbar('Error', 'Harap isi semua bagian');
               } else {
                 final spoon = double.tryParse(spoonController.text);

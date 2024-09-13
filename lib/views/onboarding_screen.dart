@@ -71,7 +71,7 @@ class OnboardingScreen extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12))),
                       child: Text(
-                        'Login',
+                        'Masuk',
                         style:
                             whiteText.copyWith(fontWeight: bold, fontSize: 14),
                       ),

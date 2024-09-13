@@ -32,8 +32,17 @@ class _QuizState extends State<Quiz> {
     });
   }
 
+  bool _isAllAnswered() {
+    return selectedAnswers.every((answer) => answer != null);
+  }
+
   void _submitQuiz(
       List<QuizModel> questions, List<int?> selectedAnswers) async {
+    if (!_isAllAnswered()) {
+      Get.snackbar('Error', 'Semua pertanyaan harus dijawab.');
+      return;
+    }
+
     int correctAnswers = 0;
     for (int i = 0; i < questions.length; i++) {
       if (selectedAnswers[i] == questions[i].correctAnswerIndex) {
@@ -48,7 +57,7 @@ class _QuizState extends State<Quiz> {
         .saveQuizResult(userId!.uid, materi.uid, questions, selectedAnswers);
 
     Get.snackbar(
-        'Quiz Submitted', 'You answered $correctAnswers questions correctly.');
+        'Kuis tersimpan', 'Kamu menjawab $correctAnswers jawaban benar.');
   }
 
   @override
@@ -75,7 +84,7 @@ class _QuizState extends State<Quiz> {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            } else if (snapshot.data!.isEmpty) {
               return const Center(child: Text('No quiz available'));
             }
 
@@ -102,7 +111,7 @@ class _QuizState extends State<Quiz> {
                   children: [
                     Text(
                       materi.nama,
-                      style: blackText.copyWith(fontSize: 22, fontWeight: bold),
+                      style: blackText.copyWith(fontSize: 14, fontWeight: bold),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -145,9 +154,15 @@ class _QuizState extends State<Quiz> {
         child: CustomRedButton(
           title: 'Submit',
           onPressed: () async {
-            List<QuizModel> questions = await futureQuestions;
-            _submitQuiz(questions, selectedAnswers);
-            Get.offAllNamed(Routes.keluargaWrapper);
+            try {
+              List<QuizModel> questions = await futureQuestions;
+              _submitQuiz(questions, selectedAnswers);
+              if (_isAllAnswered()) {
+                Get.offAllNamed(Routes.keluargaWrapper);
+              }
+            } catch (e) {
+              Get.snackbar('Error', 'Cant Submit');
+            }
           },
         ),
       ),

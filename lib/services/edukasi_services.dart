@@ -16,12 +16,23 @@ class EdukasiServices {
         .toList();
   }
 
+  Future<MateriModel> getMateriById(String materiId) async {
+    QuerySnapshot snapshot = await firestore
+        .collection("materi")
+        .where('materiId', isEqualTo: materiId)
+        .get(
+          const GetOptions(source: Source.serverAndCache),
+        );
+
+    return MateriModel.fromMap(snapshot.docs.first as Map<String, dynamic>);
+  }
+
   Future<List<QuizModel>> getAllQuiz(String materiId) async {
     try {
       QuerySnapshot snapshot = await firestore
           .collection("quiz")
           .where('materiId', isEqualTo: materiId)
-          .get(const GetOptions(source: Source.serverAndCache));
+          .get(const GetOptions(source: Source.server));
 
       return snapshot.docs
           .map((doc) => QuizModel.fromMap(doc.data() as Map<String, dynamic>))
@@ -64,5 +75,57 @@ class EdukasiServices {
         .get(const GetOptions(source: Source.serverAndCache));
 
     return snapshot.docs.isNotEmpty;
+  }
+
+  Future<DateTime?> getLastQuizCompletionTime(
+      String userId, String materiId) async {
+    QuerySnapshot snapshot = await firestore
+        .collection('riwayat')
+        .doc(userId)
+        .collection('riwayat_quiz')
+        .where('materiId', isEqualTo: materiId)
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      return (snapshot.docs.first.data() as Map<String, dynamic>)['timestamp']
+          .toDate();
+    }
+    return null;
+  }
+
+  Future<int> getMateriAccessed(String userId, String materiId) async {
+    QuerySnapshot snapshot = await firestore
+        .collection('log_materi')
+        .doc(userId)
+        .collection('logs')
+        .where('materiId', isEqualTo: materiId)
+        .get();
+    return snapshot.docs.length;
+  }
+
+  Future<bool> hasAccessedBefore(String userId, String? materiId) async {
+    QuerySnapshot snapshot = await firestore
+        .collection('riwayat')
+        .doc(userId)
+        .collection('riwayat_materi')
+        .where('materiId', isEqualTo: materiId)
+        .orderBy('timestamp', descending: true)
+        .limit(1)
+        .get();
+
+    return snapshot.docs.isNotEmpty;
+  }
+
+  Future<void> createLog(String userId, String materiId) async {
+    final CollectionReference riwayatCollection =
+        firestore.collection('log_materi').doc(userId).collection('logs');
+
+    // Create a document with materiId and timestamp
+    await riwayatCollection.add({
+      'materiId': materiId,
+      'timestamp': FieldValue.serverTimestamp(),
+    });
   }
 }

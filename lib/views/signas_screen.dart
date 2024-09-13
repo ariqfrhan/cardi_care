@@ -14,7 +14,7 @@ class SignasScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Aku sebagai...',
+              Text('Saya sebagai...',
                   style:
                       blackText.copyWith(fontSize: 32, fontWeight: semibold)),
               const SizedBox(

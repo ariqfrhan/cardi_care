@@ -21,6 +21,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
   final TextEditingController _dobController = TextEditingController();
   String? selectedGender;
   final TextEditingController _pressureController = TextEditingController();
+  final TextEditingController _pjController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -30,6 +31,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
   final AuthServices _authServices = AuthServices();
 
   List<DocumentSnapshot> familyMembers = [];
+  List<DocumentSnapshot> filteredFamilyMembers = [];
   DocumentSnapshot? selectedFamilyMember;
   List<String> jenisKelamin = ['Laki-Laki', 'Perempuan'];
 
@@ -37,14 +39,69 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
   void initState() {
     super.initState();
     fetchFamilyMembers();
+    _pjController.addListener(() {
+      filterFamilyMembers(_pjController.text);
+    });
   }
 
   Future<void> fetchFamilyMembers() async {
     var snapshot =
         await FirebaseFirestore.instance.collection('keluarga').get();
     setState(() {
-      familyMembers = snapshot.docs;
+      familyMembers = snapshot.docs.where((doc) {
+        var userIds = doc['userIds'];
+        return userIds == null ||
+            (userIds is List && (userIds.isEmpty || userIds[0] == null));
+      }).toList();
+      filteredFamilyMembers = List.from(familyMembers);
     });
+  }
+
+  void filterFamilyMembers(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredFamilyMembers = List.from(familyMembers);
+      } else {
+        filteredFamilyMembers = familyMembers.where((doc) {
+          return doc['email']
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase());
+        }).toList();
+      }
+      if (filteredFamilyMembers.isEmpty) {
+        selectedFamilyMember = null;
+      }
+    });
+  }
+
+  List<DropdownMenuEntry<DocumentSnapshot?>> _buildDropdownMenuEntries() {
+    if (_pjController.text.isEmpty) {
+      return familyMembers
+          .map<DropdownMenuEntry<DocumentSnapshot?>>(
+            (DocumentSnapshot document) => DropdownMenuEntry<DocumentSnapshot?>(
+              value: document,
+              label: document['email'] as String,
+            ),
+          )
+          .toList();
+    } else if (filteredFamilyMembers.isNotEmpty) {
+      return filteredFamilyMembers
+          .map<DropdownMenuEntry<DocumentSnapshot?>>(
+            (DocumentSnapshot document) => DropdownMenuEntry<DocumentSnapshot?>(
+              value: document,
+              label: document['email'] as String,
+            ),
+          )
+          .toList();
+    } else {
+      return [
+        const DropdownMenuEntry<DocumentSnapshot?>(
+          value: null,
+          label: 'No results found',
+        ),
+      ];
+    }
   }
 
   @override
@@ -106,22 +163,14 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                   const SizedBox(
                     height: 8,
                   ),
-                  DropdownButtonFormField<DocumentSnapshot>(
-                    isExpanded: true,
-                    menuMaxHeight: 300,
-                    value: selectedFamilyMember,
-                    items: familyMembers.map((DocumentSnapshot document) {
-                      return DropdownMenuItem<DocumentSnapshot>(
-                        value: document,
-                        child: Text('${document['name']}'),
-                      );
-                    }).toList(),
-                    onChanged: (DocumentSnapshot? newValue) {
-                      setState(() {
-                        selectedFamilyMember = newValue;
-                      });
-                    },
-                    decoration: InputDecoration(
+                  DropdownMenu<DocumentSnapshot?>(
+                    menuHeight: 300,
+                    width: double.infinity,
+                    controller: _pjController,
+                    enableFilter: true,
+                    requestFocusOnTap: true,
+                    label: const Text('Nama Penanggung Jawab'),
+                    inputDecorationTheme: InputDecorationTheme(
                       border: OutlineInputBorder(
                         borderSide: const BorderSide(width: 1),
                         borderRadius: BorderRadius.circular(12),
@@ -131,8 +180,17 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                       ),
                       floatingLabelStyle: TextStyle(color: redColor),
                       labelStyle: TextStyle(color: mono600),
-                      labelText: 'Nama Penanggung Jawab',
                     ),
+                    onSelected: (DocumentSnapshot? newValue) {
+                      setState(() {
+                        selectedFamilyMember = newValue;
+                        if (selectedFamilyMember == null) {
+                          _pjController.clear();
+                        }
+                      });
+                    },
+                    dropdownMenuEntries: _buildDropdownMenuEntries(),
+                    enabled: true,
                   ),
                   const SizedBox(
                     height: 8,
@@ -255,7 +313,7 @@ class _SignupPasienScreenState extends State<SignupPasienScreen> {
                       _passwordController.text.isEmpty ||
                       _dobController.text.isEmpty ||
                       selectedFamilyMember == null) {
-                    Get.snackbar('Error', 'Harap isi semua field');
+                    Get.snackbar('Error', 'Harap lengkapi semua data');
                   } else {
                     if (_passwordController.text ==
                         _confirmPasswordController.text) {
