@@ -10,6 +10,7 @@ import 'package:cardi_care/views/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class KeluargaProfile extends StatefulWidget {
   const KeluargaProfile({super.key});
@@ -21,6 +22,7 @@ class KeluargaProfile extends StatefulWidget {
 class _KeluargaProfileState extends State<KeluargaProfile> {
   JanjiTemuModel? closestJanjiTemu;
   UserModel? fetchedUser;
+  String? adminPhoneNumber;
 
   void fetchClosestJanjiTemu() async {
     KeluargaModel keluarga = await AuthServices().getKeluargaData();
@@ -55,6 +57,11 @@ class _KeluargaProfileState extends State<KeluargaProfile> {
         fetchedUser = user;
       });
     }
+  }
+
+  void fetchAdminPhoneNumber() async {
+    adminPhoneNumber = await AuthServices().getAdminPhoneNumber();
+    setState(() {});
   }
 
   @override
@@ -156,8 +163,32 @@ class _KeluargaProfileState extends State<KeluargaProfile> {
                 },
               ),
               const SizedBox(
-                height: 12,
+                height: 40,
               ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Pasien yang anda rawat mengalami keluhan?',
+                    style: blackText.copyWith(
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  CustomRedButton(
+                    title: 'Laporkan Keluhan',
+                    onPressed: () async {
+                      UserModel user = await AuthServices().getUserData();
+                      await launchUrlString(
+                          mode: LaunchMode.externalApplication,
+                          "https://wa.me/$adminPhoneNumber?text=Saya ${user.name}, punya keluhan");
+                    },
+                  ),
+                ],
+              )
             ],
           );
         },
