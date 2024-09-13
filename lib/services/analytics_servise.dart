@@ -3,11 +3,9 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 class AnalyticsService {
   final _instance = FirebaseAnalytics.instance;
 
-  Future<void> logMateri(String? userId, String materiId) async {
-    await _instance.logTutorialComplete(
-        parameters: {"userId": userId, "MateriId": materiId});
+  Future<void> logMateri(String? userId, String? email, String materiId) async {
     await _instance.logEvent(
-        name: 'materi_pasien',
+        name: '${email!}_$materiId',
         parameters: {"userId": userId, "MateriId": materiId});
   }
 }

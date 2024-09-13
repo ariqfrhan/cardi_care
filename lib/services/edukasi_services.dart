@@ -95,14 +95,13 @@ class EdukasiServices {
     return null;
   }
 
-  Future<int> getQuizAttemptCount(String userId, String materiId) async {
+  Future<int> getMateriAccessed(String userId, String materiId) async {
     QuerySnapshot snapshot = await firestore
-        .collection('riwayat')
+        .collection('log_materi')
         .doc(userId)
-        .collection('riwayat_quiz')
+        .collection('logs')
         .where('materiId', isEqualTo: materiId)
         .get();
-
     return snapshot.docs.length;
   }
 

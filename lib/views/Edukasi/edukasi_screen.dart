@@ -176,12 +176,8 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
                               User? user = auth.currentUser;
                               if (user == null) return;
                               AnalyticsService()
-                                  .logMateri(user.uid, materi.uid)
-                                  .then((value) => print(materi.uid));
-                              _edukasiServices
-                                  .createLog(user.uid, materi.uid)
-                                  .then((value) =>
-                                      print('firestore' + materi.uid));
+                                  .logMateri(user.uid, user.email, materi.uid);
+                              _edukasiServices.createLog(user.uid, materi.uid);
                             }
                           : null,
                     ),

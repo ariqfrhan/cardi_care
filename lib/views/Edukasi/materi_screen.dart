@@ -33,7 +33,7 @@ class _MateriState extends State<Materi> {
     User? user = _auth.currentUser;
     if (user != null) {
       int count =
-          await _edukasiServices.getQuizAttemptCount(user.uid, materi.uid);
+          await _edukasiServices.getMateriAccessed(user.uid, materi.uid);
       setState(() {
         accessCount = count;
       });
