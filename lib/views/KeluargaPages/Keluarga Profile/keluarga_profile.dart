@@ -68,6 +68,7 @@ class _KeluargaProfileState extends State<KeluargaProfile> {
   void initState() {
     super.initState();
     fetchClosestJanjiTemu();
+    fetchAdminPhoneNumber();
   }
 
   @override
@@ -181,10 +182,10 @@ class _KeluargaProfileState extends State<KeluargaProfile> {
                   CustomRedButton(
                     title: 'Laporkan Keluhan',
                     onPressed: () async {
-                      UserModel user = await AuthServices().getUserData();
+                      print(adminPhoneNumber);
                       await launchUrlString(
                           mode: LaunchMode.externalApplication,
-                          "https://wa.me/$adminPhoneNumber?text=Saya ${user.name}, punya keluhan");
+                          "https://wa.me/$adminPhoneNumber");
                     },
                   ),
                 ],
