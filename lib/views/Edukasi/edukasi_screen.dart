@@ -176,8 +176,8 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
                               User? user = auth.currentUser;
                               if (user == null) return;
                               AnalyticsService()
-                                  .logMateri(user.uid, user.email, materi.uid)
-                                  .then((value) => print('log created'));
+                                  .logMateri(user.uid, user.email, materi.uid);
+                                  // .then((value) => print('log created'));
                               _edukasiServices.createLog(user.uid, materi.uid);
                             }
                           : null,
