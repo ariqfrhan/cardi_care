@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cardi_care/model/materi_model.dart';
 import 'package:cardi_care/routes.dart';
-import 'package:cardi_care/services/analytics_servise.dart';
+import 'package:cardi_care/services/analytics_service.dart';
 import 'package:cardi_care/services/auth_services.dart';
 import 'package:cardi_care/services/edukasi_services.dart';
 import 'package:cardi_care/shared/theme.dart';
@@ -176,7 +176,8 @@ class _EdukasiScreenState extends State<EdukasiScreen> {
                               User? user = auth.currentUser;
                               if (user == null) return;
                               AnalyticsService()
-                                  .logMateri(user.uid, user.email, materi.uid);
+                                  .logMateri(user.uid, user.email, materi.uid)
+                                  .then((value) => print('log created'));
                               _edukasiServices.createLog(user.uid, materi.uid);
                             }
                           : null,
