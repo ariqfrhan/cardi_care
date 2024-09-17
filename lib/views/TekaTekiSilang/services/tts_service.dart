@@ -52,8 +52,7 @@ class TtsService {
       final CollectionReference riwayatCollection = firestore
           .collection('riwayat')
           .doc(userId)
-          // buat nama collectionya di samain aja sama quiz karna biar gampang di fetch buat akses materi
-          .collection('riwayat_quiz');
+          .collection('riwayat_crossword');
 
       await riwayatCollection.add({
         'userId': userId,
