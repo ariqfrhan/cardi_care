@@ -1,4 +1,3 @@
-import 'package:cardi_care/views/TekaTekiSilang/services/tts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -184,16 +183,6 @@ class _State extends ConsumerState<TekaTekiSilangDrawerAnswer> {
       if (item.answer.toLowerCase() ==
           textEditingController.text.toLowerCase()) {
         ref.read(ttsNotifierProvider.notifier).answerQuestion(item);
-        final String meteriId =
-            ref.read(ttsNotifierProvider.notifier).getTtsMateriId();
-        User? userId = auth.currentUser;
-
-        TtsService().saveQuizResult(
-          userId!.uid,
-          meteriId,
-          item,
-          textEditingController.text,
-        );
 
         Navigator.pop(context);
       } else {

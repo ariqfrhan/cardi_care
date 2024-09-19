@@ -46,8 +46,8 @@ class TtsService {
     }
   }
 
-  Future<void> saveQuizResult(String userId, String materiId,
-      ItemDatas questions, String answer) async {
+  Future<bool> saveQuizResult(
+      String userId, String materiId, List<ItemDatas> questions) async {
     try {
       final CollectionReference riwayatCollection = firestore
           .collection('riwayat')
@@ -55,21 +55,35 @@ class TtsService {
           // buat nama collectionya di samain aja sama quiz karna biar gampang di fetch buat akses materi
           .collection('riwayat_quiz');
 
-      await riwayatCollection.add({
-        'userId': userId,
-        'materiId': materiId,
-        'timestamp': FieldValue.serverTimestamp(),
-        'results': {
-          'title': questions.title,
-          'direction': questions.direction,
-          'answer': questions.answer,
-          'startCol': questions.startCol,
-          'startRow': questions.startRow,
-          'number': questions.number,
-        },
-      });
+      // check is all question is already aswered
+      for (var question in questions) {
+        if (!question.isAnswered) {
+          Get.snackbar('gagal menyimpan jawaban',
+              'semua jawaban harus terisi untuk bisa menyimpan jawaban anda');
+          return false;
+        }
+      }
+
+      for (var question in questions) {
+        await riwayatCollection.add({
+          'userId': userId,
+          'materiId': materiId,
+          'timestamp': FieldValue.serverTimestamp(),
+          'results': {
+            'title': question.title,
+            'direction': question.direction,
+            'answer': question.answer,
+            'startCol': question.startCol,
+            'startRow': question.startRow,
+            'number': question.number,
+          },
+        });
+      }
+
+      return true;
     } catch (e) {
-      Get.snackbar('Error', 'Error saving quiz result');
+      Get.snackbar('Error', 'gagal menyimpan hasil kuis');
+      return false;
     }
   }
 

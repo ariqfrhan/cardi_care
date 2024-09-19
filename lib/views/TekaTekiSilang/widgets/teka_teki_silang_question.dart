@@ -1,5 +1,12 @@
+import 'dart:io';
+
+import 'package:cardi_care/routes.dart';
+import 'package:cardi_care/views/TekaTekiSilang/services/tts_service.dart';
+import 'package:cardi_care/views/TekaTekiSilang/types/item_datas.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import '../providers.dart';
 
 class TekaTekiSilangQuestion extends ConsumerStatefulWidget {
@@ -10,6 +17,8 @@ class TekaTekiSilangQuestion extends ConsumerStatefulWidget {
 }
 
 class _State extends ConsumerState<TekaTekiSilangQuestion> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     bool isLoading = ref.watch(ttsNotifierProvider.notifier).getLoading();
@@ -64,6 +73,8 @@ class _State extends ConsumerState<TekaTekiSilangQuestion> {
   }
 
   Widget questionList() {
+    final ttsProvider = ref.watch(ttsNotifierProvider.notifier);
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(25.0),
@@ -104,6 +115,8 @@ class _State extends ConsumerState<TekaTekiSilangQuestion> {
               ),
             ),
             horizontalQuestionList(),
+            const SizedBox(height: 20),
+            if (!ttsProvider.isClear()) saveButton(),
           ],
         ),
       ),
@@ -136,5 +149,39 @@ class _State extends ConsumerState<TekaTekiSilangQuestion> {
       },
       itemCount: horizontalQuestion.length,
     );
+  }
+
+  Widget saveButton() {
+    final ttsProvider = ref.watch(ttsNotifierProvider.notifier);
+
+    return ElevatedButton.icon(
+      onPressed: saveProcess,
+      icon: ttsProvider.getSavingStatus() == true
+          ? Container(
+              width: 24,
+              height: 24,
+              padding: const EdgeInsets.all(2.0),
+              child: const CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 3,
+              ),
+            )
+          : const Icon(Icons.save),
+      label: const Text('Simpan'),
+      iconAlignment: IconAlignment.start,
+    );
+  }
+
+  void saveProcess() async {
+    final ttsProvider = ref.watch(ttsNotifierProvider.notifier);
+    final String meteriId = ttsProvider.getTtsMateriId();
+    User? userId = auth.currentUser;
+    final List<ItemDatas> items = ttsProvider.getStateItems();
+    ttsProvider.isSaving(true);
+    final res = await TtsService().saveQuizResult(userId!.uid, meteriId, items);
+
+    ttsProvider.isSaving(false);
+
+    if (res) Get.toNamed(Routes.userEdukasi);
   }
 }

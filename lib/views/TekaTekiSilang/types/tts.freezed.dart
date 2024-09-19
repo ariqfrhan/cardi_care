@@ -21,6 +21,8 @@ Tts _$TtsFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Tts {
   bool get isLoading => throw _privateConstructorUsedError;
+  bool get isClear => throw _privateConstructorUsedError;
+  bool get isSaving => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   int get col => throw _privateConstructorUsedError;
   int get row => throw _privateConstructorUsedError;
@@ -40,6 +42,8 @@ abstract class $TtsCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isLoading,
+      bool isClear,
+      bool isSaving,
       String name,
       int col,
       int row,
@@ -61,6 +65,8 @@ class _$TtsCopyWithImpl<$Res, $Val extends Tts> implements $TtsCopyWith<$Res> {
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isClear = null,
+    Object? isSaving = null,
     Object? name = null,
     Object? col = null,
     Object? row = null,
@@ -72,6 +78,14 @@ class _$TtsCopyWithImpl<$Res, $Val extends Tts> implements $TtsCopyWith<$Res> {
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isClear: null == isClear
+          ? _value.isClear
+          : isClear // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSaving: null == isSaving
+          ? _value.isSaving
+          : isSaving // ignore: cast_nullable_to_non_nullable
               as bool,
       name: null == name
           ? _value.name
@@ -109,6 +123,8 @@ abstract class _$$TtsImplCopyWith<$Res> implements $TtsCopyWith<$Res> {
   @useResult
   $Res call(
       {bool isLoading,
+      bool isClear,
+      bool isSaving,
       String name,
       int col,
       int row,
@@ -127,6 +143,8 @@ class __$$TtsImplCopyWithImpl<$Res> extends _$TtsCopyWithImpl<$Res, _$TtsImpl>
   @override
   $Res call({
     Object? isLoading = null,
+    Object? isClear = null,
+    Object? isSaving = null,
     Object? name = null,
     Object? col = null,
     Object? row = null,
@@ -138,6 +156,14 @@ class __$$TtsImplCopyWithImpl<$Res> extends _$TtsCopyWithImpl<$Res, _$TtsImpl>
       isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isClear: null == isClear
+          ? _value.isClear
+          : isClear // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSaving: null == isSaving
+          ? _value.isSaving
+          : isSaving // ignore: cast_nullable_to_non_nullable
               as bool,
       name: null == name
           ? _value.name
@@ -172,6 +198,8 @@ class __$$TtsImplCopyWithImpl<$Res> extends _$TtsCopyWithImpl<$Res, _$TtsImpl>
 class _$TtsImpl implements _Tts {
   const _$TtsImpl(
       {required this.isLoading,
+      required this.isClear,
+      required this.isSaving,
       required this.name,
       required this.col,
       required this.row,
@@ -186,6 +214,10 @@ class _$TtsImpl implements _Tts {
 
   @override
   final bool isLoading;
+  @override
+  final bool isClear;
+  @override
+  final bool isSaving;
   @override
   final String name;
   @override
@@ -212,7 +244,7 @@ class _$TtsImpl implements _Tts {
 
   @override
   String toString() {
-    return 'Tts(isLoading: $isLoading, name: $name, col: $col, row: $row, materiID: $materiID, items: $items, table: $table)';
+    return 'Tts(isLoading: $isLoading, isClear: $isClear, isSaving: $isSaving, name: $name, col: $col, row: $row, materiID: $materiID, items: $items, table: $table)';
   }
 
   @override
@@ -222,6 +254,9 @@ class _$TtsImpl implements _Tts {
             other is _$TtsImpl &&
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
+            (identical(other.isClear, isClear) || other.isClear == isClear) &&
+            (identical(other.isSaving, isSaving) ||
+                other.isSaving == isSaving) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.col, col) || other.col == col) &&
             (identical(other.row, row) || other.row == row) &&
@@ -236,6 +271,8 @@ class _$TtsImpl implements _Tts {
   int get hashCode => Object.hash(
       runtimeType,
       isLoading,
+      isClear,
+      isSaving,
       name,
       col,
       row,
@@ -260,6 +297,8 @@ class _$TtsImpl implements _Tts {
 abstract class _Tts implements Tts {
   const factory _Tts(
       {required final bool isLoading,
+      required final bool isClear,
+      required final bool isSaving,
       required final String name,
       required final int col,
       required final int row,
@@ -271,6 +310,10 @@ abstract class _Tts implements Tts {
 
   @override
   bool get isLoading;
+  @override
+  bool get isClear;
+  @override
+  bool get isSaving;
   @override
   String get name;
   @override

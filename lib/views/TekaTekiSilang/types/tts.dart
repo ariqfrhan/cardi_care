@@ -9,6 +9,8 @@ part 'tts.g.dart';
 class Tts with _$Tts {
   const factory Tts({
     required bool isLoading,
+    required bool isClear,
+    required bool isSaving,
     required String name,
     required int col,
     required int row,

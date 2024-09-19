@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cardi_care/views/TekaTekiSilang/types/history_answer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -13,16 +15,23 @@ class TtsNotifier extends StateNotifier<Tts> {
 
   TtsNotifier(this._ttsService)
       : super(const Tts(
-            isLoading: true,
-            name: '',
-            materiID: '',
-            col: 0,
-            row: 0,
-            items: [],
-            table: []));
+          isLoading: true,
+          isClear: false,
+          isSaving: false,
+          name: '',
+          materiID: '',
+          col: 0,
+          row: 0,
+          items: [],
+          table: [],
+        ));
 
   bool getLoading() {
     return state.isLoading;
+  }
+
+  List<ItemDatas> getStateItems() {
+    return state.items;
   }
 
   Future<Tts> getTtsData(String id) async {
@@ -45,12 +54,12 @@ class TtsNotifier extends StateNotifier<Tts> {
     }
 
     state = state.copyWith(
-      name: json['name'],
-      col: json['col'],
-      row: json['row'],
-      materiID: json['materi_id'],
-      items: itemsConverted,
-    );
+        name: json['name'],
+        col: json['col'],
+        row: json['row'],
+        materiID: json['materi_id'],
+        items: itemsConverted,
+        isClear: false);
 
     convertToMatrix(state.items, state.col, state.row);
 
@@ -69,15 +78,29 @@ class TtsNotifier extends StateNotifier<Tts> {
     state = tts;
   }
 
+  bool isClear() {
+    return state.isClear;
+  }
+
+  bool getSavingStatus() {
+    return state.isSaving;
+  }
+
+  void isSaving(bool val) {
+    state = state.copyWith(isSaving: val);
+  }
+
   void clearTts() {
-    state = const Tts(
-        isLoading: false,
-        name: '',
-        materiID: '',
-        col: 0,
-        row: 0,
-        items: [],
-        table: []);
+    state = state.copyWith(
+      isLoading: true,
+      isClear: false,
+      name: '',
+      materiID: '',
+      col: 0,
+      row: 0,
+      items: [],
+      table: [],
+    );
   }
 
   List<String> getVerticalQuestion() {
@@ -274,6 +297,10 @@ class TtsNotifier extends StateNotifier<Tts> {
           userId: answer.userId));
 
       answerQuestion(answer.results);
+    }
+
+    if (ttsHistoryAnswer.isNotEmpty) {
+      state = state.copyWith(isClear: true);
     }
 
     return historyAnswers;
